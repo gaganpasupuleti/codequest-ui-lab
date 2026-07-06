@@ -1,0 +1,31 @@
+import {
+  LayoutDashboard,
+  Swords,
+  Database,
+  Code,
+  Brain,
+  GitBranch,
+  BookOpen,
+  FileText,
+  Briefcase,
+  Map,
+  TrendingUp,
+  User,
+  Settings,
+} from 'lucide-react'
+
+export const sidebarItems = [
+  { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+  { label: 'Practice', href: '/practice', icon: Swords },
+  { label: 'SQL Arena', href: '/sql-arena', icon: Database },
+  { label: 'Python Lab', href: '/python-lab', icon: Code },
+  { label: 'Aptitude', href: '/aptitude', icon: Brain },
+  { label: 'DSA', href: '/dsa', icon: GitBranch },
+  { label: 'Materials', href: '/materials', icon: BookOpen },
+  { label: 'Resume Lab', href: '/resume-lab', icon: FileText },
+  { label: 'Jobs', href: '/jobs', icon: Briefcase },
+  { label: 'Career Map', href: '/career-map', icon: Map },
+  { label: 'Progress', href: '/progress', icon: TrendingUp },
+  { label: 'Profile', href: '/profile', icon: User },
+  { label: 'Settings', href: '/settings', icon: Settings },
+]
