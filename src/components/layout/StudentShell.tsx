@@ -1,18 +1,27 @@
-import { Outlet } from 'react-router-dom'
-import { Sidebar, MobileNav } from './Sidebar'
-import { Topbar } from './Topbar'
+import { Outlet, useLocation } from 'react-router-dom'
+import { OrchestratedTopNav } from './OrchestratedTopNav'
+import { LabSideRail } from './LabSideRail'
+import { K3Header, K3LeftRail } from '@/components/k3/K3Header'
+import { cn } from '@/lib/utils'
 
 export function StudentShell() {
+  const location = useLocation()
+  const isDashboard = location.pathname === '/dashboard'
+
   return (
-    <div className="flex h-screen bg-bg-primary overflow-hidden">
-      <Sidebar />
-      <div className="flex-1 flex flex-col min-w-0">
-        <Topbar />
-        <main className="flex-1 overflow-y-auto p-4 lg:p-6 pb-20 lg:pb-6">
-          <Outlet />
-        </main>
-      </div>
-      <MobileNav />
+    <div className="relative flex h-screen flex-col overflow-hidden bg-[#0a0a0a] md:pl-14 md:pr-14">
+      <K3LeftRail />
+      <LabSideRail />
+      <K3Header />
+      <OrchestratedTopNav />
+      <main
+        className={cn(
+          'flex-1 overflow-y-auto bg-[#0a0a0a] text-white',
+          isDashboard ? 'px-0 pb-0 pt-[7.25rem]' : 'px-4 pb-8 pt-[7.75rem] md:px-8',
+        )}
+      >
+        <Outlet />
+      </main>
     </div>
   )
 }

@@ -1,12 +1,12 @@
 import { Award, Target, Heart } from 'lucide-react'
-import { getUser } from '../lib/auth'
+import { getStoredUser } from '@/lib/auth'
 import { dummyStudent } from '../data/dummyStudent'
 import { Badge } from '../components/ui/Badge'
 import { Card } from '../components/ui/Card'
 import { ProgressBar } from '../components/ui/ProgressBar'
 
 export function ProfilePage() {
-  const user = getUser()
+  const user = getStoredUser()
 
   return (
     <div className="space-y-6">
@@ -17,10 +17,10 @@ export function ProfilePage() {
 
       <Card className="flex flex-col sm:flex-row items-center gap-6">
         <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-neon-blue to-neon-purple flex items-center justify-center text-3xl font-bold text-bg-primary">
-          {(user?.name ?? dummyStudent.name).charAt(0)}
+          {(user?.full_name ?? dummyStudent.name).charAt(0)}
         </div>
         <div className="text-center sm:text-left">
-          <h2 className="text-xl font-bold">{user?.name ?? dummyStudent.name}</h2>
+          <h2 className="text-xl font-bold">{user?.full_name ?? dummyStudent.name}</h2>
           <p className="text-text-secondary text-sm">{user?.email ?? dummyStudent.email}</p>
           <div className="flex flex-wrap gap-2 mt-3 justify-center sm:justify-start">
             <Badge variant="neon">Level {dummyStudent.level}</Badge>

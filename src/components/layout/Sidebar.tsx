@@ -8,12 +8,12 @@ export function Sidebar() {
 
   return (
     <aside
-      className={`hidden lg:flex flex-col glass border-r border-white/8 h-full transition-all duration-300 ${collapsed ? 'w-[72px]' : 'w-64'}`}
+      className={`hidden lg:flex flex-col border-r border-[#22FF88]/12 bg-[#0A1020]/80 backdrop-blur-md h-full transition-all duration-300 ${collapsed ? 'w-[72px]' : 'w-64'}`}
       aria-label="Sidebar navigation"
     >
-      <div className="p-4 flex items-center justify-between border-b border-white/8">
+      <div className="p-4 flex items-center justify-between border-b border-[#22FF88]/12">
         {!collapsed && (
-          <span className="font-bold text-sm gradient-text">Code Quest</span>
+          <span className="font-bold text-sm text-[#22FF88]">Code Quest</span>
         )}
         <button
           type="button"
@@ -33,8 +33,8 @@ export function Sidebar() {
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-colors ${
                 isActive
-                  ? 'bg-neon-blue/10 text-neon-blue border border-neon-blue/20'
-                  : 'text-text-secondary hover:text-white hover:bg-white/5'
+                  ? 'bg-[#22FF88]/10 text-[#22FF88] border border-[#22FF88]/25'
+                  : 'text-[#FAF3E0]/55 hover:text-[#FAF3E0] hover:bg-white/5'
               }`
             }
             title={collapsed ? item.label : undefined}
@@ -50,7 +50,7 @@ export function Sidebar() {
 
 export function MobileNav() {
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 glass border-t border-white/8 px-2 py-2" aria-label="Mobile navigation">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-[#22FF88]/12 bg-[#0A1020]/95 backdrop-blur-md px-2 py-2" aria-label="Mobile navigation">
       <div className="flex justify-around">
         {sidebarItems.slice(0, 5).map((item) => (
           <NavLink
@@ -58,7 +58,7 @@ export function MobileNav() {
             to={item.href}
             className={({ isActive }) =>
               `flex flex-col items-center gap-0.5 p-2 rounded-lg text-xs ${
-                isActive ? 'text-neon-blue' : 'text-text-secondary'
+                isActive ? 'text-[#22FF88]' : 'text-[#FAF3E0]/55'
               }`
             }
           >

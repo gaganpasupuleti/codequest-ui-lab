@@ -1,22 +1,22 @@
 import { useNavigate } from 'react-router-dom'
 import { Bell, LogOut, Menu, Search } from 'lucide-react'
 import { useState } from 'react'
-import { getUser, logout } from '../../lib/auth'
+import { clearAuth, getStoredUser } from '@/lib/auth'
 import { Button } from '../ui/Button'
 import { sidebarItems } from './sidebarItems'
 
 export function Topbar() {
-  const user = getUser()
+  const user = getStoredUser()
   const navigate = useNavigate()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const handleLogout = () => {
-    logout()
+    clearAuth()
     navigate('/login')
   }
 
   return (
-    <header className="h-16 glass border-b border-white/8 flex items-center justify-between px-4 lg:px-6 shrink-0">
+    <header className="h-16 border-b border-[#22FF88]/12 bg-[#0A1020]/90 backdrop-blur-md flex items-center justify-between px-4 lg:px-6 shrink-0">
       <div className="flex items-center gap-3 flex-1">
         <button
           type="button"
@@ -49,9 +49,9 @@ export function Topbar() {
 
         <div className="hidden sm:flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-neon-blue to-neon-purple flex items-center justify-center text-sm font-bold text-bg-primary">
-            {user?.name?.charAt(0) ?? 'Q'}
+            {user?.full_name?.charAt(0) ?? 'Q'}
           </div>
-          <span className="text-sm font-medium hidden md:block">{user?.name ?? 'Learner'}</span>
+          <span className="text-sm font-medium hidden md:block">{user?.full_name ?? 'Learner'}</span>
         </div>
 
         <Button variant="ghost" size="sm" onClick={handleLogout} aria-label="Logout">
