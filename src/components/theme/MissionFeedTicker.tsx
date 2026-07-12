@@ -118,7 +118,7 @@ export function MissionFeedTicker({
     <div
       ref={rootRef}
       className={cn(
-        'relative shrink-0 overflow-hidden border-t border-white/10 bg-[#0a0a0a]',
+        'relative shrink-0 overflow-hidden border-t border-[color:var(--cq-border-subtle)] bg-bg-primary',
         className,
       )}
     >

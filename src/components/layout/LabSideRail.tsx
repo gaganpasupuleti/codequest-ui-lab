@@ -9,7 +9,7 @@ export function LabSideRail() {
 
   return (
     <aside
-      className="fixed right-0 top-0 z-[1300] hidden h-screen w-14 flex-col items-center border-l border-white/15 bg-[#0a0a0a] py-5 md:flex"
+      className="fixed right-0 top-0 z-[1300] hidden h-screen w-14 flex-col items-center border-l border-[color:var(--cq-border-subtle)] bg-bg-primary py-5 md:flex"
       aria-label="Lab controls"
     >
       <div className="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-white">

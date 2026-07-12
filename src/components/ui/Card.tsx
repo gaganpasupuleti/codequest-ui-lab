@@ -7,7 +7,7 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 export function Card({ hover = false, glass = true, className = '', children, ...props }: CardProps) {
-  const base = glass ? 'glass rounded-2xl' : 'rounded-2xl bg-white/5 border border-white/8'
+  const base = glass ? 'glass rounded-2xl' : 'rounded-2xl bg-[color:var(--cq-bg-glass)] border border-[color:var(--cq-border-subtle)]'
 
   if (hover) {
     return (

@@ -76,7 +76,7 @@ export function OrchestratedTopNav() {
       aria-modal="true"
       aria-label="Navigation menu"
       aria-hidden={!menuOpen}
-      style={{ backgroundColor: '#0a0a0a' }}
+      style={{ backgroundColor: 'var(--cq-bg-page)' }}
     >
       <div
         ref={panelRef}
@@ -85,12 +85,12 @@ export function OrchestratedTopNav() {
           menuOpen ? 'opacity-100' : 'opacity-0',
         )}
       >
-        <header className="relative shrink-0 border-b border-white/10 bg-[#0a0a0a]/95 px-4 py-5 backdrop-blur-md sm:px-6 md:px-8">
+        <header className="relative shrink-0 border-b border-[color:var(--cq-border-subtle)] bg-[color:var(--cq-bg-overlay)] px-4 py-5 backdrop-blur-md sm:px-6 md:px-8">
           <div className="mx-auto flex w-full max-w-6xl items-center gap-3">
             <span className="hidden font-mono text-xs uppercase tracking-[0.25em] text-white/40 sm:block">
               Code Quest · Explore
             </span>
-            <div className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl border border-white/15 bg-[#111] px-4 py-3">
+            <div className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl border border-[color:var(--cq-border-strong)] bg-[color:var(--cq-bg-elevated)] px-4 py-3">
               <Search className="h-5 w-5 shrink-0 text-white/50" />
               <input
                 ref={searchRef}
@@ -106,7 +106,7 @@ export function OrchestratedTopNav() {
             <button
               type="button"
               onClick={handleCloseMenu}
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/15 bg-[#111] text-white/70 hover:border-white/35 hover:text-white"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[color:var(--cq-border-strong)] bg-[color:var(--cq-bg-elevated)] text-[color:var(--cq-text-secondary)] hover:border-[color:var(--cq-border-strong)] hover:text-[color:var(--cq-text-primary)]"
               aria-label="Close navigation"
             >
               <X className="h-5 w-5" />
@@ -184,7 +184,7 @@ export function OrchestratedTopNav() {
           active={menuOpen}
           label="What's new"
           speed={36}
-          className="border-t border-white/10 bg-[#0a0a0a]"
+          className="border-t border-[color:var(--cq-border-subtle)] bg-bg-primary"
         />
       </div>
     </div>,

@@ -14,7 +14,7 @@ type K3DashboardProps = {
 /** Full K3 Studios–style dashboard — https://k3studios.ae/ */
 export function K3Dashboard({ firstName }: K3DashboardProps) {
   return (
-    <div className="bg-[#0a0a0a] text-white">
+    <div className="bg-bg-primary text-text-primary">
       <K3Hero firstName={firstName} />
       <K3ServiceMarquee speed={26} />
       <K3Stats />

@@ -53,7 +53,7 @@ export function K3ServiceMarquee({ className = '', speed = 28 }: K3MarqueeProps)
     <div
       ref={rootRef}
       className={cn(
-        'overflow-hidden border-y border-white/10 bg-[#0a0a0a] py-3 font-mono text-[11px] font-medium uppercase tracking-[0.2em] text-white/70',
+        'overflow-hidden border-y border-[color:var(--cq-border-subtle)] bg-bg-primary py-3 font-mono text-[11px] font-medium uppercase tracking-[0.2em] text-text-secondary',
         className,
       )}
     >

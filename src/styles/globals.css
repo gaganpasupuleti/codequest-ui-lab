@@ -1,30 +1,83 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* ─── Code Quest shared visual token contract (source of truth) ─── */
+:root {
+  /* Core surfaces */
+  --cq-bg-page: #0a0812;
+  --cq-bg-elevated: #110d18;
+  --cq-bg-card: #16101f;
+  --cq-bg-glass: rgba(255, 255, 255, 0.045);
+  --cq-bg-glass-strong: rgba(255, 255, 255, 0.075);
+  --cq-bg-overlay: rgba(10, 8, 18, 0.94);
+
+  /* Text hierarchy */
+  --cq-text-primary: #ffffff;
+  --cq-text-secondary: rgba(232, 225, 255, 0.78);
+  --cq-text-muted: rgba(196, 181, 230, 0.58);
+  --cq-text-disabled: rgba(196, 181, 230, 0.38);
+
+  /* Brand and accents */
+  --cq-purple-primary: #8b5cf6;
+  --cq-purple-bright: #a78bfa;
+  --cq-lavender: #c4b5fd;
+  --cq-blue-accent: #7c9cff;
+  --cq-success: #34d399;
+  --cq-warning: #fbbf24;
+  --cq-destructive: #ef4444;
+
+  /* Borders and effects */
+  --cq-border-subtle: rgba(167, 139, 250, 0.14);
+  --cq-border-strong: rgba(167, 139, 250, 0.28);
+  --cq-focus-ring: #c4b5fd;
+  --cq-glow-soft: 0 0 28px rgba(139, 92, 246, 0.18);
+  --cq-glow-strong: 0 0 48px rgba(139, 92, 246, 0.32);
+  --cq-shadow-card: 0 10px 40px rgba(0, 0, 0, 0.38);
+
+  /* Layout and shape */
+  --cq-radius-sm: 0.5rem;
+  --cq-radius-md: 0.75rem;
+  --cq-radius-lg: 1rem;
+  --cq-radius-pill: 9999px;
+
+  /* Motion */
+  --cq-duration-fast: 150ms;
+  --cq-duration-normal: 250ms;
+  --cq-duration-slow: 400ms;
+  --cq-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* K3 shell aliases */
+  --cq-k3-bg: var(--cq-bg-page);
+  --cq-k3-surface: var(--cq-bg-elevated);
+}
+
 @theme {
-  --color-bg-primary: #0a0a0a;
-  --color-text-primary: #ffffff;
-  --color-text-secondary: rgba(255, 255, 255, 0.7);
-  --color-text-muted: rgba(255, 255, 255, 0.45);
-  --color-neon-blue: #ffffff;
-  --color-neon-purple: rgba(255, 255, 255, 0.6);
-  --color-electric-blue: rgba(255, 255, 255, 0.4);
-  --color-white-smoke: #ffffff;
-  --color-smoky-black: #0a0a0a;
-  --color-lemon-yellow: rgba(255, 255, 255, 0.85);
-  --color-mantis-green: rgba(255, 255, 255, 0.75);
+  --color-bg-primary: var(--cq-bg-page);
+  --color-text-primary: var(--cq-text-primary);
+  --color-text-secondary: var(--cq-text-secondary);
+  --color-text-muted: var(--cq-text-muted);
+  --color-neon-blue: var(--cq-lavender);
+  --color-neon-purple: var(--cq-purple-primary);
+  --color-electric-blue: var(--cq-purple-bright);
+  --color-white-smoke: var(--cq-text-primary);
+  --color-smoky-black: var(--cq-bg-page);
+  --color-lemon-yellow: var(--cq-warning);
+  --color-mantis-green: var(--cq-success);
   --font-sans: "DM Sans", "Space Grotesk", system-ui, sans-serif;
   --font-serif: "Space Grotesk", "DM Sans", system-ui, sans-serif;
-  --color-background: #0a0a0a;
-  --color-foreground: #ffffff;
-  --color-primary: #ffffff;
-  --color-primary-foreground: #0a0a0a;
-  --color-muted-foreground: rgba(255, 255, 255, 0.45);
-  --color-border: rgba(255, 255, 255, 0.12);
-  --color-input: rgba(255, 255, 255, 0.15);
-  --color-ring: #ffffff;
-  --color-accent: #111111;
-  --color-destructive: #ef4444;
+  --color-background: var(--cq-bg-page);
+  --color-foreground: var(--cq-text-primary);
+  --color-primary: var(--cq-lavender);
+  --color-primary-foreground: var(--cq-bg-page);
+  --color-muted-foreground: var(--cq-text-muted);
+  --color-border: var(--cq-border-subtle);
+  --color-input: var(--cq-border-strong);
+  --color-ring: var(--cq-focus-ring);
+  --color-accent: var(--cq-bg-elevated);
+  --color-destructive: var(--cq-destructive);
+  --color-cq-purple: var(--cq-purple-primary);
+  --color-cq-lavender: var(--cq-lavender);
+  --color-cq-blue: var(--cq-blue-accent);
 }
 
 * {
@@ -52,28 +105,34 @@ html {
 body {
   margin: 0;
   font-family: var(--font-sans);
-  background-color: #0a0a0a;
-  color: #ffffff;
+  background-color: var(--cq-bg-page);
+  color: var(--cq-text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 .glass {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--cq-bg-glass);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--cq-border-subtle);
+  box-shadow: var(--cq-glow-soft);
 }
 
 .glass-strong {
-  background: rgba(255, 255, 255, 0.07);
+  background: var(--cq-bg-glass-strong);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--cq-border-strong);
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.55) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--cq-text-primary) 0%,
+    var(--cq-lavender) 55%,
+    var(--cq-purple-primary) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -81,8 +140,8 @@ body {
 
 .coding-grid {
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(rgba(167, 139, 250, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(167, 139, 250, 0.04) 1px, transparent 1px);
   background-size: 48px 48px;
 }
 
@@ -108,13 +167,13 @@ body {
 }
 
 :focus-visible {
-  outline: 2px solid #ffffff;
+  outline: 2px solid var(--cq-focus-ring);
   outline-offset: 2px;
 }
 
 .scrollbar-thin {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+  scrollbar-color: rgba(167, 139, 250, 0.28) transparent;
 }
 
 .scrollbar-thin::-webkit-scrollbar {
@@ -122,8 +181,8 @@ body {
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.25);
-  border-radius: 999px;
+  background: rgba(167, 139, 250, 0.28);
+  border-radius: var(--cq-radius-pill);
 }
 
 .orch-nav-overlay {
@@ -142,7 +201,7 @@ body {
 
 .orch-nav-grid {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+  scrollbar-color: rgba(167, 139, 250, 0.28) transparent;
 }
 
 .orch-nav-grid::-webkit-scrollbar {
@@ -150,8 +209,8 @@ body {
 }
 
 .orch-nav-grid::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.25);
-  border-radius: 999px;
+  background: rgba(167, 139, 250, 0.28);
+  border-radius: var(--cq-radius-pill);
 }
 
 .orch-nav-card {

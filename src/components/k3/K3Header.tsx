@@ -16,7 +16,7 @@ export function K3Header() {
   const { toggleMenu } = useNavMenu()
 
   return (
-    <header className="fixed inset-x-0 top-0 z-[1100] border-b border-white/10 bg-[#0a0a0a]/95 backdrop-blur-md md:pl-0 md:pr-14">
+    <header className="fixed inset-x-0 top-0 z-[1100] border-b border-[color:var(--cq-border-subtle)] bg-[color:var(--cq-bg-overlay)] backdrop-blur-md md:pl-0 md:pr-14">
       {/* Row 1 — logo + primary CQ routes */}
       <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-3 px-4 py-3.5 md:px-8">
         <div className="flex min-w-0 flex-1 items-center gap-4 md:gap-6">
