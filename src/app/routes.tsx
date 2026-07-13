@@ -4,6 +4,9 @@ import { ProtectedRoute } from '../components/layout/ProtectedRoute'
 import { StudentShell } from '../components/layout/StudentShell'
 
 const LandingPage = lazy(() => import('../pages/LandingPage').then((m) => ({ default: m.LandingPage })))
+const EditorialLandingPage = lazy(() =>
+  import('../pages/EditorialLandingPage').then((m) => ({ default: m.EditorialLandingPage })),
+)
 const LoginPage = lazy(() => import('../pages/LoginPage').then((m) => ({ default: m.LoginPage })))
 const RegisterPage = lazy(() => import('../pages/RegisterPage').then((m) => ({ default: m.RegisterPage })))
 const DashboardPage = lazy(() => import('../pages/DashboardPage').then((m) => ({ default: m.DashboardPage })))
@@ -39,6 +42,7 @@ function withSuspense(Component: React.ComponentType) {
 
 export const router = createBrowserRouter([
   { path: '/', element: withSuspense(LandingPage) },
+  { path: '/landing-editorial', element: withSuspense(EditorialLandingPage) },
   { path: '/login', element: withSuspense(LoginPage) },
   { path: '/register', element: withSuspense(RegisterPage) },
   {

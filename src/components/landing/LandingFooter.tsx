@@ -40,10 +40,10 @@ const footerColumns = [
 
 export function LandingFooter() {
   return (
-    <footer className="border-t border-white/8 bg-white/[0.02]">
+    <footer className="landing-section-footer landing-footer">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-12">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4">
+          <h2 className="landing-footer-heading text-2xl sm:text-3xl font-bold mb-4">
             Start your coding quest today.
           </h2>
           <Link to="/register">
@@ -54,7 +54,7 @@ export function LandingFooter() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           {footerColumns.map((col) => (
             <div key={col.title}>
-              <h3 className="text-xs font-semibold uppercase tracking-widest text-text-secondary mb-4">
+              <h3 className="landing-footer-col-title text-xs font-semibold uppercase tracking-widest mb-4">
                 {col.title}
               </h3>
               <ul className="space-y-2">
@@ -62,7 +62,7 @@ export function LandingFooter() {
                   <li key={link.label}>
                     <Link
                       to={link.href}
-                      className="text-sm text-text-secondary hover:text-white transition-colors"
+                      className="landing-footer-link text-sm transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -73,9 +73,9 @@ export function LandingFooter() {
           ))}
         </div>
 
-        <div className="border-t border-white/8 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <span className="font-bold gradient-text">Code Quest UI Lab</span>
-          <p className="text-xs text-text-muted">
+        <div className="landing-footer-divider border-t pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <span className="landing-footer-brand font-bold">CodeQuest UI Lab</span>
+          <p className="landing-footer-fine-print text-xs">
             Frontend skeleton prototype — design review only. No backend connected.
           </p>
         </div>

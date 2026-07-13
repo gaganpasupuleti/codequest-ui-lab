@@ -1,0 +1,501 @@
+{
+  "ranAt": "2026-07-13T16:59:43.322Z",
+  "baseUrl": "http://localhost:5173/",
+  "viewportResults": [
+    {
+      "viewport": "desktop-1440",
+      "metrics": {
+        "overflowX": 0,
+        "offenders": [
+          {
+            "tag": "div",
+            "id": null,
+            "className": "flex w-max items-center",
+            "right": 2265
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mx-5 inline-flex items-center whitespace-nowrap text-sm font-bold uppercase trac",
+            "right": 43
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mr-3 h-1.5 w-1.5 rounded-full bg-[#1944F1]",
+            "right": -42
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mx-5 inline-flex items-center whitespace-nowrap text-sm font-bold uppercase trac",
+            "right": 1516
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mx-5 inline-flex items-center whitespace-nowrap text-sm font-bold uppercase trac",
+            "right": 1663
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mr-3 h-1.5 w-1.5 rounded-full bg-[#1944F1]",
+            "right": 1562
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mx-5 inline-flex items-center whitespace-nowrap text-sm font-bold uppercase trac",
+            "right": 1757
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mr-3 h-1.5 w-1.5 rounded-full bg-[#1944F1]",
+            "right": 1709
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mx-5 inline-flex items-center whitespace-nowrap text-sm font-bold uppercase trac",
+            "right": 1904
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mr-3 h-1.5 w-1.5 rounded-full bg-[#1944F1]",
+            "right": 1803
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mx-5 inline-flex items-center whitespace-nowrap text-sm font-bold uppercase trac",
+            "right": 2048
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mr-3 h-1.5 w-1.5 rounded-full bg-[#1944F1]",
+            "right": 1950
+          }
+        ],
+        "heroOpacity": "1",
+        "scrollTriggerCount": 0,
+        "pageHeight": 10543,
+        "title": "Code Quest UI Lab — Full Frontend Skeleton Prototype"
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "consoleLogs": [
+        "[debug] [vite] connecting...",
+        "[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold",
+        "[debug] [vite] connected."
+      ]
+    },
+    {
+      "viewport": "laptop-1024",
+      "metrics": {
+        "overflowX": 0,
+        "offenders": [
+          {
+            "tag": "div",
+            "id": null,
+            "className": "flex w-max items-center",
+            "right": 2265
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mx-5 inline-flex items-center whitespace-nowrap text-sm font-bold uppercase trac",
+            "right": 43
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mr-3 h-1.5 w-1.5 rounded-full bg-[#1944F1]",
+            "right": -42
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mx-5 inline-flex items-center whitespace-nowrap text-sm font-bold uppercase trac",
+            "right": 1078
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mx-5 inline-flex items-center whitespace-nowrap text-sm font-bold uppercase trac",
+            "right": 1210
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mr-3 h-1.5 w-1.5 rounded-full bg-[#1944F1]",
+            "right": 1124
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mx-5 inline-flex items-center whitespace-nowrap text-sm font-bold uppercase trac",
+            "right": 1303
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mr-3 h-1.5 w-1.5 rounded-full bg-[#1944F1]",
+            "right": 1256
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mx-5 inline-flex items-center whitespace-nowrap text-sm font-bold uppercase trac",
+            "right": 1516
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mr-3 h-1.5 w-1.5 rounded-full bg-[#1944F1]",
+            "right": 1349
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mx-5 inline-flex items-center whitespace-nowrap text-sm font-bold uppercase trac",
+            "right": 1663
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mr-3 h-1.5 w-1.5 rounded-full bg-[#1944F1]",
+            "right": 1562
+          }
+        ],
+        "heroOpacity": "1",
+        "scrollTriggerCount": 0,
+        "pageHeight": 10554,
+        "title": "Code Quest UI Lab — Full Frontend Skeleton Prototype"
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "consoleLogs": [
+        "[debug] [vite] connecting...",
+        "[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold",
+        "[debug] [vite] connected."
+      ]
+    },
+    {
+      "viewport": "tablet-768",
+      "metrics": {
+        "overflowX": 0,
+        "offenders": [
+          {
+            "tag": "div",
+            "id": null,
+            "className": "flex w-max items-center",
+            "right": 2264
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mx-5 inline-flex items-center whitespace-nowrap text-sm font-bold uppercase trac",
+            "right": 43
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mr-3 h-1.5 w-1.5 rounded-full bg-[#1944F1]",
+            "right": -43
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mx-5 inline-flex items-center whitespace-nowrap text-sm font-bold uppercase trac",
+            "right": 881
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mr-3 h-1.5 w-1.5 rounded-full bg-[#1944F1]",
+            "right": 783
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mx-5 inline-flex items-center whitespace-nowrap text-sm font-bold uppercase trac",
+            "right": 1078
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mr-3 h-1.5 w-1.5 rounded-full bg-[#1944F1]",
+            "right": 927
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mx-5 inline-flex items-center whitespace-nowrap text-sm font-bold uppercase trac",
+            "right": 1209
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mr-3 h-1.5 w-1.5 rounded-full bg-[#1944F1]",
+            "right": 1124
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mx-5 inline-flex items-center whitespace-nowrap text-sm font-bold uppercase trac",
+            "right": 1303
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mr-3 h-1.5 w-1.5 rounded-full bg-[#1944F1]",
+            "right": 1255
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mx-5 inline-flex items-center whitespace-nowrap text-sm font-bold uppercase trac",
+            "right": 1515
+          }
+        ],
+        "heroOpacity": "1",
+        "scrollTriggerCount": 0,
+        "pageHeight": 9006,
+        "title": "Code Quest UI Lab — Full Frontend Skeleton Prototype"
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "consoleLogs": [
+        "[debug] [vite] connecting...",
+        "[debug] [vite] connected.",
+        "[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+      ]
+    },
+    {
+      "viewport": "mobile-390",
+      "metrics": {
+        "overflowX": 0,
+        "offenders": [
+          {
+            "tag": "div",
+            "id": null,
+            "className": "flex w-max items-center",
+            "right": 2264
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mx-5 inline-flex items-center whitespace-nowrap text-sm font-bold uppercase trac",
+            "right": 43
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mr-3 h-1.5 w-1.5 rounded-full bg-[#1944F1]",
+            "right": -43
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mx-5 inline-flex items-center whitespace-nowrap text-sm font-bold uppercase trac",
+            "right": 496
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mr-3 h-1.5 w-1.5 rounded-full bg-[#1944F1]",
+            "right": 395
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mx-5 inline-flex items-center whitespace-nowrap text-sm font-bold uppercase trac",
+            "right": 590
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mr-3 h-1.5 w-1.5 rounded-full bg-[#1944F1]",
+            "right": 542
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mx-5 inline-flex items-center whitespace-nowrap text-sm font-bold uppercase trac",
+            "right": 738
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mr-3 h-1.5 w-1.5 rounded-full bg-[#1944F1]",
+            "right": 636
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mx-5 inline-flex items-center whitespace-nowrap text-sm font-bold uppercase trac",
+            "right": 881
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mr-3 h-1.5 w-1.5 rounded-full bg-[#1944F1]",
+            "right": 784
+          },
+          {
+            "tag": "span",
+            "id": null,
+            "className": "mx-5 inline-flex items-center whitespace-nowrap text-sm font-bold uppercase trac",
+            "right": 1078
+          }
+        ],
+        "heroOpacity": "1",
+        "scrollTriggerCount": 0,
+        "pageHeight": 9184,
+        "title": "Code Quest UI Lab — Full Frontend Skeleton Prototype"
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "consoleLogs": [
+        "[debug] [vite] connecting...",
+        "[debug] [vite] connected.",
+        "[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+      ]
+    }
+  ],
+  "reducedMotion": {
+    "heroOpacity": "1",
+    "stepOpacities": [
+      "1",
+      "1",
+      "1",
+      "1",
+      "1"
+    ],
+    "barWidths": [
+      "78%",
+      "64%",
+      "72%",
+      "85%"
+    ],
+    "hasPinSpacer": false,
+    "overflowX": 0
+  },
+  "keyboard": {
+    "ctaHrefs": [
+      {
+        "text": "Start Your Quest",
+        "tag": "BUTTON",
+        "href": null
+      },
+      {
+        "text": "Start Your Quest",
+        "tag": "BUTTON",
+        "href": null
+      },
+      {
+        "text": "Explore the Platform",
+        "tag": "BUTTON",
+        "href": null
+      },
+      {
+        "text": "Start Your Quest",
+        "tag": "BUTTON",
+        "href": null
+      },
+      {
+        "text": "View Learning Paths",
+        "tag": "BUTTON",
+        "href": null
+      },
+      {
+        "text": "Start Your Quest",
+        "tag": "A",
+        "href": "/register"
+      },
+      {
+        "text": "Start Your Quest",
+        "tag": "BUTTON",
+        "href": null
+      }
+    ],
+    "focusables": [
+      {
+        "tag": "A",
+        "text": "CodeQuest",
+        "href": "/",
+        "outline": "solid"
+      },
+      {
+        "tag": "A",
+        "text": "How It Works",
+        "href": "/#how-it-works",
+        "outline": "solid"
+      },
+      {
+        "tag": "A",
+        "text": "Arenas",
+        "href": "/#quest-arenas",
+        "outline": "solid"
+      },
+      {
+        "tag": "A",
+        "text": "Career Map",
+        "href": "/#career-map",
+        "outline": "solid"
+      },
+      {
+        "tag": "A",
+        "text": "Features",
+        "href": "/#features",
+        "outline": "solid"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Start Your Quest",
+        "href": null,
+        "outline": "solid"
+      },
+      {
+        "tag": "A",
+        "text": "Start Your Quest",
+        "href": "/register",
+        "outline": "solid"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Start Your Quest",
+        "href": null,
+        "outline": "solid"
+      },
+      {
+        "tag": "A",
+        "text": "Dashboard",
+        "href": "/dashboard",
+        "outline": "solid"
+      },
+      {
+        "tag": "A",
+        "text": "Progress",
+        "href": "/progress",
+        "outline": "solid"
+      },
+      {
+        "tag": "A",
+        "text": "Profile",
+        "href": "/profile",
+        "outline": "solid"
+      },
+      {
+        "tag": "A",
+        "text": "Settings",
+        "href": "/settings",
+        "outline": "solid"
+      }
+    ]
+  }
+}

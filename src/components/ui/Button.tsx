@@ -33,6 +33,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         className={isFullWidth ? 'w-full' : 'inline-flex'}
+        tabIndex={-1}
       >
         <button
           ref={ref}
