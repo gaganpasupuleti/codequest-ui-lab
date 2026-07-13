@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { gsap, ScrollTrigger, useGSAP } from '@/lib/gsapSetup'
+import { gsap, useGSAP } from '@/lib/gsapSetup'
 import { motionAllowed } from '@/lib/motionPreference'
 
 const LIGHT_ITEMS = [

@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CQOrbitMark } from '@/components/landing/editorial/CQOrbitMark'
-import { gsap, ScrollTrigger, useGSAP } from '@/lib/gsapSetup'
+import { gsap, useGSAP } from '@/lib/gsapSetup'
 import { motionAllowed, pointerTiltAllowed } from '@/lib/motionPreference'
 
 export function EditorialFinalCTA() {
