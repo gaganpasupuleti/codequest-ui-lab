@@ -4,7 +4,7 @@ interface LoginCircuitOrbProps {
   className?: string
 }
 
-/** ponytail: SVG orbit rings around CQ — subtle rotation via GSAP, no WebGL. */
+/** Orbit rings around CQ — soft electric-blue accents. */
 export function LoginCircuitOrb({ className }: LoginCircuitOrbProps) {
   return (
     <svg
@@ -17,14 +17,14 @@ export function LoginCircuitOrb({ className }: LoginCircuitOrbProps) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <circle className="login-circuit-glow" cx="160" cy="160" r="118" stroke="#22FF88" strokeOpacity="0.1" strokeWidth="1" />
+      <circle className="login-circuit-glow" cx="160" cy="160" r="118" stroke="#1944F1" strokeOpacity="0.18" strokeWidth="1" />
       <circle
         className="login-orbit-ring login-orbit-ring-a"
         cx="160"
         cy="160"
         r="104"
-        stroke="#22FF88"
-        strokeOpacity="0.3"
+        stroke="#1944F1"
+        strokeOpacity="0.45"
         strokeWidth="1"
         strokeDasharray="6 10"
       />
@@ -33,8 +33,8 @@ export function LoginCircuitOrb({ className }: LoginCircuitOrbProps) {
         cx="160"
         cy="160"
         r="88"
-        stroke="#3B82F6"
-        strokeOpacity="0.22"
+        stroke="#FFEF4D"
+        strokeOpacity="0.28"
         strokeWidth="0.75"
         strokeDasharray="4 14"
       />
@@ -44,8 +44,8 @@ export function LoginCircuitOrb({ className }: LoginCircuitOrbProps) {
         cy="160"
         rx="120"
         ry="68"
-        stroke="#22FF88"
-        strokeOpacity="0.18"
+        stroke="#82D173"
+        strokeOpacity="0.22"
         strokeWidth="0.75"
         strokeDasharray="3 12"
         transform="rotate(-18 160 160)"
