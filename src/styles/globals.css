@@ -100,11 +100,18 @@ html {
 
 body {
   margin: 0;
+  width: 100%;
+  overflow-x: clip;
   font-family: var(--font-sans);
   background-color: var(--cq-bg-page);
   color: var(--cq-text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100%;
+  min-height: 100dvh;
 }
 
 .glass {
