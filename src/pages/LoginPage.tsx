@@ -7,7 +7,7 @@ export function LoginPage() {
   return (
     <CodeQuestLoginPage
       onAuthenticated={() => {
-        navigate('/dashboard')
+        navigate('/')
       }}
     />
   )

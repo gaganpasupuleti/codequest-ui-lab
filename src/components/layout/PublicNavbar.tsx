@@ -57,7 +57,7 @@ export function PublicNavbar({ variant = 'default' }: PublicNavbarProps) {
         </div>
 
         <div className="hidden md:block">
-          <Button size="sm" className={variant === 'landing' ? 'landing-btn-primary' : undefined} onClick={() => navigate('/register')}>
+          <Button size="sm" className={variant === 'landing' ? 'landing-btn-primary' : undefined} onClick={() => navigate('/login')}>
             Start Your Quest
           </Button>
         </div>
@@ -104,7 +104,7 @@ export function PublicNavbar({ variant = 'default' }: PublicNavbarProps) {
                   {link.label}
                 </a>
               ))}
-              <Button size="sm" className={`w-full mt-2 ${variant === 'landing' ? 'landing-btn-primary' : ''}`} onClick={() => { setOpen(false); navigate('/register') }}>
+              <Button size="sm" className={`w-full mt-2 ${variant === 'landing' ? 'landing-btn-primary' : ''}`} onClick={() => { setOpen(false); navigate('/login') }}>
                 Start Your Quest
               </Button>
             </div>

@@ -237,11 +237,11 @@ export function CinematicHero() {
           </p>
 
           <div ref={ctaRef} className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Button size="lg" className="landing-btn-primary" onClick={() => navigate('/register')}>
+            <Button size="lg" className="landing-btn-primary" onClick={() => navigate('/login')}>
               Start Your Quest
               <ArrowRight className="h-4 w-4" aria-hidden />
             </Button>
-            <Button variant="outline" size="lg" className="landing-btn-outline-dark" onClick={() => navigate('/practice')}>
+            <Button variant="outline" size="lg" className="landing-btn-outline-dark" onClick={() => navigate('/login')}>
               Explore the Platform
             </Button>
           </div>

@@ -46,7 +46,7 @@ export function LandingFooter() {
           <h2 className="landing-footer-heading text-2xl sm:text-3xl font-bold mb-4">
             Start your coding quest today.
           </h2>
-          <Link to="/register">
+          <Link to="/login">
             <Button size="lg">Start Your Quest</Button>
           </Link>
         </div>
