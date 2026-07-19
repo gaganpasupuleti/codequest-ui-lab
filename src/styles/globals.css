@@ -3,36 +3,50 @@
 
 /* ─── Code Quest shared visual token contract (source of truth) ─── */
 :root {
-  /* Core surfaces */
-  --cq-bg-page: #0a0812;
-  --cq-bg-elevated: #110d18;
-  --cq-bg-card: #16101f;
-  --cq-bg-glass: rgba(255, 255, 255, 0.045);
-  --cq-bg-glass-strong: rgba(255, 255, 255, 0.075);
-  --cq-bg-overlay: rgba(10, 8, 18, 0.94);
+  /* Core surfaces — lighter navy cards, electric accents */
+  --cq-bg-page: #080d18;
+  --cq-bg-sidebar: #101827;
+  --cq-bg-elevated: #1a2740;
+  --cq-bg-card: #1a2740;
+  --cq-bg-card-elevated: #223353;
+  --cq-bg-glass: rgba(79, 140, 255, 0.1);
+  --cq-bg-glass-strong: rgba(79, 140, 255, 0.16);
+  --cq-bg-overlay: rgba(8, 13, 24, 0.94);
 
   /* Text hierarchy */
-  --cq-text-primary: #ffffff;
-  --cq-text-secondary: rgba(232, 225, 255, 0.78);
-  --cq-text-muted: rgba(196, 181, 230, 0.58);
-  --cq-text-disabled: rgba(196, 181, 230, 0.38);
+  --cq-text-primary: #f8fafc;
+  --cq-text-secondary: rgba(248, 250, 252, 0.9);
+  --cq-text-muted: #a8b8d0;
+  --cq-text-disabled: rgba(168, 184, 208, 0.5);
 
-  /* Brand and accents */
-  --cq-purple-primary: #8b5cf6;
-  --cq-purple-bright: #a78bfa;
-  --cq-lavender: #c4b5fd;
-  --cq-blue-accent: #7c9cff;
-  --cq-success: #34d399;
-  --cq-warning: #fbbf24;
-  --cq-destructive: #ef4444;
+  /* Semantic accents — brighter electric */
+  --cq-primary: #4f8cff;
+  --cq-cyan: #2ee9ff;
+  --cq-green: #3ee7a8;
+  --cq-violet: #b794ff;
+  --cq-yellow: #ffd54a;
+  --cq-coral: #ff7a93;
+
+  /* Brand aliases (keep existing call sites working) */
+  --cq-brand-blue: var(--cq-primary);
+  --cq-brand-blue-soft: #9ec5ff;
+  --cq-brand-lemon: var(--cq-yellow);
+  --cq-purple-primary: var(--cq-primary);
+  --cq-purple-bright: #6ea8ff;
+  --cq-lavender: #9ec5ff;
+  --cq-blue-accent: #6ea8ff;
+  --cq-success: var(--cq-green);
+  --cq-warning: var(--cq-yellow);
+  --cq-destructive: var(--cq-coral);
 
   /* Borders and effects */
-  --cq-border-subtle: rgba(167, 139, 250, 0.14);
-  --cq-border-strong: rgba(167, 139, 250, 0.28);
-  --cq-focus-ring: #c4b5fd;
-  --cq-glow-soft: 0 0 28px rgba(139, 92, 246, 0.18);
-  --cq-glow-strong: 0 0 48px rgba(139, 92, 246, 0.32);
-  --cq-shadow-card: 0 10px 40px rgba(0, 0, 0, 0.38);
+  --cq-border: #334866;
+  --cq-border-subtle: #334866;
+  --cq-border-strong: #456087;
+  --cq-focus-ring: #6ea8ff;
+  --cq-glow-soft: 0 0 28px rgba(79, 140, 255, 0.22);
+  --cq-glow-strong: 0 0 48px rgba(79, 140, 255, 0.32);
+  --cq-shadow-card: 0 10px 28px rgba(2, 6, 16, 0.4);
 
   /* Layout and shape */
   --cq-radius-sm: 0.5rem;
@@ -74,6 +88,9 @@
   --color-cq-purple: var(--cq-purple-primary);
   --color-cq-lavender: var(--cq-lavender);
   --color-cq-blue: var(--cq-blue-accent);
+  --color-mantis-green: var(--cq-success);
+  --color-lemon-yellow: var(--cq-brand-lemon);
+  --color-white-smoke: var(--cq-text-primary);
 }
 
 * {
@@ -112,6 +129,42 @@ body {
 #root {
   width: 100%;
   min-height: 100dvh;
+  overflow-x: clip;
+}
+
+/* Shared responsive media / data helpers (app + public pages) */
+img,
+video,
+canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+pre {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.cq-table-scroll {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+.cq-table-scroll table {
+  width: max(100%, 36rem);
+  border-collapse: collapse;
+}
+
+@media (min-width: 1920px) {
+  .cq-page-wide {
+    width: 100%;
+    max-width: 1600px;
+    margin-inline: auto;
+  }
 }
 
 .glass {

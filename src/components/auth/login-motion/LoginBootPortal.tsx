@@ -68,19 +68,19 @@ export function LoginBootPortal({ children, className }: LoginBootPortalProps) {
             ref={portalTiltRef}
             className="relative mx-auto flex w-full max-w-[700px] flex-col justify-center lg:mx-auto"
           >
-            <div className="mb-5 flex items-center justify-center gap-3.5 lg:mb-6">
+            <div className="mb-5 flex max-w-full flex-wrap items-center justify-center gap-2.5 sm:gap-3.5 lg:mb-6">
               <div ref={logoWrapRef} className="relative shrink-0">
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute left-1/2 top-1/2 h-24 w-24 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[rgba(25,68,241,0.4)] blur-2xl"
+                  className="pointer-events-none absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[rgba(25,68,241,0.4)] blur-2xl sm:h-24 sm:w-24"
                 />
-                <div ref={logoMotionRef} className="relative inline-flex will-change-transform">
+                <div ref={logoMotionRef} className="relative inline-flex will-change-transform scale-90 sm:scale-100">
                   <CQLogo size="lg" />
                 </div>
               </div>
               <Link
                 to="/"
-                className="text-xl font-bold tracking-tight text-[#f7f8f4] transition-opacity hover:opacity-90"
+                className="text-[clamp(1.05rem,4vw,1.25rem)] font-bold tracking-tight text-[#f7f8f4] transition-opacity hover:opacity-90"
               >
                 CodeQuest
               </Link>

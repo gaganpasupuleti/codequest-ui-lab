@@ -3,37 +3,20 @@ import { Button } from '../ui/Button'
 
 const footerColumns = [
   {
-    title: 'Platform',
+    title: 'Explore',
     links: [
-      { label: 'Dashboard', href: '/dashboard' },
-      { label: 'Progress', href: '/progress' },
-      { label: 'Profile', href: '/profile' },
-      { label: 'Settings', href: '/settings' },
+      { label: 'How It Works', href: '/#how-it-works' },
+      { label: 'Arenas', href: '/#quest-arenas' },
+      { label: 'Career Map', href: '/#career-map' },
+      { label: 'Features', href: '/#features' },
     ],
   },
   {
-    title: 'Practice',
+    title: 'Account',
     links: [
-      { label: 'SQL Arena', href: '/sql-arena' },
-      { label: 'Python Lab', href: '/python-lab' },
-      { label: 'Aptitude', href: '/aptitude' },
-      { label: 'DSA', href: '/dsa' },
-    ],
-  },
-  {
-    title: 'Career',
-    links: [
-      { label: 'Resume Lab', href: '/resume-lab' },
-      { label: 'Jobs Portal', href: '/jobs' },
-      { label: 'Career Map', href: '/career-map' },
-    ],
-  },
-  {
-    title: 'Resources',
-    links: [
-      { label: 'Materials', href: '/materials' },
-      { label: 'Mock Tests', href: '/aptitude' },
-      { label: 'Admin', href: '/admin' },
+      { label: 'Home', href: '/' },
+      { label: 'Login', href: '/login' },
+      { label: 'Start Your Quest', href: '/login' },
     ],
   },
 ]
@@ -51,7 +34,7 @@ export function LandingFooter() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-2 gap-8 mb-12 max-w-xl mx-auto">
           {footerColumns.map((col) => (
             <div key={col.title}>
               <h3 className="landing-footer-col-title text-xs font-semibold uppercase tracking-widest mb-4">

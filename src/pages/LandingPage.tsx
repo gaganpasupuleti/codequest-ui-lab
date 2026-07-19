@@ -11,7 +11,7 @@ import { LandingFooter } from '@/components/landing/LandingFooter'
 
 export function LandingPage() {
   return (
-    <div className="landing-cinematic min-h-screen">
+    <div className="landing-cinematic min-h-dvh overflow-x-clip">
       <PublicNavbar variant="landing" />
       <main>
         <CinematicHero />
