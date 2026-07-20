@@ -1,13 +1,16 @@
 import { useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
-import { Button } from '@/components/ui/Button'
+import { LandingCtaButton } from '@/components/landing/LandingCtaButton'
 import { CQLogo } from '@/components/landing/shared/CQLogo'
 import { gsap, useGSAP } from '@/lib/gsapSetup'
 import { motionAllowed, pointerTiltAllowed } from '@/lib/motionPreference'
 
-export function FinalQuestCTA() {
-  const navigate = useNavigate()
+type FinalQuestCTAProps = {
+  onStartQuest: () => void
+}
+
+export function FinalQuestCTA({ onStartQuest }: FinalQuestCTAProps) {
+
   const rootRef = useRef<HTMLElement>(null)
   const logoWrapRef = useRef<HTMLDivElement>(null)
   const logoMotionRef = useRef<HTMLDivElement>(null)
@@ -114,13 +117,18 @@ export function FinalQuestCTA() {
         </h2>
 
         <div ref={ctaRef} className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <Button size="lg" className="landing-btn-primary" onClick={() => navigate('/login')}>
+          <LandingCtaButton size="lg" className="landing-btn-primary" onClick={onStartQuest}>
             Start Your Quest
             <ArrowRight className="h-4 w-4" aria-hidden />
-          </Button>
-          <Button variant="outline" size="lg" className="landing-btn-outline-dark" onClick={() => navigate('/login')}>
+          </LandingCtaButton>
+          <LandingCtaButton
+            variant="outline"
+            size="lg"
+            className="landing-btn-outline-dark"
+            onClick={onStartQuest}
+          >
             View Learning Paths
-          </Button>
+          </LandingCtaButton>
         </div>
       </div>
     </section>

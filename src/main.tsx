@@ -1,12 +1,17 @@
-import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './styles/globals.css'
-import App from './app/App'
+import { ErrorBoundary } from "react-error-boundary";
+import "@github/spark/spark"
 
-document.documentElement.setAttribute('data-theme', 'k3')
+import App from './App.tsx'
+import { ErrorFallback } from './ErrorFallback.tsx'
+
+import "./main.css"
+import "./styles/theme.css"
+import "./styles/landing-cinematic.css"
+import "./index.css"
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+  <ErrorBoundary FallbackComponent={ErrorFallback}>
     <App />
-  </StrictMode>,
+   </ErrorBoundary>
 )

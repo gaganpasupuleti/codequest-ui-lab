@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react'
-import { Link } from 'react-router-dom'
 
 import { CQLogo } from '@/components/landing/shared/CQLogo'
 import { HERO_FLOAT_LABELS } from '@/data/landingContent'
@@ -13,9 +12,10 @@ import { useLoginBootMotion } from './useLoginBootMotion'
 interface LoginBootPortalProps {
   children: ReactNode
   className?: string
+  onHome?: () => void
 }
 
-export function LoginBootPortal({ children, className }: LoginBootPortalProps) {
+export function LoginBootPortal({ children, className, onHome }: LoginBootPortalProps) {
   const {
     rootRef,
     portalTiltRef,
@@ -74,16 +74,17 @@ export function LoginBootPortal({ children, className }: LoginBootPortalProps) {
                   aria-hidden
                   className="pointer-events-none absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[rgba(25,68,241,0.4)] blur-2xl sm:h-24 sm:w-24"
                 />
-                <div ref={logoMotionRef} className="relative inline-flex will-change-transform scale-90 sm:scale-100">
+                <div ref={logoMotionRef} className="relative inline-flex scale-90 will-change-transform sm:scale-100">
                   <CQLogo size="lg" />
                 </div>
               </div>
-              <Link
-                to="/"
+              <button
+                type="button"
+                onClick={onHome}
                 className="text-[clamp(1.05rem,4vw,1.25rem)] font-bold tracking-tight text-[#f7f8f4] transition-opacity hover:opacity-90"
               >
                 CodeQuest
-              </Link>
+              </button>
             </div>
 
             <LoginPortalScene
@@ -97,10 +98,7 @@ export function LoginBootPortal({ children, className }: LoginBootPortalProps) {
           </section>
 
           <section className="flex w-full items-center justify-center lg:justify-end">
-            <div
-              ref={cardRef}
-              className="login-motion-card w-full max-w-lg lg:ml-auto"
-            >
+            <div ref={cardRef} className="login-motion-card w-full max-w-lg lg:ml-auto">
               {children}
             </div>
           </section>

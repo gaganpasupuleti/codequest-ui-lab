@@ -28,20 +28,19 @@ import {
   fetchAuthPublicConfig,
   type AuthPublicConfig,
   fetchCurrentUser,
-  loginWithBackend,
   loginWithGoogleIdToken,
-  registerWithBackend,
+  loginWithLabFallback,
   requestPasswordReset,
   resetPasswordWithToken,
   storeAuthToken,
   storeUser,
   setDemoFlag,
   type AuthUser,
-  UI_LAB_AUTH,
-  loginWithLabFallback,
 } from '@/lib/auth'
+
 interface LoginPageProps {
   onAuthenticated: (user: AuthUser) => void
+  onBackToLanding?: () => void
 }
 
 type AuthMode = 'login' | 'signup' | 'forgotPassword'
@@ -105,7 +104,7 @@ function persistRememberMe(remember: boolean, email: string) {
   }
 }
 
-export function LoginPage({ onAuthenticated }: LoginPageProps) {
+export function LoginPage({ onAuthenticated, onBackToLanding }: LoginPageProps) {
   const remembered = useMemo(() => readRememberedEmail(), [])
   const [mode, setMode] = useState<AuthMode>('login')
   const [email, setEmail] = useState(remembered.email)
@@ -163,51 +162,30 @@ export function LoginPage({ onAuthenticated }: LoginPageProps) {
     !!googleClientId &&
     (googleBackendEnabled === true || !!bootstrapGoogleClientId)
 
-  const finalizeLogin = async (accessToken: string, fallbackUser: AuthUser) => {
+  const finalizeLogin = async (accessToken: string, user: AuthUser, demo: boolean) => {
     storeAuthToken(accessToken)
-    const user = await fetchCurrentUser(accessToken) ?? fallbackUser
-    setDemoFlag(false)
+    setDemoFlag(demo)
     storeUser(user)
-    toast.success(`Welcome back, ${user.full_name}!`)
-    onAuthenticated(user)
-  }
-
-  const finalizeLabLogin = (user: AuthUser) => {
-    toast.success(`Welcome, ${user.full_name}!`)
+    toast.success(
+      demo
+        ? `Test login ready — welcome, ${user.full_name}!`
+        : `Welcome back, ${user.full_name}!`,
+    )
     onAuthenticated(user)
   }
 
   const handleLogin = async () => {
-    if (UI_LAB_AUTH) {
-      setIsLoading(true)
-      persistRememberMe(rememberMe, email)
-      const user = loginWithLabFallback(email)
-      finalizeLabLogin(user)
-      setIsLoading(false)
-      return
-    }
-
-    if (!email.trim() || !password.trim()) {
-      toast.error('Email and password are required.')
-      return
-    }
     try {
       setIsLoading(true)
-      persistRememberMe(rememberMe, email)
-      const token = await loginWithBackend(email.trim(), password)
-      await finalizeLogin(token, {
-        id: 0,
-        email: email.trim(),
-        full_name: email.split('@')[0],
-        role: 'student',
-      })
+      // UI lab: one click — local test session, no email/password required.
+      const loginEmail = email.trim() || 'student@codequest.dev'
+      const loginPassword = password.trim() || 'test'
+      persistRememberMe(rememberMe, loginEmail)
+      const result = await loginWithLabFallback(loginEmail, loginPassword)
+      await finalizeLogin(result.token, result.user, true)
     } catch (err) {
       const msg = err instanceof Error ? err.message : ''
-      if (msg.toLowerCase().includes('pending admin approval')) {
-        setPendingApproval(true)
-      } else {
-        toast.error(msg || 'Login failed. Check credentials.')
-      }
+      toast.error(msg || 'Login failed.')
     } finally {
       setIsLoading(false)
     }
@@ -232,39 +210,18 @@ export function LoginPage({ onAuthenticated }: LoginPageProps) {
   }, [])
 
   const handleSignup = async () => {
-    if (UI_LAB_AUTH) {
-      setIsLoading(true)
-      const user = loginWithLabFallback(email, fullName)
-      finalizeLabLogin(user)
-      setIsLoading(false)
-      return
-    }
-
-    if (!email.trim() || !password.trim() || !fullName.trim()) {
-      toast.error('Name, email and password are required.')
-      return
-    }
     try {
       setIsLoading(true)
-      await registerWithBackend(fullName.trim(), email.trim(), password)
-      const token = await loginWithBackend(email.trim(), password)
-      await finalizeLogin(token, {
-        id: 0,
-        email: email.trim(),
-        full_name: fullName.trim(),
-        role: 'student',
-      })
+      // UI lab: one click — local test session, no form required.
+      const result = await loginWithLabFallback(
+        email.trim() || 'student@codequest.dev',
+        password.trim() || 'test',
+        fullName.trim() || 'Test Student',
+      )
+      await finalizeLogin(result.token, result.user, true)
     } catch (err) {
       const msg = err instanceof Error ? err.message : ''
-      if (
-        msg.toLowerCase().includes('pending admin approval') ||
-        msg.toLowerCase().includes('pending approval')
-      ) {
-        setPendingApproval(true)
-        toast.success('Registration submitted! Please wait for admin approval before logging in.')
-      } else {
-        toast.error(msg || 'Sign-up failed. Try a different email.')
-      }
+      toast.error(msg || 'Sign-up failed.')
     } finally {
       setIsLoading(false)
     }
@@ -324,11 +281,6 @@ export function LoginPage({ onAuthenticated }: LoginPageProps) {
       window.google.accounts.id.initialize({
         client_id: googleClientId,
         callback: async ({ credential }: GoogleCredentialResponse) => {
-          if (UI_LAB_AUTH) {
-            const user = loginWithLabFallback(email, fullName)
-            finalizeLabLogin(user)
-            return
-          }
           if (!credential) {
             toast.error('Google login failed. No credential returned.')
             return
@@ -336,12 +288,15 @@ export function LoginPage({ onAuthenticated }: LoginPageProps) {
           try {
             setIsLoading(true)
             const token = await loginWithGoogleIdToken(credential)
-            await finalizeLogin(token, {
-              id: 0,
-              email: email.trim() || 'google-user@local',
-              full_name: fullName.trim() || 'Google User',
-              role: 'student',
-            })
+            const user =
+              (await fetchCurrentUser(token)) ??
+              ({
+                id: 0,
+                email: email.trim() || 'google-user@local',
+                full_name: fullName.trim() || 'Google User',
+                role: 'student' as const,
+              } satisfies AuthUser)
+            await finalizeLogin(token, user, false)
           } catch (err) {
             const msg = err instanceof Error ? err.message : ''
             if (
@@ -426,17 +381,14 @@ export function LoginPage({ onAuthenticated }: LoginPageProps) {
     if (authPublicFetchFailed && !googleClientId) {
       return (
         <p className="text-center text-[11px] leading-snug text-[#b8c0d4]/80">
-          Google sign-in is offline for this session. Continue with email below.
+          Google sign-in is offline for this session. Use email instead.
         </p>
       )
     }
 
     if (googleButtonAllowed) {
       return (
-        <div className={`${LOGIN_GOOGLE_FRAME} space-y-3`}>
-          <p className="text-center text-[11px] font-semibold uppercase tracking-[0.14em] text-[#ffef4d]/90">
-            Continue with Google
-          </p>
+        <div className={LOGIN_GOOGLE_FRAME}>
           <div className={LOGIN_GOOGLE_BUTTON_WELL} ref={googleButtonHostRef}>
             <div ref={attachGoogleButtonRef} className="w-full [&>div]:!w-full" />
           </div>
@@ -447,7 +399,7 @@ export function LoginPage({ onAuthenticated }: LoginPageProps) {
     if (googleBackendEnabled && !googleClientId) {
       return (
         <p className="text-center text-xs text-[#b8c0d4]/80">
-          Google sign-in is not configured. Use email below.
+          Google sign-in is not configured. Use email above.
         </p>
       )
     }
@@ -457,8 +409,17 @@ export function LoginPage({ onAuthenticated }: LoginPageProps) {
 
   return (
     <>
-      <LoginBootPortal>
-        <div className={authCardClass}>
+      <LoginBootPortal onHome={onBackToLanding}>
+        <div className={`${authCardClass} flex flex-col`}>
+            {onBackToLanding ? (
+              <button
+                type="button"
+                onClick={onBackToLanding}
+                className="login-card-stagger mb-2 self-start text-sm font-medium text-[#dce5ff] underline-offset-4 hover:text-[#f7f8f4] hover:underline"
+              >
+                ← Back to home
+              </button>
+            ) : null}
             <div ref={authPanelRef} className="login-auth-panel">
             {mode === 'forgotPassword' ? (
               <div className="space-y-6" onKeyDown={handleKeyDown}>
@@ -515,10 +476,10 @@ export function LoginPage({ onAuthenticated }: LoginPageProps) {
 
                 <div className="login-card-stagger grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <button type="button" className={secondaryButtonClass} onClick={handleRequestPasswordReset} disabled={isLoading}>
-                    {isLoading ? 'Please waitâ€¦' : 'Send reset link'}
+                    {isLoading ? 'Please wait…' : 'Send reset link'}
                   </button>
                   <button type="button" className={primaryButtonClass} onClick={handleResetPassword} disabled={isLoading}>
-                    {isLoading ? 'Please waitâ€¦' : 'Reset password'}
+                    {isLoading ? 'Please wait…' : 'Reset password'}
                   </button>
                 </div>
 
@@ -563,18 +524,10 @@ export function LoginPage({ onAuthenticated }: LoginPageProps) {
                   </h2>
                   <p className="mt-1.5 text-sm leading-relaxed text-[#b8c0d4]">
                     {mode === 'login'
-                      ? 'Welcome back. Continue with Google or use your email credentials.'
-                      : 'New accounts require admin approval before you can sign in.'}
+                      ? 'Test mode: click Sign In to enter locally — no email or password needed.'
+                      : 'Test mode: click Create Account to enter locally — no form required.'}
                   </p>
                 </div>
-
-                <div className="login-card-stagger">{renderGoogleSection()}</div>
-
-                {(mode === 'login' || mode === 'signup') && googleButtonAllowed ? (
-                  <div className="login-card-stagger flex items-center gap-3 text-xs font-medium uppercase tracking-wide text-[#b8c0d4] before:h-px before:flex-1 before:bg-white/12 before:content-[''] after:h-px after:flex-1 after:bg-white/12 after:content-['']">
-                    Or use email
-                  </div>
-                ) : null}
 
                 <div className="login-card-stagger space-y-3.5 rounded-xl border border-white/10 bg-[#0b1020]/45 p-4">
                   {mode === 'signup' && (
@@ -652,8 +605,16 @@ export function LoginPage({ onAuthenticated }: LoginPageProps) {
                   onClick={mode === 'login' ? handleLogin : handleSignup}
                   disabled={isLoading}
                 >
-                  {isLoading ? 'Please waitâ€¦' : mode === 'login' ? 'Sign In with Email' : 'Create Account'}
+                  {isLoading ? 'Please wait…' : mode === 'login' ? 'Sign In' : 'Create Account'}
                 </button>
+
+                {(mode === 'login' || mode === 'signup') && googleButtonAllowed ? (
+                  <div className="login-card-stagger flex items-center gap-3 text-xs font-medium uppercase tracking-wide text-[#b8c0d4] before:h-px before:flex-1 before:bg-white/12 before:content-[''] after:h-px after:flex-1 after:bg-white/12 after:content-['']">
+                    Or continue with Google
+                  </div>
+                ) : null}
+
+                <div className="login-card-stagger">{renderGoogleSection()}</div>
 
                 {mode === 'login' ? (
                   <p className="login-card-stagger text-center text-sm text-[#b8c0d4]">
@@ -696,7 +657,7 @@ export function LoginPage({ onAuthenticated }: LoginPageProps) {
               <DialogHeader>
                 <DialogTitle className="text-slate-900">Sign-in help</DialogTitle>
                 <DialogDescription>
-                  Quick answers for common login issues. Everything stays on this page â€” no external links.
+                  Quick answers for common login issues. Everything stays on this page — no external links.
                 </DialogDescription>
               </DialogHeader>
               <ul className="space-y-4 text-sm text-slate-600">

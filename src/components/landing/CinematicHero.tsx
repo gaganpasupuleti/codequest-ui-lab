@@ -1,7 +1,6 @@
 import { useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { ArrowRight, ChevronDown } from 'lucide-react'
-import { Button } from '@/components/ui/Button'
+import { LandingCtaButton } from '@/components/landing/LandingCtaButton'
 import { CQLogo } from '@/components/landing/shared/CQLogo'
 import { HERO_FLOAT_LABELS } from '@/data/landingContent'
 import { gsap, useGSAP } from '@/lib/gsapSetup'
@@ -9,8 +8,12 @@ import { motionAllowed, pointerTiltAllowed } from '@/lib/motionPreference'
 
 const HEADLINE_LINES = ['Build Skills.', 'Prove Progress.', 'Get Hired.']
 
-export function CinematicHero() {
-  const navigate = useNavigate()
+type CinematicHeroProps = {
+  onStartQuest: () => void
+}
+
+export function CinematicHero({ onStartQuest }: CinematicHeroProps) {
+
   const rootRef = useRef<HTMLElement>(null)
   const sceneRef = useRef<HTMLDivElement>(null)
   const headlineRef = useRef<HTMLHeadingElement>(null)
@@ -237,13 +240,18 @@ export function CinematicHero() {
           </p>
 
           <div ref={ctaRef} className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Button size="lg" className="landing-btn-primary" onClick={() => navigate('/login')}>
+            <LandingCtaButton size="lg" className="landing-btn-primary" onClick={onStartQuest}>
               Start Your Quest
               <ArrowRight className="h-4 w-4" aria-hidden />
-            </Button>
-            <Button variant="outline" size="lg" className="landing-btn-outline-dark" onClick={() => navigate('/login')}>
+            </LandingCtaButton>
+            <LandingCtaButton
+              variant="outline"
+              size="lg"
+              className="landing-btn-outline-dark"
+              onClick={onStartQuest}
+            >
               Explore the Platform
-            </Button>
+            </LandingCtaButton>
           </div>
         </div>
       </div>

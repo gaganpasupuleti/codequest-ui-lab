@@ -10,6 +10,7 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+*-dist
 *.local
 
 # Editor directories and files
@@ -22,3 +23,38 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+.env
+**/agent-eval-report*
+packages
+pids
+.file-manifest
+.devcontainer/
+
+.spark-workbench-id
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info
+backend/career_portal.db
+backend/fixture_portal.db
+backend/fixture_cohort_logins.json
+
+# Screenshots from smoke tests
+scripts/screenshots/
+
+# Generated Excel exports (run scripts/export_jobs_excel.py to regenerate)
+*.xlsx
+
+# Local job enrichment prep (exports + working batches — do not commit unless approved)
+local-data/
+
+# Legacy Railway DB exports before service deletion (production data — keep local only)
+pre-deleted-files/**/*
+!pre-deleted-files/README.md

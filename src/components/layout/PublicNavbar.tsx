@@ -1,79 +1,60 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Button } from '../ui/Button'
+
+import { LandingCtaButton } from '@/components/landing/LandingCtaButton'
 
 const navLinks = [
-  { label: 'How It Works', href: '/#how-it-works' },
-  { label: 'Arenas', href: '/#quest-arenas' },
-  { label: 'Career Map', href: '/#career-map' },
-  { label: 'Features', href: '/#features' },
+  { label: 'How It Works', href: '#how-it-works' },
+  { label: 'Arenas', href: '#quest-arenas' },
+  { label: 'Career Map', href: '#career-map' },
+  { label: 'Features', href: '#features' },
 ]
 
 type PublicNavbarProps = {
-  variant?: 'default' | 'landing'
+  onStartQuest: () => void
+  onHome?: () => void
 }
 
-export function PublicNavbar({ variant = 'default' }: PublicNavbarProps) {
+export function PublicNavbar({ onStartQuest, onHome }: PublicNavbarProps) {
   const [open, setOpen] = useState(false)
-  const navigate = useNavigate()
 
   return (
-    <header
-      className={
-        variant === 'landing'
-          ? 'landing-nav fixed top-0 left-0 right-0 z-50'
-          : 'fixed top-0 left-0 right-0 z-50 glass border-b border-white/8'
-      }
-    >
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between" aria-label="Main navigation">
-        <Link to="/" className="flex items-center gap-2 font-bold text-lg tracking-tight">
-          <span
-            className={
-              variant === 'landing'
-                ? 'landing-nav-brand'
-                : 'gradient-text'
-            }
-          >
-            CodeQuest
-          </span>
-        </Link>
+    <header className="landing-nav fixed top-0 left-0 right-0 z-50">
+      <nav
+        className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
+        aria-label="Main navigation"
+      >
+        <button
+          type="button"
+          onClick={onHome}
+          className="flex items-center gap-2 text-lg font-bold tracking-tight"
+        >
+          <span className="landing-nav-brand">CodeQuest</span>
+        </button>
 
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden items-center gap-8 md:flex">
           {navLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className={
-                variant === 'landing'
-                  ? 'landing-nav-link text-sm transition-colors'
-                  : 'text-sm text-text-secondary hover:text-white transition-colors'
-              }
-            >
+            <a key={link.label} href={link.href} className="landing-nav-link text-sm transition-colors">
               {link.label}
             </a>
           ))}
         </div>
 
         <div className="hidden md:block">
-          <Button size="sm" className={variant === 'landing' ? 'landing-btn-primary' : undefined} onClick={() => navigate('/login')}>
+          <LandingCtaButton size="sm" className="landing-btn-primary" onClick={onStartQuest}>
             Start Your Quest
-          </Button>
+          </LandingCtaButton>
         </div>
 
         <button
           type="button"
-          className={
-            variant === 'landing'
-              ? 'landing-nav-toggle md:hidden p-2'
-              : 'md:hidden p-2 text-text-secondary hover:text-white'
-          }
+          className="landing-nav-toggle p-2 md:hidden"
           onClick={() => setOpen(!open)}
           aria-label={open ? 'Close menu' : 'Open menu'}
           aria-expanded={open}
         >
-          {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
       </nav>
 
@@ -83,30 +64,29 @@ export function PublicNavbar({ variant = 'default' }: PublicNavbarProps) {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className={
-              variant === 'landing'
-                ? 'landing-nav-mobile md:hidden'
-                : 'md:hidden glass-strong border-t border-white/8'
-            }
+            className="landing-nav-mobile md:hidden"
           >
-            <div className="px-4 py-4 flex flex-col gap-3">
+            <div className="flex flex-col gap-3 px-4 py-4">
               {navLinks.map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
-                  className={
-                    variant === 'landing'
-                      ? 'landing-nav-link text-sm py-2'
-                      : 'text-sm text-text-secondary hover:text-white py-2'
-                  }
+                  className="landing-nav-link py-2 text-sm"
                   onClick={() => setOpen(false)}
                 >
                   {link.label}
                 </a>
               ))}
-              <Button size="sm" className={`w-full mt-2 ${variant === 'landing' ? 'landing-btn-primary' : ''}`} onClick={() => { setOpen(false); navigate('/login') }}>
+              <LandingCtaButton
+                size="sm"
+                className="landing-btn-primary mt-2 w-full"
+                onClick={() => {
+                  setOpen(false)
+                  onStartQuest()
+                }}
+              >
                 Start Your Quest
-              </Button>
+              </LandingCtaButton>
             </div>
           </motion.div>
         )}

@@ -173,6 +173,38 @@ export async function loginWithBackend(email: string, password: string): Promise
   return payload.access_token
 }
 
+const UI_LAB_FAKE_TOKEN = 'ui-lab-session-token'
+
+export function isUiLabFakeToken(token: string | null | undefined): boolean {
+  return Boolean(token && token === UI_LAB_FAKE_TOKEN)
+}
+
+export function createUiLabFakeUser(email: string, fullName?: string): AuthUser {
+  const trimmed = email.trim()
+  const nameFromEmail = trimmed.includes('@') ? trimmed.split('@')[0] : trimmed
+  return {
+    id: 1,
+    email: trimmed || 'student@codequest.dev',
+    full_name: (fullName?.trim() || nameFromEmail || 'Test Student').replace(/[._-]+/g, ' '),
+    role: 'student',
+    password_setup_required: false,
+  }
+}
+
+/**
+ * UI-lab auth: always create a local fake session (no backend wait).
+ * Kept async so call sites can stay await-based.
+ */
+export async function loginWithLabFallback(
+  email: string,
+  _password: string,
+  fullName?: string,
+): Promise<{ token: string; user: AuthUser; demo: boolean }> {
+  const token = UI_LAB_FAKE_TOKEN
+  const user = createUiLabFakeUser(email, fullName)
+  return { token, user, demo: true }
+}
+
 export async function loginWithGoogleIdToken(idToken: string): Promise<string> {
   const response = await fetch(`${API_BASE_URL}/auth/google-login`, {
     method: 'POST',
@@ -277,35 +309,4 @@ export async function completePasswordSetup(token: string, password: string): Pr
     role,
     password_setup_required: Boolean(payload.password_setup_required),
   }
-}
-
-// ---------- UI lab auth (no backend) ----------
-
-/** Default on in codequest-ui-lab — set VITE_UI_LAB_AUTH=false to use real API only. */
-export const UI_LAB_AUTH = import.meta.env.VITE_UI_LAB_AUTH !== 'false'
-
-const LAB_TOKEN = 'ui-lab-session-token'
-
-export function loginWithLabFallback(email?: string, fullName?: string): AuthUser {
-  const resolvedEmail = (email?.trim() || 'student@codequest.dev').toLowerCase()
-  const localPart = resolvedEmail.split('@')[0] || 'learner'
-  const resolvedName =
-    fullName?.trim() ||
-    localPart.charAt(0).toUpperCase() + localPart.slice(1).replace(/[._-]/g, ' ')
-
-  const user: AuthUser = {
-    id: 1,
-    email: resolvedEmail,
-    full_name: resolvedName,
-    role: 'student',
-  }
-
-  storeAuthToken(LAB_TOKEN)
-  setDemoFlag(true)
-  storeUser(user)
-  return user
-}
-
-export function isLabSession(): boolean {
-  return getAuthToken() === LAB_TOKEN || isDemoUser()
 }
