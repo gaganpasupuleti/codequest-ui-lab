@@ -33,7 +33,7 @@ function NoteContent({ note }: { note: CalendarClassNote }) {
         <ul className={cn('space-y-1', CQ_BODY)}>
           {note.bullets.map((bullet) => (
             <li key={bullet} className="flex gap-2">
-              <span className="text-[#708090]">•</span>
+              <span className="text-[#6B7280]">•</span>
               <span>{bullet}</span>
             </li>
           ))}
@@ -70,7 +70,7 @@ export function DayClassNotes({ selectedDate, dayPlan, loading }: DayClassNotesP
           <ul className={cn('space-y-1', CQ_BODY)}>
             {dayPlan.objectives.map((obj) => (
               <li key={obj} className="flex gap-2">
-                <span className="text-[#708090]">•</span>
+                <span className="text-[#6B7280]">•</span>
                 <span>{obj}</span>
               </li>
             ))}

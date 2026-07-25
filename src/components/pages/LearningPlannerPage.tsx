@@ -9,7 +9,11 @@ interface LearningPlannerPageProps {
 }
 
 export function LearningPlannerPage({ user, onNavigate }: LearningPlannerPageProps) {
-  return <LearningPlannerView user={user} onNavigate={onNavigate} />
+  return (
+    <div className="min-w-0 w-full overflow-x-hidden">
+      <LearningPlannerView user={user} onNavigate={onNavigate} />
+    </div>
+  )
 }
 
 export type { PlannerNavTarget }

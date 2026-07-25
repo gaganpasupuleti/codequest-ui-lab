@@ -27,6 +27,17 @@ import {
   recordDemoQuizAttempt,
   triggerQuizLockedError,
 } from '@/lib/demo-limits'
+import { CATALOG_QUIZ_SUMMARIES } from '@/lib/catalog-data'
+import {
+  CQ_BODY,
+  CQ_META,
+  CQ_PAGE_BG,
+  CQ_PAGE_CONTAINER,
+  CQ_PAGE_PAD,
+  CQ_PAGE_TITLE,
+  CQ_STACK_GAP,
+} from '@/components/student-dashboard/cq/cqTheme'
+import { cn } from '@/lib/utils'
 
 const normalizeText = (value: string) => value.trim().replace(/\r\n/g, '\n')
 
@@ -143,9 +154,18 @@ interface QuizPageProps {
   onComplete?: (passed: boolean) => void
   /** Override the "back to list" action (e.g. navigate back to roadmap). */
   onBack?: () => void
+  /** Nest inside Assignments (no page chrome / title). */
+  embedded?: boolean
 }
 
-export function QuizPage({ lockedQuizIds = [], onBeforeSelect, initialQuizId, onComplete, onBack }: QuizPageProps = {}) {
+export function QuizPage({
+  lockedQuizIds = [],
+  onBeforeSelect,
+  initialQuizId,
+  onComplete,
+  onBack,
+  embedded = false,
+}: QuizPageProps = {}) {
   const [quizList, setQuizList] = useState<CatalogQuizSummary[]>([])
   const [quizzesLoading, setQuizzesLoading] = useState(true)
   const [quizListError, setQuizListError] = useState(false)
@@ -183,8 +203,8 @@ export function QuizPage({ lockedQuizIds = [], onBeforeSelect, initialQuizId, on
         setQuizList(list)
       })
       .catch(() => {
-        setQuizList([])
-        setQuizListError(true)
+        setQuizList(CATALOG_QUIZ_SUMMARIES)
+        setQuizListError(false)
       })
       .finally(() => setQuizzesLoading(false))
   }, [])
@@ -323,109 +343,150 @@ export function QuizPage({ lockedQuizIds = [], onBeforeSelect, initialQuizId, on
   }
 
   if (!selectedQuiz) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-background to-secondary/10">
-        <div className="container mx-auto px-6 py-12">
-          <div className="max-w-5xl mx-auto space-y-8">
-            <div className="text-center space-y-4">
-              <h1 className="text-4xl md:text-5xl font-bold tracking-tight">Quiz Zone</h1>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Test your knowledge with short quizzes. Each one is quick, focused, and beginner friendly.
-              </p>
-            </div>
-
-            {quizzesLoading || quizLoading ? (
-              <div className="text-center py-12 text-muted-foreground">
-                {quizLoading ? 'Loading quiz...' : 'Loading quizzes...'}
-              </div>
-            ) : quizListError ? (
-              <div className="text-center py-16 space-y-4 rounded-xl border border-destructive/20 bg-destructive/5 px-6">
-                <p className="text-muted-foreground">Could not load quizzes. Check the API and try again.</p>
-                <Button type="button" onClick={loadQuizList} variant="default">
-                  Retry
-                </Button>
-              </div>
-            ) : quizList.length === 0 ? (
-              <div className="text-center py-16 space-y-3 text-muted-foreground">
-                <p>No quizzes are published yet.</p>
-                <Button type="button" variant="outline" onClick={loadQuizList}>
-                  Refresh
-                </Button>
-              </div>
-            ) : (
-            <div className="grid md:grid-cols-2 gap-6 pt-4">
-              {quizList.map((quiz) => {
-                const isLockedByProps = lockedQuizIds.includes(quiz.id)
-                const isLockedByDemo = demoMode && !canAttemptDemoQuiz(quiz.id)
-                const isLocked = isLockedByProps || isLockedByDemo
-                return (
-                  <Card
-                    key={quiz.id}
-                    className={`transition-all duration-300 border-2 bg-card relative ${
-                      isLocked ? 'opacity-70' : 'hover:shadow-xl hover:-translate-y-1 hover:border-primary/50'
-                    }`}
-                  >
-                    {isLocked && (
-                      <div className="absolute inset-0 rounded-xl bg-background/60 backdrop-blur-[2px] flex flex-col items-center justify-center z-10 gap-2">
-                        <Lock size={20} className="text-muted-foreground" />
-                        <p className="text-xs font-medium text-muted-foreground text-center px-4">
-                          Demo limit reached. Upgrade for full access.
-                        </p>
-                      </div>
-                    )}
-                    <div className="p-6 space-y-4">
-                      <div className="space-y-2">
-                        <h2 className="text-2xl font-semibold">{quiz.title}</h2>
-                        <p className="text-muted-foreground">{quiz.description}</p>
-                      </div>
-
-                      <div className="flex flex-wrap gap-2">
-                        <Badge variant="secondary" className="px-3 py-1">
-                          {quiz.difficulty}
-                        </Badge>
-                        <Badge variant="outline" className="px-3 py-1">
-                          {quiz.estimatedTime}
-                        </Badge>
-                        <Badge className="px-3 py-1 bg-primary/10 text-primary">
-                          {quiz.questionCount} Questions
-                        </Badge>
-                      </div>
-
-                      <Button
-                        className="w-full bg-primary hover:bg-primary/90"
-                        size="lg"
-                        onClick={() => handleSelectQuiz(quiz.id)}
-                        disabled={isLocked}
-                      >
-                        {isLocked ? (
-                          <>
-                            <Lock size={16} className="mr-2" />
-                            Locked
-                          </>
-                        ) : (
-                          <>
-                            Start Quiz
-                            <ArrowRight className="ml-2" size={18} weight="bold" />
-                          </>
-                        )}
-                      </Button>
-                    </div>
-                  </Card>
-                )
-              })}
-            </div>
-            )}
+    const listBody = (
+      <>
+        {!embedded && (
+          <div>
+            <h1 className={CQ_PAGE_TITLE}>Quiz Zone</h1>
+            <p className={cn(CQ_BODY, 'mt-1 max-w-2xl')}>
+              Short knowledge checks from your path. Also available under Assignments.
+            </p>
           </div>
-        </div>
+        )}
+        {embedded && (
+          <div className="border-b border-[#E5E7EB] px-4 py-3">
+            <h2 className="text-[15px] font-semibold text-[#111827]">Quiz Zone</h2>
+            <p className={cn(CQ_META, 'mt-0.5')}>
+              Path quizzes live here with HackerRank and practice assignments.
+            </p>
+          </div>
+        )}
+
+        {quizzesLoading || quizLoading ? (
+          <div
+            className={cn(
+              CQ_META,
+              'rounded-lg border border-[#E5E7EB] bg-white px-4 py-8 text-center',
+              embedded && 'm-3',
+            )}
+          >
+            {quizLoading ? 'Loading quiz...' : 'Loading quizzes...'}
+          </div>
+        ) : quizListError ? (
+          <div
+            className={cn(
+              'space-y-3 rounded-lg border border-red-200/80 bg-red-50/80 px-4 py-6 text-center',
+              embedded && 'm-3',
+            )}
+          >
+            <p className={CQ_META}>Could not load quizzes. Check the API and try again.</p>
+            <Button type="button" onClick={loadQuizList} variant="default">
+              Retry
+            </Button>
+          </div>
+        ) : quizList.length === 0 ? (
+          <div
+            className={cn(
+              'space-y-3 rounded-lg border border-dashed border-[#E5E7EB] bg-white px-4 py-8 text-center',
+              embedded && 'm-3',
+            )}
+          >
+            <p className={CQ_META}>No quizzes are published yet.</p>
+            <Button type="button" variant="outline" onClick={loadQuizList}>
+              Refresh
+            </Button>
+          </div>
+        ) : (
+          <div
+            className={cn(
+              'grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-3',
+              embedded ? 'p-3' : undefined,
+            )}
+          >
+            {quizList.map((quiz) => {
+              const isLockedByProps = lockedQuizIds.includes(quiz.id)
+              const isLockedByDemo = demoMode && !canAttemptDemoQuiz(quiz.id)
+              const isLocked = isLockedByProps || isLockedByDemo
+              return (
+                <div
+                  key={quiz.id}
+                  className={cn(
+                    'relative flex h-full min-h-[10rem] flex-col rounded-lg border border-[#E5E7EB] bg-white p-3.5 shadow-sm transition-colors',
+                    isLocked
+                      ? 'opacity-70'
+                      : 'hover:border-[#D1D5DB] hover:shadow-md',
+                  )}
+                >
+                  {isLocked && (
+                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 rounded-lg bg-white/80">
+                      <Lock size={18} className="text-[#6B7280]" />
+                      <p className="px-3 text-center text-[12px] font-medium text-[#6B7280]">
+                        Demo limit reached. Upgrade for full access.
+                      </p>
+                    </div>
+                  )}
+                  <h2 className="line-clamp-2 text-[15px] font-semibold text-[#111827]">
+                    {quiz.title}
+                  </h2>
+                  <p className={cn(CQ_META, 'mt-1 line-clamp-2')}>{quiz.description}</p>
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    <span className="rounded-md bg-zinc-100 px-2 py-0.5 text-[11px] font-semibold text-zinc-700">
+                      {quiz.difficulty}
+                    </span>
+                    <span className="rounded-md bg-zinc-100 px-2 py-0.5 text-[11px] font-semibold text-zinc-700">
+                      {quiz.estimatedTime}
+                    </span>
+                    <span className="rounded-md bg-sky-50 px-2 py-0.5 text-[11px] font-semibold text-sky-800">
+                      {quiz.questionCount} Q
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    className={cn(
+                      'mt-auto inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-lg text-[13px] font-semibold transition-colors',
+                      isLocked
+                        ? 'cursor-not-allowed bg-zinc-100 text-zinc-400'
+                        : 'bg-[#2563EB] text-white hover:bg-[#1D4ED8]',
+                    )}
+                    onClick={() => handleSelectQuiz(quiz.id)}
+                    disabled={isLocked}
+                  >
+                    {isLocked ? (
+                      <>
+                        <Lock size={14} />
+                        Locked
+                      </>
+                    ) : (
+                      <>
+                        Start Quiz
+                        <ArrowRight size={16} weight="bold" />
+                      </>
+                    )}
+                  </button>
+                </div>
+              )
+            })}
+          </div>
+        )}
+      </>
+    )
+
+    if (embedded) {
+      return <div className="flex min-h-0 flex-col">{listBody}</div>
+    }
+
+    return (
+      <div className={cn(CQ_PAGE_BG, CQ_PAGE_PAD)}>
+        <div className={cn(CQ_PAGE_CONTAINER, 'flex flex-col', CQ_STACK_GAP)}>{listBody}</div>
       </div>
     )
   }
 
   if (quizResult) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-        <div className="container mx-auto px-6 py-12 max-w-3xl space-y-6">
-          <Card className="border-2 p-8 space-y-6">
+      <div className={cn(CQ_PAGE_BG, CQ_PAGE_PAD)}>
+        <div className={cn(CQ_PAGE_CONTAINER, 'mx-auto max-w-3xl space-y-4')}>
+          <Card className="space-y-5 border border-[#E5E7EB] bg-[#FFFFFF] p-6 shadow-[0_8px_22px_-18px_rgba(10,16,32,0.5)]">
             <div className="text-center space-y-2">
               <h1 className="text-3xl font-bold">Quiz Result</h1>
               <p className="text-muted-foreground">{selectedQuiz.title}</p>
@@ -487,9 +548,9 @@ export function QuizPage({ lockedQuizIds = [], onBeforeSelect, initialQuizId, on
   const challengeTimeLabel = `${String(Math.floor(remainingSec / 60)).padStart(2, '0')}:${String(remainingSec % 60).padStart(2, '0')}`
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-      <header className="sticky top-0 z-30 border-b border-border/80 bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/80 shadow-sm">
-        <div className="container mx-auto px-4 md:px-6 max-w-6xl py-3 space-y-3">
+    <div className={cn(CQ_PAGE_BG, 'min-h-dvh overflow-x-hidden')}>
+      <header className="sticky top-0 z-30 border-b border-[#E5E7EB] bg-white/95 shadow-sm backdrop-blur-md">
+        <div className="mx-auto w-full min-w-0 max-w-[1440px] space-y-3 px-3 py-3 sm:px-4 md:px-5">
           <div className="flex flex-wrap items-center gap-3 justify-between">
             <div className="flex items-center gap-2 min-w-0 flex-1">
               <Button variant="ghost" size="sm" onClick={handleBackToList} className="shrink-0 hover:bg-secondary -ml-2">
@@ -530,7 +591,7 @@ export function QuizPage({ lockedQuizIds = [], onBeforeSelect, initialQuizId, on
         </div>
       </header>
 
-      <div className="container mx-auto px-4 md:px-6 py-6 max-w-6xl space-y-5">
+      <div className="mx-auto w-full min-w-0 max-w-[1440px] px-3 sm:px-4 md:px-5 py-6 space-y-5">
         <div className="flex flex-wrap gap-2 overflow-x-auto pb-1">
           {selectedQuiz.questions.map((item, index) => {
             const submitted = submittedAnswers[item.id] !== undefined

@@ -207,8 +207,8 @@ export function ProjectLearningPage({ projectId, onBack, onComplete }: ProjectLe
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 px-6 py-12">
-        <div className="max-w-3xl mx-auto space-y-4 animate-pulse">
+      <div className="min-h-dvh min-w-0 overflow-x-hidden bg-gradient-to-b from-background to-muted/20 px-3 sm:px-4 md:px-5 py-12">
+        <div className="mx-auto w-full min-w-0 max-w-[1440px] space-y-4 animate-pulse">
           <div className="h-10 w-2/3 rounded-lg bg-muted" />
           <div className="h-4 w-full rounded bg-muted" />
           <div className="h-4 w-5/6 rounded bg-muted" />
@@ -220,7 +220,7 @@ export function ProjectLearningPage({ projectId, onBack, onComplete }: ProjectLe
 
   if (!project) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 flex flex-col items-center justify-center gap-4 px-6">
+      <div className="min-h-dvh min-w-0 overflow-x-hidden bg-gradient-to-b from-background to-muted/20 flex flex-col items-center justify-center gap-4 px-3 sm:px-4 md:px-5">
         <p className="text-muted-foreground text-center">This project could not be loaded. It may have been removed or the catalog is unavailable.</p>
         <Button type="button" variant="default" onClick={onBack}>
           Back to projects
@@ -245,8 +245,8 @@ export function ProjectLearningPage({ projectId, onBack, onComplete }: ProjectLe
     // ── Completion celebration ──────────────────────────────────────────────
     if (isProjectCompleted) {
       return (
-        <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 flex items-center justify-center">
-          <div className="max-w-lg w-full mx-auto text-center space-y-8 px-6 py-16">
+        <div className="min-h-dvh min-w-0 overflow-x-hidden bg-gradient-to-b from-background to-muted/20 flex items-center justify-center">
+          <div className="mx-auto w-full min-w-0 max-w-lg px-3 sm:px-4 md:px-5 py-16 text-center space-y-8">
             <div className="flex justify-center">
               <div className="w-28 h-28 rounded-full bg-green-500/15 flex items-center justify-center animate-bounce">
                 <Trophy size={56} className="text-green-500" weight="fill" />
@@ -282,9 +282,9 @@ export function ProjectLearningPage({ projectId, onBack, onComplete }: ProjectLe
 
     const tddStep = toProjectStep(project.steps[tddStepIndex])
     return (
-      <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-        <div className="container mx-auto px-6 py-8">
-          <div className="max-w-4xl mx-auto space-y-6">
+      <div className="min-h-dvh min-w-0 overflow-x-hidden bg-gradient-to-b from-background to-muted/20">
+        <div className="mx-auto w-full min-w-0 max-w-[1440px] px-3 sm:px-4 md:px-5 py-8">
+          <div className="mx-auto w-full min-w-0 max-w-4xl space-y-6">
             <div className="flex items-center justify-between">
               <Button variant="ghost" size="sm" onClick={onBack} className="hover:bg-secondary">
                 <ArrowLeft className="mr-2" size={18} />
@@ -394,20 +394,20 @@ export function ProjectLearningPage({ projectId, onBack, onComplete }: ProjectLe
   // Render interactive builder if available and selected
   if (viewMode === 'builder' && hasInteractiveBuilder) {
     return (
-      <div className="h-[calc(100vh-56px)] flex flex-col overflow-hidden bg-background">
+      <div className="flex h-[calc(100dvh-3rem)] min-h-0 flex-col overflow-hidden bg-background">
         {/* ── Slim header bar ── */}
-        <div className="flex items-center justify-between px-4 py-2 border-b bg-background/95 backdrop-blur-sm flex-shrink-0">
+        <div className="flex flex-shrink-0 items-center justify-between gap-2 border-b bg-background/95 px-3 py-2 backdrop-blur-sm sm:px-4">
           <Button
             variant="ghost"
             size="sm"
             onClick={onBack}
-            className="gap-1.5 h-8 text-xs"
+            className="h-10 gap-1.5 text-xs sm:h-8"
           >
             <ArrowLeft size={15} />
             Projects
           </Button>
 
-          <span className="text-sm font-semibold text-foreground">{project_.title}</span>
+          <span className="min-w-0 truncate text-sm font-semibold text-foreground">{project_.title}</span>
 
           <div className="flex items-center gap-2">
             <SandboxInfo />
@@ -437,9 +437,9 @@ export function ProjectLearningPage({ projectId, onBack, onComplete }: ProjectLe
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-      <div className="container mx-auto px-6 py-8">
-        <div className="max-w-5xl mx-auto space-y-6">
+    <div className="min-h-dvh min-w-0 overflow-x-hidden bg-gradient-to-b from-background to-muted/20">
+      <div className="mx-auto w-full min-w-0 max-w-[1440px] px-3 sm:px-4 md:px-5 py-8">
+        <div className="mx-auto w-full min-w-0 max-w-5xl space-y-6">
           <div className="flex items-center justify-between">
             <Button 
               variant="ghost" 

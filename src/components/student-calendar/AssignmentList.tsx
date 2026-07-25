@@ -39,11 +39,11 @@ function AssignmentRow({
   const title = item.title
 
   return (
-    <li className="flex items-start gap-2 rounded-lg border border-[#708090]/15 bg-[#FAF3E0]/60 px-2.5 py-2">
+    <li className="flex items-start gap-2 rounded-lg border border-[#E5E7EB] bg-[#F4F5F7]/60 px-2.5 py-2">
       {done ? (
         <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#0F766E]" aria-hidden />
       ) : (
-        <Circle className="mt-0.5 h-4 w-4 shrink-0 text-[#708090]" aria-hidden />
+        <Circle className="mt-0.5 h-4 w-4 shrink-0 text-[#6B7280]" aria-hidden />
       )}
       <div className="min-w-0 flex-1">
         <span className={cn(CQ_BODY, done ? 'text-[#9CA3AF] line-through' : 'font-medium text-[#111827]')}>

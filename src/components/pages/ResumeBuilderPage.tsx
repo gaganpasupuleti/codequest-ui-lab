@@ -5,7 +5,14 @@ import { cn } from '@/lib/utils'
 import type { AuthUser } from '@/lib/auth'
 import { ResumeForm } from '@/components/resume/ResumeForm'
 import { ResumePreview } from '@/components/resume/ResumePreview'
-import { STUDENT_PAGE_BG } from '@/components/student-dashboard/dashboard-styles'
+import {
+  CQ_BODY,
+  CQ_PAGE_BG,
+  CQ_PAGE_CONTAINER,
+  CQ_PAGE_PAD,
+  CQ_PAGE_TITLE,
+  CQ_STACK_GAP,
+} from '@/components/student-dashboard/cq/cqTheme'
 import { computeResumeReadinessScore } from '@/lib/resume-score'
 import { loadResumeData, resetResumeToSample, saveResumeData } from '@/lib/resume-storage'
 import type { ResumeData } from '@/components/resume/resume-demo-data'
@@ -36,15 +43,13 @@ export function ResumeBuilderPage({ user }: ResumeBuilderPageProps) {
   const completedSections = score.checklist.filter((c) => c.done).length
 
   return (
-    <div className={cn(STUDENT_PAGE_BG, 'p-4 md:p-6 print:bg-white print:p-0')}>
-      <div className="mx-auto max-w-7xl space-y-6 print:max-w-none print:space-y-0">
-        <header className="flex flex-col gap-4 border-b border-slate-200 pb-6 print:hidden">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+    <div className={cn(CQ_PAGE_BG, CQ_PAGE_PAD, 'print:bg-white print:p-0')}>
+      <div className={cn(CQ_PAGE_CONTAINER, 'flex flex-col print:max-w-none print:space-y-0', CQ_STACK_GAP)}>
+        <header className="flex flex-col gap-3 border-b border-[#E5E7EB] pb-3 print:hidden">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <h1 className="text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
-                Resume builder
-              </h1>
-              <p className="mt-1 max-w-xl text-sm text-slate-600">
+              <h1 className={CQ_PAGE_TITLE}>Resume Lab</h1>
+              <p className={cn(CQ_BODY, 'mt-1 max-w-xl')}>
                 ATS-friendly one-column layout. Edits save automatically in this browser.
               </p>
             </div>

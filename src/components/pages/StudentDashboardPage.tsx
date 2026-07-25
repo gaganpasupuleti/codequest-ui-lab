@@ -5,14 +5,18 @@ import { cn } from '@/lib/utils'
 import { JobReadinessPanel, PlannerCard } from '@/components/student-dashboard/DashboardCalendarPanel'
 import { DashboardTopHeader } from '@/components/student-dashboard/DashboardTopHeader'
 import {
+  DashboardGlanceRow,
   DeadlinesPanel,
-  PracticeProgressGrid,
   ProgressPanel,
   SyllabusPanel,
-  TodayPanel,
   UpcomingClassesPanel,
 } from '@/components/student-dashboard/DashboardContentSections'
-import { CQ_PAGE_BG, CQ_PAGE_PAD, CQ_STACK_GAP } from '@/components/student-dashboard/cq/cqTheme'
+import {
+  CQ_PAGE_BG,
+  CQ_PAGE_CONTAINER,
+  CQ_PAGE_PAD,
+  CQ_STACK_GAP,
+} from '@/components/student-dashboard/cq/cqTheme'
 import { resolveNextLessonTitle } from '@/components/student-dashboard/DashboardHero'
 import { useStudentDashboardSnapshot } from '@/components/student-dashboard/useStudentDashboardSnapshot'
 import { useLearningPlanner } from '@/components/learning-planner/useLearningPlanner'
@@ -23,6 +27,7 @@ import {
   getPracticeStreakSummary,
   getSqlPracticeSummary,
   getTypingPracticeSummary,
+  resolveContinuePracticeTarget,
 } from '@/lib/practice-progress-summary'
 import { storeSelectedDateForPlanner } from '@/lib/learning-planner-derive'
 
@@ -86,92 +91,122 @@ export function StudentDashboardPage({ user, onNavigate }: StudentDashboardPageP
   const codeSummary = getCodePracticeSummary()
   const typingSummary = getTypingPracticeSummary(typingWpm)
   const streak = getPracticeStreakSummary()
+  const hasAnyPractice =
+    sqlSummary.hasActivity || codeSummary.hasActivity || typingSummary.hasActivity
+  const continueTarget = resolveContinuePracticeTarget(sqlSummary, codeSummary, typingSummary)
+  const continueLabel = hasAnyPractice ? 'Continue practice' : 'Start practicing'
+  const plannerSuggestion = !sqlSummary.hasActivity
+    ? 'Start your first SQL module'
+    : !codeSummary.hasActivity
+      ? 'Try a Code Workbench challenge'
+      : !typingSummary.hasActivity
+        ? 'Warm up with a typing drill'
+        : nextLessonTitle
+          ? `Continue: ${nextLessonTitle}`
+          : 'Review yesterday\'s practice and push one more set'
 
   const progressPct = snapshot.careerJourney?.pct ?? 0
   const pathTitle = snapshot.careerJourney?.title ?? 'Choose your career path'
 
   return (
     <div className={cn(CQ_PAGE_BG, CQ_PAGE_PAD)}>
-      <DashboardTopHeader
-        firstName={firstName}
-        pathTitle={pathTitle}
-        progressPct={progressPct}
-        currentStreak={streak.currentStreak}
-        practicedToday={streak.practicedToday}
-        daysRemaining={daysRemaining}
-        nextLessonTitle={nextLessonTitle}
-        loading={snapshot.loading}
-        onContinuePractice={() => onNavigate('practice-code')}
-        onOpenCareer={() => onNavigate('roadmapper')}
-        onOpenCalendar={() => onNavigate('calendar')}
-        onOpenResume={() => onNavigate('resume')}
-        onOpenJobs={() => onNavigate('jobspy')}
-      />
+      <div className={CQ_PAGE_CONTAINER}>
+        <DashboardTopHeader
+          firstName={firstName}
+          pathTitle={pathTitle}
+          progressPct={progressPct}
+          currentStreak={streak.currentStreak}
+          practicedToday={streak.practicedToday}
+          daysRemaining={daysRemaining}
+          nextLessonTitle={nextLessonTitle}
+          loading={snapshot.loading}
+          continueLabel={continueLabel}
+          onContinuePractice={() => onNavigate(continueTarget)}
+          onOpenCareer={() => onNavigate('roadmapper')}
+          onOpenCalendar={() => onNavigate('calendar')}
+          onOpenResume={() => onNavigate('resume')}
+          onOpenJobs={() => onNavigate('jobspy')}
+        />
 
-      <div className={cn('mt-3 grid lg:grid-cols-[minmax(0,1fr)_280px] lg:items-start', CQ_STACK_GAP)}>
-        <div className={cn('flex min-w-0 flex-col', CQ_STACK_GAP)}>
-          <div className={cn('grid lg:grid-cols-[1fr_1.4fr] lg:items-stretch', CQ_STACK_GAP)}>
-            <TodayPanel
-              sessions={snapshot.upcomingSessions}
-              deadlines={snapshot.deadlines}
-              loading={snapshot.loading}
-              onOpenCalendar={() => onNavigate('calendar')}
-            />
-            <PracticeProgressGrid
-              sql={sqlSummary}
-              code={codeSummary}
-              typing={typingSummary}
-              onPracticeSql={() => onNavigate('practice-sql')}
-              onPracticeCode={() => onNavigate('practice-code')}
-              onPracticeTyping={() => onNavigate('practice-typing')}
-            />
-          </div>
-
-          <ProgressPanel
-            careerJourney={snapshot.careerJourney}
-            stageRows={snapshot.stageRows}
-            catalogSteps={snapshot.catalogSteps}
+        <div className={cn('mt-3 flex min-w-0 flex-col', CQ_STACK_GAP)}>
+          <DashboardGlanceRow
+            sessions={snapshot.upcomingSessions}
+            deadlines={snapshot.deadlines}
             loading={snapshot.loading}
-            onViewProgress={() => onNavigate('progress')}
+            onOpenCalendar={() => onNavigate('calendar')}
+            sql={sqlSummary}
+            code={codeSummary}
+            typing={typingSummary}
+            onPracticeSql={() => onNavigate('practice-sql')}
+            onPracticeCode={() => onNavigate('practice-code')}
+            onPracticeTyping={() => onNavigate('practice-typing')}
           />
 
-          <div className={cn('grid lg:grid-cols-2 lg:items-stretch', CQ_STACK_GAP)}>
-            <UpcomingClassesPanel sessions={snapshot.upcomingSessions} loading={snapshot.loading} />
-            <SyllabusPanel
-              careerJourney={snapshot.careerJourney}
-              stageRows={snapshot.stageRows}
-              loading={snapshot.loading}
-              onOpenCareer={() => onNavigate('roadmapper')}
+          <div
+            className={cn(
+              'grid min-w-0 grid-cols-1 xl:grid-cols-[minmax(0,1fr)_minmax(280px,300px)] xl:items-start',
+              CQ_STACK_GAP,
+            )}
+          >
+            <div className={cn('flex min-w-0 flex-col', CQ_STACK_GAP)}>
+              <ProgressPanel
+                careerJourney={snapshot.careerJourney}
+                stageRows={snapshot.stageRows}
+                catalogSteps={snapshot.catalogSteps}
+                loading={snapshot.loading}
+                onViewProgress={() => onNavigate('progress')}
+              />
+              <div
+                className={cn(
+                  'grid min-w-0 auto-rows-fr grid-cols-1 items-stretch md:grid-cols-2',
+                  CQ_STACK_GAP,
+                )}
+              >
+                <div className="min-h-0 h-full">
+                  <UpcomingClassesPanel
+                    sessions={snapshot.upcomingSessions}
+                    loading={snapshot.loading}
+                  />
+                </div>
+                <div className="min-h-0 h-full">
+                  <SyllabusPanel
+                    careerJourney={snapshot.careerJourney}
+                    stageRows={snapshot.stageRows}
+                    loading={snapshot.loading}
+                    onOpenCareer={() => onNavigate('roadmapper')}
+                  />
+                </div>
+                <div className="min-h-0 h-full">
+                  <DeadlinesPanel deadlines={snapshot.deadlines} loading={snapshot.loading} />
+                </div>
+                <div className="min-h-0 h-full">
+                  <JobReadinessPanel
+                    readiness={readiness}
+                    loading={snapshot.loading}
+                    onOpenJobs={() => onNavigate('jobspy')}
+                  />
+                </div>
+              </div>
+            </div>
+            <PlannerCard
+              viewMonth={plannerPreview.viewMonth}
+              onViewMonthChange={plannerPreview.setViewMonth}
+              selectedDate={plannerPreview.selectedDate}
+              onSelectDate={(date) => {
+                storeSelectedDateForPlanner(date)
+                plannerPreview.setSelectedDate(date)
+              }}
+              markedDates={plannerPreview.markedDates}
+              dayPlan={plannerPreview.dayPlan}
+              plannerLoading={plannerPreview.loading}
+              onOpenPlanner={() => {
+                storeSelectedDateForPlanner(plannerPreview.selectedDate)
+                onNavigate('calendar')
+              }}
+              emptyDaySuggestion={plannerSuggestion}
+              className="xl:sticky xl:top-3"
             />
           </div>
-
-          <div className={cn('grid lg:grid-cols-[1.4fr_1fr] lg:items-stretch', CQ_STACK_GAP)}>
-            <DeadlinesPanel deadlines={snapshot.deadlines} loading={snapshot.loading} />
-            <JobReadinessPanel
-              readiness={readiness}
-              loading={snapshot.loading}
-              onOpenJobs={() => onNavigate('jobspy')}
-            />
-          </div>
-        </div>
-
-        <div className="lg:sticky lg:top-4">
-          <PlannerCard
-            viewMonth={plannerPreview.viewMonth}
-            onViewMonthChange={plannerPreview.setViewMonth}
-            selectedDate={plannerPreview.selectedDate}
-            onSelectDate={(date) => {
-              storeSelectedDateForPlanner(date)
-              plannerPreview.setSelectedDate(date)
-            }}
-            markedDates={plannerPreview.markedDates}
-            dayPlan={plannerPreview.dayPlan}
-            plannerLoading={plannerPreview.loading}
-            onOpenPlanner={() => {
-              storeSelectedDateForPlanner(plannerPreview.selectedDate)
-              onNavigate('calendar')
-            }}
-          />
         </div>
       </div>
     </div>

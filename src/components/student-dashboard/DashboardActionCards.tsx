@@ -62,14 +62,14 @@ export function DashboardActionCards({
   ]
 
   return (
-    <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+    <div className="grid grid-cols-1 gap-3 min-[400px]:grid-cols-2 xl:grid-cols-4">
       {cards.map((card) => (
         <button
           key={card.key}
           type="button"
           onClick={card.onClick}
           className={cn(
-            'group flex items-center gap-3 rounded-2xl border border-[#708090]/18 p-3 text-left transition-shadow hover:shadow-[0_14px_30px_-18px_rgba(10,16,32,0.55)]',
+            'group flex items-center gap-3 rounded-lg border border-[#E5E7EB] p-3 text-left transition-shadow hover:shadow-[0_14px_30px_-18px_rgba(10,16,32,0.55)]',
             CQ_TONE_BG[card.tone],
             CQ_FOCUS,
           )}

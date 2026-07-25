@@ -14,12 +14,12 @@ import {
   CQ_META,
   CQ_METRIC,
   CQ_PAGE_BG,
+  CQ_PAGE_CONTAINER,
   CQ_PAGE_PAD,
+  CQ_PAGE_TITLE,
   CQ_SECTION_TITLE,
   CQ_STACK_GAP,
 } from '@/components/student-dashboard/cq/cqTheme'
-import { useStudentNavCollapsed } from '@/hooks/useStudentNavCollapsed'
-import { NavToggleButton } from '@/components/shells/StudentShell'
 import { JOB_ROLE_CATALOG, roleName } from '@/data/jobRoleCatalog'
 import {
   BOOK_REPORTS_CATALOG,
@@ -184,10 +184,11 @@ export function StudyMaterialsPage() {
   ] as const
 
   return (
-    <div className={cn(CQ_PAGE_BG, CQ_PAGE_PAD, 'w-full')}>
+    <div className={cn(CQ_PAGE_BG, CQ_PAGE_PAD)}>
+      <div className={CQ_PAGE_CONTAINER}>
       <header className="mb-3 flex flex-wrap items-end justify-between gap-3">
         <div className="min-w-0">
-          <h1 className={cn(CQ_SECTION_TITLE, 'flex items-center gap-2 text-[18px] sm:text-[20px]')}>
+          <h1 className={cn(CQ_PAGE_TITLE, 'flex items-center gap-2')}>
             <BookOpen className="h-5 w-5 shrink-0 text-[#0A1020]/70" aria-hidden />
             Study Materials
           </h1>
@@ -211,7 +212,7 @@ export function StudyMaterialsPage() {
           <div
             key={stat.label}
             className={cn(
-              'flex items-center justify-between rounded-xl border border-[#708090]/18 px-3.5 py-2.5',
+              'flex items-center justify-between rounded-xl border border-[#E5E7EB] px-3.5 py-2.5',
               stat.tone,
             )}
           >
@@ -229,8 +230,8 @@ export function StudyMaterialsPage() {
               type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Title, family, level, or role…"
-              className="w-full rounded-lg border border-[#0A1020]/15 bg-white px-3 py-2 text-[13px] text-[#111827] placeholder:text-[#708090] focus:border-[#2563EB] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
+              placeholder="Title, family, level, or role�"
+              className="w-full rounded-lg border border-[#0A1020]/15 bg-white px-3 py-2 text-[13px] text-[#111827] placeholder:text-[#6B7280] focus:border-[#2563EB] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
             />
           </label>
           <FilterSelect
@@ -282,12 +283,12 @@ export function StudyMaterialsPage() {
       </CQCard>
 
       {filtered.length === 0 ? (
-        <CQCard tone="cream" className="py-10 text-center">
+        <CQCard tone="cream" className="flex min-h-[40vh] flex-col items-center justify-center py-10 text-center">
           <p className="font-semibold text-[#111827]">No reports match</p>
           <p className={cn('mt-1', CQ_META)}>Try clearing a filter or changing your search.</p>
         </CQCard>
       ) : (
-        <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+        <ul className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filtered.map((report) => (
             <ReportCard
               key={report.id}
@@ -298,6 +299,7 @@ export function StudyMaterialsPage() {
           ))}
         </ul>
       )}
+      </div>
     </div>
   )
 }
@@ -350,13 +352,13 @@ function ReportCard({
         <button
           type="button"
           onClick={onOpen}
-          className="flex h-full w-full gap-3 p-3 text-left transition-colors hover:bg-[#FAF3E0]/50"
+          className="flex h-full w-full gap-3 p-3 text-left transition-colors hover:bg-[#F4F5F7]/50"
         >
           <div className="relative h-[7.5rem] w-[5.25rem] shrink-0 overflow-hidden rounded-lg bg-[#0A1020]">
             {coverUrl ? (
               <img src={coverUrl} alt="" className="h-full w-full object-cover" loading="lazy" />
             ) : (
-              <div className="flex h-full items-center justify-center text-[#FAF3E0]/40">
+              <div className="flex h-full items-center justify-center text-[#F4F5F7]/40">
                 <BookOpen className="h-7 w-7" aria-hidden />
               </div>
             )}
@@ -369,15 +371,15 @@ function ReportCard({
               ) : null}
               <span className={cn(CQ_CHIP, 'bg-[#0A1020]/6 text-[#4B5563]')}>{report.level}</span>
             </div>
-            <h2 className="font-serif text-[14px] font-semibold leading-snug tracking-tight text-[#0A1020] line-clamp-2">
+            <h2 className="text-[14px] font-semibold leading-snug tracking-tight text-[#0A1020] line-clamp-2">
               {displayTitle(report.title)}
             </h2>
             <p className={cn(CQ_META, 'truncate')}>
               {primaryRole}
-              {roleIds.length > 1 ? ` +${roleIds.length - 1}` : ''} · {report.chapter_count} ch
+              {roleIds.length > 1 ? ` +${roleIds.length - 1}` : ''} � {report.chapter_count} ch
             </p>
             {progressPercent > 0 ? <CQProgressBar value={progressPercent} className="mt-auto" /> : null}
-            <span className="mt-auto pt-1 text-[13px] font-semibold text-[#2563EB]">Read →</span>
+            <span className="mt-auto pt-1 text-[13px] font-semibold text-[#2563EB]">Read ?</span>
           </div>
         </button>
       </CQCard>
@@ -398,12 +400,12 @@ function Badge({
         CQ_CHIP,
         'px-2 py-0.5 text-[10px] uppercase tracking-wide',
         type === 'role_career_path'
-          ? 'bg-[#0A1020] text-[#FAF3E0]'
+          ? 'bg-[#0A1020] text-[#F4F5F7]'
           : type === 'role_book_study'
             ? 'bg-[#2563EB]/12 text-[#1D4ED8]'
             : type === 'role_project'
               ? 'bg-[#0D9488]/12 text-[#0F766E]'
-              : 'bg-[#0A1020] text-[#FAF3E0]',
+              : 'bg-[#0A1020] text-[#F4F5F7]',
       )}
     >
       {children}
@@ -412,7 +414,7 @@ function Badge({
 }
 
 const READER_PROSE =
-  'prose prose-lg max-w-none text-[#2D3748] prose-p:my-3 prose-p:text-[17px] prose-p:leading-[1.8] prose-headings:font-serif prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-[#0A1020] prose-h3:mt-6 prose-h3:mb-2 prose-h3:border-b prose-h3:border-[#0A1020]/10 prose-h3:pb-2 prose-h3:text-lg prose-strong:font-semibold prose-strong:text-[#0A1020] prose-a:text-[#2563EB] prose-a:no-underline hover:prose-a:underline prose-code:rounded-md prose-code:bg-[#0A1020]/8 prose-code:px-1.5 prose-code:py-0.5 prose-code:font-mono prose-code:text-[0.88em] prose-code:text-[#0A1020] prose-code:before:content-none prose-code:after:content-none prose-pre:my-4 prose-pre:overflow-x-auto prose-pre:rounded-lg prose-pre:border prose-pre:border-[#0A1020]/15 prose-pre:bg-[#0A1020] prose-pre:px-4 prose-pre:py-3 prose-pre:font-mono prose-pre:text-[14px] prose-pre:leading-relaxed prose-pre:text-[#E8E0D4] prose-blockquote:my-4 prose-blockquote:border-l-4 prose-blockquote:border-[#2563EB]/70 prose-blockquote:bg-transparent prose-blockquote:py-0 prose-blockquote:pl-4 prose-blockquote:not-italic prose-blockquote:text-[#374151] prose-li:my-1 prose-li:marker:text-[#2563EB]'
+  'prose prose-lg max-w-none text-[#2D3748] prose-p:my-3 prose-p:text-[17px] prose-p:leading-[1.8] prose-headings:prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-[#0A1020] prose-h3:mt-6 prose-h3:mb-2 prose-h3:border-b prose-h3:border-[#0A1020]/10 prose-h3:pb-2 prose-h3:text-lg prose-strong:font-semibold prose-strong:text-[#0A1020] prose-a:text-[#2563EB] prose-a:no-underline hover:prose-a:underline prose-code:rounded-md prose-code:bg-[#0A1020]/8 prose-code:px-1.5 prose-code:py-0.5 prose-code:font-mono prose-code:text-[0.88em] prose-code:text-[#0A1020] prose-code:before:content-none prose-code:after:content-none prose-pre:my-4 prose-pre:overflow-x-auto prose-pre:rounded-lg prose-pre:border prose-pre:border-[#0A1020]/15 prose-pre:bg-[#0A1020] prose-pre:px-4 prose-pre:py-3 prose-pre:font-mono prose-pre:text-[14px] prose-pre:leading-relaxed prose-pre:text-[#E8E0D4] prose-blockquote:my-4 prose-blockquote:border-l-4 prose-blockquote:border-[#2563EB]/70 prose-blockquote:bg-transparent prose-blockquote:py-0 prose-blockquote:pl-4 prose-blockquote:not-italic prose-blockquote:text-[#374151] prose-li:my-1 prose-li:marker:text-[#2563EB]'
 
 function StudyReportReader({
   report,
@@ -433,7 +435,6 @@ function StudyReportReader({
   const [tocCollapsed, setTocCollapsed] = useState(false)
   const [pageIndex, setPageIndex] = useState(0)
   const pendingPageRef = useRef<number | null>(null)
-  const { hidden: navHidden, toggleHidden: toggleNav } = useStudentNavCollapsed()
 
   const chapter =
     report.chapters.find((c) => c.number === chapterNumber) ?? report.chapters[0] ?? null
@@ -508,8 +509,8 @@ function StudyReportReader({
   const showToc = !tocCollapsed || tocOpen
 
   return (
-    <div className="flex h-[calc(100dvh-3rem)] flex-col overflow-hidden bg-[#FFFDF6] lg:h-[calc(100dvh-2.75rem)]">
-      <header className="z-30 shrink-0 border-b border-[#0A1020]/10 bg-[#FFFDF6]">
+    <div className="flex h-[calc(100dvh-3rem)] flex-col overflow-hidden bg-[#FFFFFF] lg:h-[calc(100dvh-2.75rem)]">
+      <header className="z-30 shrink-0 border-b border-[#0A1020]/10 bg-[#FFFFFF]">
         <div className="flex items-center gap-2 px-3 py-2 md:px-4">
           <button
             type="button"
@@ -521,18 +522,16 @@ function StudyReportReader({
           </button>
 
           <div className="min-w-0 flex-1 text-center">
-            <p className="truncate font-serif text-sm font-semibold text-[#0A1020]">{title}</p>
-            <p className="text-[11px] text-[#708090]">
-              Ch. {chapterNumber}/{total} · Page {pageIndex + 1}/{totalPages || 1}
+            <p className="truncate text-sm font-semibold text-[#0A1020]">{title}</p>
+            <p className="text-[11px] text-[#6B7280]">
+              Ch. {chapterNumber}/{total} � Page {pageIndex + 1}/{totalPages || 1}
             </p>
           </div>
-
-          <NavToggleButton hidden={navHidden} onToggle={toggleNav} className="hidden shrink-0 md:inline-flex" />
 
           <button
             type="button"
             onClick={() => (window.innerWidth >= 1024 ? setTocCollapsed((v) => !v) : setTocOpen((v) => !v))}
-            className="inline-flex shrink-0 items-center gap-1 rounded-full border border-[#0A1020]/12 bg-white px-2.5 py-1.5 text-[11px] font-semibold text-[#0A1020] hover:bg-[#FAF3E0]"
+            className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-[#E5E7EB] bg-white px-2.5 py-1.5 text-[11px] font-semibold text-[#0A1020] hover:bg-[#F4F5F7]"
             aria-expanded={showToc}
             aria-controls="study-reader-toc"
           >
@@ -553,7 +552,7 @@ function StudyReportReader({
           <aside
             id="study-reader-toc"
             className={cn(
-              'shrink-0 overflow-y-auto border-[#0A1020]/10 bg-[#FAF3E0]/40 lg:static lg:max-h-none lg:w-56 lg:border-r lg:shadow-none xl:w-60',
+              'shrink-0 overflow-y-auto border-[#0A1020]/10 bg-[#F4F5F7]/40 lg:static lg:max-h-none lg:w-56 lg:border-r lg:shadow-none xl:w-60',
               tocOpen
                 ? 'absolute inset-x-0 top-12 z-20 max-h-80 border-b shadow-lg'
                 : 'hidden lg:block',
@@ -569,7 +568,7 @@ function StudyReportReader({
                   />
                 ) : null}
                 <div className="min-w-0">
-                  <p className="font-serif text-xs font-semibold leading-snug text-[#0A1020] line-clamp-3">{title}</p>
+                  <p className="text-xs font-semibold leading-snug text-[#0A1020] line-clamp-3">{title}</p>
                 </div>
               </div>
               <nav className="space-y-0.5" aria-label="Chapters">
@@ -593,7 +592,7 @@ function StudyReportReader({
                         aria-hidden
                       />
                       <span className="min-w-0">
-                        <span className={cn('block text-[10px] font-semibold uppercase tracking-wider', active ? 'text-[#2563EB]' : 'text-[#708090]')}>
+                        <span className={cn('block text-[10px] font-semibold uppercase tracking-wider', active ? 'text-[#2563EB]' : 'text-[#6B7280]')}>
                           Chapter {ch.number}
                         </span>
                         <span className={cn('block text-sm leading-snug', active ? 'font-semibold text-[#0A1020]' : 'text-[#374151]')}>
@@ -626,7 +625,7 @@ function StudyReportReader({
           </div>
 
           <nav
-            className="flex shrink-0 items-center justify-between gap-3 border-t border-[#0A1020]/10 bg-[#FFFDF6] px-4 py-2 md:px-6"
+            className="flex shrink-0 items-center justify-between gap-3 border-t border-[#0A1020]/10 bg-[#FFFFFF] px-4 py-2 md:px-6"
             aria-label="Page navigation"
           >
             <CQActionButton
@@ -639,11 +638,11 @@ function StudyReportReader({
               Previous
             </CQActionButton>
 
-            <p className="text-center text-xs text-[#708090]">
+            <p className="text-center text-xs text-[#6B7280]">
               <span className="font-semibold text-[#0A1020]">
                 Page {pageIndex + 1}/{totalPages || 1}
               </span>
-              <span className="mx-1.5">·</span>
+              <span className="mx-1.5">�</span>
               <span>Ch. {chapterNumber}/{total}</span>
             </p>
 
@@ -681,15 +680,15 @@ function ChapterPage({
     return (
       <div>
         <header className="mb-4 border-b border-[#0A1020]/10 pb-4 text-center">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#708090]">
-            Chapter {chapter.number} · Summary
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6B7280]">
+            Chapter {chapter.number} � Summary
           </p>
-          <h1 className="mt-1 font-serif text-2xl font-bold text-[#0A1020]">Before you move on</h1>
+          <h1 className="mt-1 text-2xl font-bold text-[#0A1020]">Before you move on</h1>
         </header>
         <ul className="space-y-3">
           {chapter.key_takeaways.map((t, i) => (
             <li key={t} className="flex gap-3 text-[16px] leading-relaxed text-[#374151]">
-              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#0A1020] font-serif text-sm font-semibold text-[#FAF3E0]">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#0A1020] text-sm font-semibold text-[#F4F5F7]">
                 {i + 1}
               </span>
               <span className="pt-0.5">{t}</span>
@@ -704,17 +703,17 @@ function ChapterPage({
     <div>
       {pageIndex === 0 ? (
         <header className="mb-5 border-b border-[#0A1020]/10 pb-4 text-center">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#708090]">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6B7280]">
             Chapter {chapter.number}
-            {chapter.level ? ` · ${chapter.level}` : ''}
+            {chapter.level ? ` � ${chapter.level}` : ''}
           </p>
-          <h1 className="mt-2 font-serif text-2xl font-bold leading-tight tracking-tight text-[#0A1020] md:text-3xl">
+          <h1 className="mt-2 text-2xl font-bold leading-tight tracking-tight text-[#0A1020] md:text-3xl">
             {chapter.title}
           </h1>
         </header>
       ) : (
-        <p className="mb-4 text-center text-[10px] font-semibold uppercase tracking-[0.16em] text-[#708090]">
-          {chapter.title} · page {pageIndex + 1}/{totalPages}
+        <p className="mb-4 text-center text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
+          {chapter.title} � page {pageIndex + 1}/{totalPages}
         </p>
       )}
 

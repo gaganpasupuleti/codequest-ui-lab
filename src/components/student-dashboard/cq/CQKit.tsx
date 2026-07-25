@@ -101,20 +101,27 @@ interface CQProgressBarProps {
   label?: string
   value: number
   className?: string
+  /** When false, hide the trailing percent (use when a large metric already shows it). */
+  showValue?: boolean
 }
 
-export function CQProgressBar({ label, value, className }: CQProgressBarProps) {
+export function CQProgressBar({ label, value, className, showValue }: CQProgressBarProps) {
   const pct = Math.max(0, Math.min(100, Math.round(value)))
+  const renderValue = showValue ?? !label
   return (
-    <div className={cn('flex items-center gap-2', className)}>
-      {label && <span className={cn('w-16 shrink-0 font-medium text-[#374151]', CQ_META)}>{label}</span>}
-      <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#0A1020]/10">
+    <div className={cn('flex min-w-0 items-center gap-1.5', className)}>
+      {label ? (
+        <span className={cn('w-14 shrink-0 truncate font-medium text-[#374151]', CQ_META)}>
+          {label}
+        </span>
+      ) : null}
+      <div className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-[#0A1020]/10">
         <div
           className="h-full rounded-full bg-[#0A1020]/75 transition-all duration-500"
           style={{ width: `${pct}%` }}
         />
       </div>
-      {!label && <span className={cn('shrink-0 tabular-nums', CQ_META)}>{pct}%</span>}
+      {renderValue ? <span className={cn('w-8 shrink-0 text-right tabular-nums', CQ_META)}>{pct}%</span> : null}
     </div>
   )
 }
@@ -145,10 +152,10 @@ export function CQSectionTitle({ children, sub, icon, action, className }: CQSec
 type CQButtonVariant = 'primary' | 'navy' | 'ghost'
 
 const CQ_BUTTON_VARIANTS: Record<CQButtonVariant, string> = {
-  primary: 'bg-[#2563EB] text-[#FFF9EA] hover:bg-[#1D4ED8]',
-  navy: 'bg-[#0A1020] text-[#FAF3E0] hover:bg-[#121A2E]',
+  primary: 'bg-[#2563EB] text-white hover:bg-[#1D4ED8]',
+  navy: 'bg-[#111827] text-white hover:bg-[#1F2937]',
   ghost:
-    'border border-[#708090]/30 bg-[#FFF9EA] text-[#374151] hover:bg-[#FAF3E0] hover:text-[#111827]',
+    'border border-[#E5E7EB] bg-white text-[#374151] hover:bg-zinc-50 hover:text-[#111827]',
 }
 
 interface CQActionButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -165,7 +172,7 @@ export function CQActionButton({
     <button
       type="button"
       className={cn(
-        'inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 text-[13px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50',
+        'inline-flex items-center justify-center gap-2 rounded-lg px-3.5 py-2 text-[13px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50',
         CQ_BUTTON_VARIANTS[variant],
         CQ_FOCUS,
         className,

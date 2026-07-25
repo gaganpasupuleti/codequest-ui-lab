@@ -445,19 +445,19 @@ export function ExpandedCalendarDrawer({ open, onClose }: ExpandedCalendarDrawer
         role="dialog"
         aria-modal="true"
         aria-label="Expanded calendar schedule"
-        className="fixed top-0 right-0 z-50 flex h-full w-[75vw] gap-6 bg-slate-50 p-6 shadow-2xl animate-in slide-in-from-right duration-300"
+        className="fixed inset-y-0 right-0 z-50 flex h-full w-full max-w-full flex-col gap-4 overflow-y-auto bg-slate-50 p-3 shadow-2xl animate-in slide-in-from-right duration-300 sm:p-5 md:gap-6 md:p-6 lg:w-[min(75vw,72rem)] lg:flex-row lg:overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 z-50 rounded-full p-2 text-gray-500 transition-colors hover:bg-gray-200 hover:text-gray-900"
+          className="absolute top-3 right-3 z-50 grid h-11 w-11 place-items-center rounded-full text-gray-500 transition-colors hover:bg-gray-200 hover:text-gray-900 sm:top-4 sm:right-4"
           aria-label="Close calendar"
         >
           <X className="h-4 w-4" />
         </button>
 
-        <div className="flex w-[30%] min-w-0 flex-col gap-5">
+        <div className="flex w-full min-w-0 shrink-0 flex-col gap-4 pt-10 lg:w-[min(30%,20rem)] lg:gap-5 lg:pt-0">
           <MiniCalendarNav
             viewDate={viewDate}
             selectedDay={selectedDay}
@@ -467,12 +467,14 @@ export function ExpandedCalendarDrawer({ open, onClose }: ExpandedCalendarDrawer
           <ScheduleFilters filters={filters} onChange={setFilters} />
         </div>
 
-        <WeekTimeGrid
-          weekStart={weekStart}
-          events={events}
-          filters={filters}
-          loading={loadingEvents}
-        />
+        <div className="min-h-0 min-w-0 flex-1 overflow-x-auto">
+          <WeekTimeGrid
+            weekStart={weekStart}
+            events={events}
+            filters={filters}
+            loading={loadingEvents}
+          />
+        </div>
       </div>
     </>
   )

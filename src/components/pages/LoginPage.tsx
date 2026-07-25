@@ -653,7 +653,7 @@ export function LoginPage({ onAuthenticated, onBackToLanding }: LoginPageProps) 
       </LoginBootPortal>
 
       <Dialog open={helpOpen} onOpenChange={setHelpOpen}>
-            <DialogContent className="max-w-md rounded-2xl border-slate-100 sm:max-w-md">
+            <DialogContent className="max-w-md rounded-lg border-slate-100 sm:max-w-md">
               <DialogHeader>
                 <DialogTitle className="text-slate-900">Sign-in help</DialogTitle>
                 <DialogDescription>

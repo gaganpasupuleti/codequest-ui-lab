@@ -47,10 +47,10 @@ export function StudentProgressPage({ user, onNavigate }: StudentProgressPagePro
   const pathTitle = snapshot.careerJourney?.title ?? fallback?.currentStageLabel ?? 'Learning path'
 
   return (
-    <div className={cn(CQ_PAGE_BG, 'flex h-full min-h-0 flex-1 flex-col overflow-hidden')}>
-      <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#708090]/18 bg-[#FFFDF6]/80 px-3 py-2.5 backdrop-blur-sm md:px-4">
-        <div className="min-w-0">
-          <h1 className={cn(CQ_SECTION_TITLE, 'flex items-center gap-2 text-[16px] sm:text-[18px]')}>
+    <div className={cn(CQ_PAGE_BG, 'flex h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden')}>
+      <header className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-[#E5E7EB] bg-[#FFFFFF]/80 px-3 py-2.5 backdrop-blur-sm sm:gap-3 md:px-4">
+        <div className="min-w-0 flex-1">
+          <h1 className={cn(CQ_SECTION_TITLE, 'flex items-center gap-2 text-[clamp(1rem,2.2vw,1.125rem)]')}>
             <TrendingUp className="h-4 w-4 shrink-0 text-[#0A1020]/70" aria-hidden />
             Progress map
           </h1>
@@ -60,7 +60,7 @@ export function StudentProgressPage({ user, onNavigate }: StudentProgressPagePro
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex max-w-full flex-wrap items-center gap-2">
           <MetricChip label="Course" value={snapshot.loading ? '…' : `${coursePct}%`} tone="sage" />
           <MetricChip
             label="Quiz avg"
@@ -79,7 +79,7 @@ export function StudentProgressPage({ user, onNavigate }: StudentProgressPagePro
           <button
             type="button"
             onClick={() => onNavigate('roadmapper')}
-            className="inline-flex items-center rounded-full bg-[#0A1020] px-3 py-1.5 text-[12px] font-semibold text-[#FAF3E0] hover:bg-[#121A2E]"
+            className="inline-flex min-h-10 items-center rounded-full bg-[#0A1020] px-3 py-1.5 text-[12px] font-semibold text-[#F4F5F7] hover:bg-[#121A2E]"
           >
             Career Map
           </button>
@@ -101,11 +101,13 @@ export function StudentProgressPage({ user, onNavigate }: StudentProgressPagePro
         )}
       </div>
 
-      <footer className="flex shrink-0 flex-wrap items-center gap-3 border-t border-[#708090]/18 bg-[#FFFDF6]/90 px-3 py-1.5 text-[11px] md:px-4">
+      <footer className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-1 border-t border-[#E5E7EB] bg-[#FFFFFF]/90 px-3 py-1.5 text-[11px] md:px-4">
         <LegendDot className="bg-[#C2CDB0]" label="Done" />
         <LegendDot className="bg-[#DDD0F5]" label="In progress" />
-        <LegendDot className="bg-[#FFFDF6] ring-1 ring-[#708090]/25" label="Up next" />
-        <span className={cn('ml-auto', CQ_META)}>Click a node for details · drag to pan · scroll to zoom</span>
+        <LegendDot className="bg-[#FFFFFF] ring-1 ring-[#708090]/25" label="Up next" />
+        <span className={cn('w-full sm:ml-auto sm:w-auto', CQ_META)}>
+          Tap a node for details · drag to pan · pinch/scroll to zoom
+        </span>
       </footer>
     </div>
   )
@@ -130,7 +132,7 @@ function MetricChip({
   return (
     <div className={cn('rounded-xl px-2.5 py-1.5', toneClass)}>
       <p className="text-[10px] font-semibold uppercase tracking-wider text-[#0A1020]/55">{label}</p>
-      <p className={cn(CQ_METRIC, 'mt-0.5 text-[18px]')}>{value}</p>
+      <p className={cn(CQ_METRIC, 'mt-0.5 text-[clamp(1rem,2.5vw,1.125rem)]')}>{value}</p>
     </div>
   )
 }

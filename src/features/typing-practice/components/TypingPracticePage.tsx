@@ -312,7 +312,7 @@ export function TypingPracticePage({ embedded = false }: TypingPracticePageProps
   }
 
   return (
-    <div className={cn('flex h-full min-h-0 flex-1 flex-col overflow-hidden', wb.root)}>
+    <div className={cn('practice-workbench-shell flex min-h-0 flex-1 flex-col overflow-hidden', wb.root)}>
       <TypingPracticeChrome
         mode={mode}
         setMode={setMode}
@@ -329,8 +329,8 @@ export function TypingPracticePage({ embedded = false }: TypingPracticePageProps
         onNext={loadNextSample}
       />
 
-      <div className="grid min-h-0 flex-1 grid-cols-1 overflow-hidden lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)_180px]">
-        <section className={cn('flex min-h-[220px] flex-col overflow-hidden border-b lg:min-h-0 lg:border-b-0 lg:border-r', wb.border, wb.panel)}>
+      <div className="grid min-h-0 min-w-0 flex-1 grid-cols-1 overflow-y-auto lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)_minmax(140px,180px)] lg:overflow-hidden">
+        <section className={cn('flex min-h-[min(40dvh,220px)] min-w-0 flex-col overflow-hidden border-b lg:min-h-0 lg:border-b-0 lg:border-r', wb.border, wb.panel)}>
           <div className={cn('flex shrink-0 items-center justify-between border-b px-3 py-1.5', wb.border)}>
             <span className={cn('text-[12px] font-semibold', wb.textPrimary)}>Prompt</span>
             <span className={cn('text-[11px]', wb.textMuted)}>{sourceText.length} chars</span>
@@ -338,7 +338,7 @@ export function TypingPracticePage({ embedded = false }: TypingPracticePageProps
           <TypingPromptDisplay source={sourceText} typed={typedText} className="min-h-0 flex-1" />
         </section>
 
-        <section className={cn('flex min-h-[220px] flex-col overflow-hidden border-b lg:min-h-0 lg:border-b-0 lg:border-r', wb.border, wb.panel)}>
+        <section className={cn('flex min-h-[min(40dvh,220px)] min-w-0 flex-col overflow-hidden border-b lg:min-h-0 lg:border-b-0 lg:border-r', wb.border, wb.panel)}>
           <div className={cn('flex shrink-0 items-center justify-between border-b px-3 py-1.5', wb.border)}>
             <span className={cn('inline-flex items-center gap-1.5 text-[12px] font-semibold', wb.textPrimary)}>
               <Keyboard size={14} />
@@ -371,7 +371,7 @@ export function TypingPracticePage({ embedded = false }: TypingPracticePageProps
           />
         </section>
 
-        <aside className={cn('grid grid-cols-4 gap-px overflow-auto border-b lg:grid-cols-1 lg:border-b-0', wb.border, 'bg-[#26324A]')}>
+        <aside className={cn('grid grid-cols-2 gap-px overflow-auto border-b sm:grid-cols-4 lg:grid-cols-1 lg:border-b-0', wb.border, 'bg-[#26324A]')}>
           {stats.map((stat) => (
             <div key={stat.label} className={cn('flex flex-col justify-center px-2.5 py-2 lg:px-3 lg:py-2.5', wb.panel)}>
               <p className={cn('text-[10px] font-semibold uppercase tracking-wider', wb.textMuted)}>{stat.label}</p>
@@ -464,26 +464,28 @@ export function TypingPracticePage({ embedded = false }: TypingPracticePageProps
           {recentSessions.length === 0 ? (
             <p className={cn('text-[12px]', wb.textMuted)}>Complete a drill to see local progress.</p>
           ) : (
-            <table className="w-full text-[11px]">
-              <thead>
-                <tr className={cn('text-left uppercase tracking-wider', wb.textMuted)}>
-                  <th className="pb-1 pr-2 font-semibold">Snippet</th>
-                  <th className="pb-1 pr-2 font-semibold">WPM</th>
-                  <th className="pb-1 pr-2 font-semibold">Acc</th>
-                  <th className="pb-1 font-semibold">Err</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentSessions.slice(0, 6).map((session) => (
-                  <tr key={session.id} className={wb.textSecondary}>
-                    <td className="truncate py-0.5 pr-2 max-w-[9rem]">{session.snippetTitle}</td>
-                    <td className="py-0.5 pr-2 tabular-nums">{session.wpm}</td>
-                    <td className="py-0.5 pr-2 tabular-nums">{session.accuracy}%</td>
-                    <td className="py-0.5 tabular-nums">{session.mistakeCount}</td>
+            <div className="cq-h-scroll">
+              <table className="w-full min-w-[20rem] text-[11px]">
+                <thead>
+                  <tr className={cn('text-left uppercase tracking-wider', wb.textMuted)}>
+                    <th className="pb-1 pr-2 font-semibold">Snippet</th>
+                    <th className="pb-1 pr-2 font-semibold">WPM</th>
+                    <th className="pb-1 pr-2 font-semibold">Acc</th>
+                    <th className="pb-1 font-semibold">Err</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {recentSessions.slice(0, 6).map((session) => (
+                    <tr key={session.id} className={wb.textSecondary}>
+                      <td className="max-w-[9rem] truncate py-0.5 pr-2">{session.snippetTitle}</td>
+                      <td className="py-0.5 pr-2 tabular-nums">{session.wpm}</td>
+                      <td className="py-0.5 pr-2 tabular-nums">{session.accuracy}%</td>
+                      <td className="py-0.5 tabular-nums">{session.mistakeCount}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </section>
       </div>

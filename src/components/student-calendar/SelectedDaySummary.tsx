@@ -55,7 +55,7 @@ export function SelectedDaySummary({
   const hasWork = assignmentCount > 0 || resourceCount > 0
 
   return (
-    <CQCard>
+    <CQCard className="h-full">
       {loading ? (
         <div className="space-y-2.5" aria-hidden>
           <div className="h-5 w-2/3 animate-pulse rounded bg-[#0A1020]/8" />
@@ -79,7 +79,7 @@ export function SelectedDaySummary({
           </div>
 
           {session ? (
-            <div className="mt-3 rounded-xl border border-[#708090]/15 bg-[#FAF3E0]/70 px-3 py-2.5">
+            <div className="mt-3 rounded-xl border border-[#E5E7EB] bg-[#F4F5F7]/70 px-3 py-2.5">
               <p className={CQ_BODY_STRONG}>{session.title}</p>
               {session.topic && <p className={cn('mt-0.5', CQ_BODY)}>{session.topic}</p>}
               <p className={cn('mt-1.5 inline-flex items-center gap-1.5', CQ_META)}>
@@ -94,24 +94,24 @@ export function SelectedDaySummary({
           {(hasFocus || hasWork) && (
             <dl className={cn('mt-3 grid grid-cols-2 sm:grid-cols-3', CQ_STACK_GAP)}>
               {dayPlan?.topic && (
-                <div className="rounded-lg border border-[#708090]/15 bg-[#FAF3E0]/60 px-2.5 py-2">
+                <div className="rounded-lg border border-[#E5E7EB] bg-[#F4F5F7]/60 px-2.5 py-2">
                   <dt className={CQ_META}>Focus</dt>
                   <dd className={cn('mt-0.5 truncate', CQ_BODY_STRONG)}>{dayPlan.topic}</dd>
                 </div>
               )}
               {note && !dayPlan?.topic && (
-                <div className="rounded-lg border border-[#708090]/15 bg-[#FAF3E0]/60 px-2.5 py-2">
+                <div className="rounded-lg border border-[#E5E7EB] bg-[#F4F5F7]/60 px-2.5 py-2">
                   <dt className={CQ_META}>Notes</dt>
                   <dd className={cn('mt-0.5 truncate', CQ_BODY_STRONG)}>{note.title}</dd>
                 </div>
               )}
-              <div className="rounded-lg border border-[#708090]/15 bg-[#FAF3E0]/60 px-2.5 py-2">
+              <div className="rounded-lg border border-[#E5E7EB] bg-[#F4F5F7]/60 px-2.5 py-2">
                 <dt className={CQ_META}>Assignments</dt>
                 <dd className={cn(CQ_CHIP, 'mt-1 bg-[#F3DFA0]/55 tabular-nums text-[#92400E]')}>
                   {assignmentCount}
                 </dd>
               </div>
-              <div className="rounded-lg border border-[#708090]/15 bg-[#FAF3E0]/60 px-2.5 py-2">
+              <div className="rounded-lg border border-[#E5E7EB] bg-[#F4F5F7]/60 px-2.5 py-2">
                 <dt className={CQ_META}>Resources</dt>
                 <dd className={cn(CQ_CHIP, 'mt-1 bg-[#B8C9E8]/45 tabular-nums text-[#1D4ED8]')}>
                   {resourceCount}

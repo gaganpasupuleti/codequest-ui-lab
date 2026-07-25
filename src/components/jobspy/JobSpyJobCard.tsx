@@ -42,8 +42,9 @@ export function JobSpyJobCard({ job, saved = false, onSelect, onSave, onUnsave }
         }
       }}
       className={cn(
-        'w-full text-left rounded-xl border border-slate-200 bg-white p-5 shadow-sm cursor-pointer',
-        'hover:border-blue-300 hover:shadow-md transition-all duration-200',
+        'flex h-full w-full cursor-pointer flex-col rounded-lg border border-[#E5E7EB] bg-[#FFFFFF] p-4 text-left',
+        'shadow-[0_8px_22px_-18px_rgba(10,16,32,0.5)] transition-all duration-200',
+        'hover:border-[#2563EB]/35 hover:shadow-[0_14px_30px_-18px_rgba(10,16,32,0.55)]',
       )}
     >
       <div className="flex items-start justify-between gap-2 mb-3">

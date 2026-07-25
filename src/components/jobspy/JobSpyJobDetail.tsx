@@ -39,7 +39,7 @@ export function JobSpyJobDetail({
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/50" onClick={onClose}>
       <div
-        className="flex flex-col w-full max-w-2xl max-h-[90vh] rounded-2xl border border-slate-200 bg-white shadow-xl"
+        className="flex flex-col w-full max-w-2xl max-h-[90vh] rounded-lg border border-slate-200 bg-white shadow-xl"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-label="Job details"

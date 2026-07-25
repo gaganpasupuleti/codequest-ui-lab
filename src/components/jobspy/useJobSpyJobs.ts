@@ -157,10 +157,13 @@ export function useJobSpyJobs() {
   }
 
   const openJob = async (id: JobSpyJobId) => {
+    const local = [...jobs, ...savedJobs].find((job) => job.id === id)
+    if (local) setSelectedJob(local)
     try {
       const job = await jobspyApi.getJob(id)
       setSelectedJob(job)
     } catch (e) {
+      if (local) return
       setError(e instanceof Error ? e.message : 'Failed to load job')
     }
   }

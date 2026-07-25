@@ -17,6 +17,38 @@ export interface PracticeAreaSummary {
   total: number
   pct: number
   detail: string
+  /** ISO timestamp of the most recent activity in this area, if any. */
+  lastPracticeAt: string | null
+  /** True once the learner has any attempts/sessions in this area. */
+  hasActivity: boolean
+}
+
+/** Relative “Last session …” copy for practice cards. */
+export function formatLastPracticeLabel(iso: string | null): string {
+  if (!iso) return 'Not started yet'
+  const then = new Date(iso).getTime()
+  if (Number.isNaN(then)) return 'Not started yet'
+  const days = Math.floor((Date.now() - then) / 86400000)
+  if (days <= 0) return 'Last session: today'
+  if (days === 1) return 'Last session: yesterday'
+  if (days < 14) return `Last session: ${days} days ago`
+  return `Last session: ${new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}`
+}
+
+/** Prefer the practice area with the most recent activity; else SQL for new users. */
+export function resolveContinuePracticeTarget(
+  sql: PracticeAreaSummary,
+  code: PracticeAreaSummary,
+  typing: PracticeAreaSummary,
+): 'practice-sql' | 'practice-code' | 'practice-typing' {
+  const ranked = [
+    { page: 'practice-sql' as const, at: sql.lastPracticeAt },
+    { page: 'practice-code' as const, at: code.lastPracticeAt },
+    { page: 'practice-typing' as const, at: typing.lastPracticeAt },
+  ]
+    .filter((r) => r.at)
+    .sort((a, b) => String(b.at).localeCompare(String(a.at)))
+  return ranked[0]?.page ?? 'practice-sql'
 }
 
 export interface PracticeStreakSummary {
@@ -119,15 +151,26 @@ export function getPracticeStreakSummary(): PracticeStreakSummary {
 
 export function getSqlPracticeSummary(): PracticeAreaSummary {
   const progress = loadSqlProgress()
+  const attempts = loadSqlAttempts()
   const summary = getQuestionProgressSummary(SQL_PRACTICE_QUESTIONS, progress)
   const pct = summary.total > 0 ? Math.round((summary.passed / summary.total) * 100) : 0
+  const lastPracticeAt =
+    attempts
+      .map((a) => a.ranAt)
+      .filter((v): v is string => Boolean(v))
+      .sort((a, b) => b.localeCompare(a))[0] ?? null
+  const hasActivity = summary.passed + summary.failed > 0 || attempts.length > 0
 
   return {
     label: 'SQL Practice',
     completed: summary.passed,
     total: summary.total,
     pct,
-    detail: `${summary.failed} need review · ${summary.unattempted} not started`,
+    detail: hasActivity
+      ? `${summary.failed} need review · ${summary.unattempted} not started`
+      : 'Start with your first SQL module',
+    lastPracticeAt,
+    hasActivity,
   }
 }
 
@@ -137,16 +180,20 @@ export function getCodePracticeSummary(): PracticeAreaSummary {
   const passedCount = attempts.filter((a) => a.passed).length
   const pct =
     attempts.length > 0 ? Math.round((passedCount / attempts.length) * 100) : 0
+  const lastPracticeAt =
+    attempts.map((a) => a.createdAt).sort((a, b) => b.localeCompare(a))[0] ?? null
+  const hasActivity = attempts.length > 0
 
   return {
     label: 'Code Workbench',
     completed: passedCount,
-    total: Math.max(attempts.length, 1),
-    pct: attempts.length > 0 ? pct : 0,
-    detail:
-      attempts.length === 0
-        ? 'No attempts yet — open Code Workbench'
-        : `${mistakes.length} mistakes saved locally`,
+    total: Math.max(attempts.length, hasActivity ? attempts.length : 0),
+    pct: hasActivity ? pct : 0,
+    detail: hasActivity
+      ? `${mistakes.length} mistake${mistakes.length === 1 ? '' : 's'} saved locally`
+      : 'Solve your first coding challenge',
+    lastPracticeAt,
+    hasActivity,
   }
 }
 
@@ -158,13 +205,20 @@ export function getTypingPracticeSummary(typingAttemptsWpm: number | null): Prac
       : typingAttemptsWpm
 
   const pct = avgWpm ? Math.min(100, Math.round((avgWpm / 80) * 100)) : 0
+  const lastPracticeAt =
+    sessions.map((s) => s.completedAt).sort((a, b) => b.localeCompare(a))[0] ?? null
+  const hasActivity = sessions.length > 0
 
   return {
     label: 'Typing Practice',
     completed: sessions.length,
     total: Math.max(sessions.length, 10),
     pct,
-    detail: avgWpm ? `Avg ${avgWpm} WPM · ${sessions.length} sessions` : 'Complete a typing session',
+    detail: hasActivity
+      ? `Avg ${avgWpm ?? 0} WPM · ${sessions.length} session${sessions.length === 1 ? '' : 's'}`
+      : 'Build speed with a short typing drill',
+    lastPracticeAt,
+    hasActivity,
   }
 }
 

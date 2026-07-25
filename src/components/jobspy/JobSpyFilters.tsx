@@ -25,7 +25,7 @@ export function JobSpyFilters({ filters, loading, onChange, onSearch }: JobSpyFi
   )
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-4">
+    <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm space-y-4">
       <div>
         <h2 className="text-lg font-semibold text-slate-900">Find your next role</h2>
         <p className="text-sm text-slate-500 mt-1">

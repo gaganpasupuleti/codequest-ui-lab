@@ -353,7 +353,7 @@ export function RoadmapFlow({ roadmapPath }: RoadmapFlowProps) {
   const selectedLabel = String((selectedNode?.data as { label?: unknown })?.label ?? '')
 
   return (
-    <div className="relative h-[70vh] min-h-[500px] w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-50/50 md:h-[calc(100vh-100px)] md:min-h-[600px]">
+    <div className="relative h-[min(70dvh,40rem)] min-h-[min(60dvh,22rem)] w-full min-w-0 overflow-hidden rounded-xl border border-slate-200 bg-slate-50/50 md:h-[min(100dvh-6.5rem,48rem)]">
       <style dangerouslySetInnerHTML={{ __html: useFlowingEdges ? flowStyles : '' }} />
 
       <ReactFlowProvider>

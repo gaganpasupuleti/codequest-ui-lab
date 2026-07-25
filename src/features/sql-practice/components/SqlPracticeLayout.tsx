@@ -29,23 +29,25 @@ export function SqlPracticeLayout({
 
   if (!desktopLayout) {
     return (
-      <div className={cn('flex min-h-[calc(100vh-4rem)] flex-col', wb.root)}>
-        {topBar}
-        <div className="grid min-h-0 flex-1 grid-cols-1">
-          <div className="min-h-[240px] border-b">{objectExplorer}</div>
-          <div className={cn('flex min-h-[360px] flex-col', wb.border, 'border-b')}>{editorPanel}</div>
-          <div className="min-h-[240px] border-b">{questionPanel}</div>
+      <div className={cn('practice-workbench-shell flex min-h-0 flex-1 flex-col', wb.root)}>
+        <div className="min-w-0 shrink-0 overflow-x-auto">{topBar}</div>
+        <div className="grid min-h-0 min-w-0 flex-1 grid-cols-1 overflow-y-auto">
+          <div className="min-h-[min(35dvh,240px)] min-w-0 border-b">{objectExplorer}</div>
+          <div className={cn('flex min-h-[min(50dvh,360px)] min-w-0 flex-col', wb.border, 'border-b')}>
+            {editorPanel}
+          </div>
+          <div className="min-h-[min(35dvh,240px)] min-w-0 border-b">{questionPanel}</div>
         </div>
-        {bottomPanel}
-        {statusBar}
+        <div className="min-w-0 shrink-0">{bottomPanel}</div>
+        <div className="min-w-0 shrink-0 overflow-x-auto">{statusBar}</div>
       </div>
     )
   }
 
   return (
-    <div className={cn('flex h-[calc(100vh-4rem)] max-h-[calc(100vh-4rem)] flex-col overflow-hidden', wb.root)}>
-      {topBar}
-      <div className="flex min-h-0 flex-1 overflow-hidden">
+    <div className={cn('practice-workbench-shell flex min-h-0 flex-1 flex-col overflow-hidden', wb.root)}>
+      <div className="min-w-0 shrink-0 overflow-x-auto">{topBar}</div>
+      <div className="flex min-h-0 min-w-0 flex-1 overflow-hidden">
         {state.isLeftCollapsed ? (
           <SqlExpandRail side="left" label="Object Explorer" onExpand={toggleLeftCollapsed} />
         ) : (

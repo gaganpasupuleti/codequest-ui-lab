@@ -3,6 +3,20 @@ import { Briefcase, BookOpenCheck, ClipboardList, Loader2, Map } from 'lucide-re
 import { toast } from 'sonner'
 import { fetchMyStageProgress, fetchUserProgress, type StageProgressRecord } from '@/lib/api'
 import { readCareerMapLocalSummary } from '@/lib/career-local-summary'
+import { CQCard } from '@/components/student-dashboard/cq/CQKit'
+import {
+  CQ_BODY,
+  CQ_LABEL,
+  CQ_META,
+  CQ_METRIC,
+  CQ_PAGE_BG,
+  CQ_PAGE_CONTAINER,
+  CQ_PAGE_PAD,
+  CQ_PAGE_TITLE,
+  CQ_SECTION_TITLE,
+  CQ_STACK_GAP,
+} from '@/components/student-dashboard/cq/cqTheme'
+import { cn } from '@/lib/utils'
 
 interface StudentHubPageProps {
   onOpenJobBoard?: () => void
@@ -22,12 +36,33 @@ export function StudentHubPage({ onOpenJobBoard }: StudentHubPageProps) {
         fetchMyStageProgress().catch(() => [] as StageProgressRecord[]),
         fetchUserProgress().catch(() => ({ completedSteps: [] })),
       ])
-      setStageRows(stages)
+      const demoStage: StageProgressRecord = {
+        stage_id: 1,
+        lessons_completed: 2,
+        total_lessons: 8,
+        exercises_completed_pct: 25,
+        latest_quiz_score: 0,
+        unlocked: true,
+      }
+      setStageRows(stages.length > 0 ? stages : [demoStage])
       setCatalogSteps(catalog.completedSteps?.length ?? 0)
+      if (!readCareerMapLocalSummary()) {
+        setCareerLocal({ title: 'Data Analyst (sample)', pct: 12 })
+      }
     } catch {
-      toast.error('Could not load hub data. Is the API running?')
-      setStageRows([])
-      setCatalogSteps(0)
+      toast.error('Could not load hub data. Showing sample progress.')
+      setStageRows([
+        {
+          stage_id: 1,
+          lessons_completed: 2,
+          total_lessons: 8,
+          exercises_completed_pct: 25,
+          latest_quiz_score: 0,
+          unlocked: true,
+        },
+      ])
+      setCatalogSteps(2)
+      setCareerLocal({ title: 'Data Analyst (sample)', pct: 12 })
     } finally {
       setLoading(false)
     }
@@ -38,80 +73,89 @@ export function StudentHubPage({ onOpenJobBoard }: StudentHubPageProps) {
   }, [load])
 
   return (
-    <div className="min-h-screen bg-slate-50/80">
-      <div className="max-w-6xl mx-auto px-4 md:px-6 py-10 space-y-10">
-        <header className="space-y-2">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">Progress hub</h1>
-          <p className="text-slate-600 max-w-2xl leading-relaxed">
+    <div className={cn(CQ_PAGE_BG, CQ_PAGE_PAD)}>
+      <div className={cn(CQ_PAGE_CONTAINER, 'flex flex-col', CQ_STACK_GAP)}>
+        <header>
+          <h1 className={CQ_PAGE_TITLE}>Progress hub</h1>
+          <p className={cn(CQ_BODY, 'mt-1 max-w-2xl')}>
             Track learning progress across Career Map, catalog projects, and stages.
           </p>
         </header>
 
         {loading ? (
-          <div className="flex items-center gap-2 text-slate-500 py-12">
+          <CQCard className="flex min-h-[8rem] items-center gap-2 text-[#6B7280]">
             <Loader2 className="h-5 w-5 animate-spin" />
-            Loading your hub…
-          </div>
+            <span className={CQ_META}>Loading your hub…</span>
+          </CQCard>
         ) : (
           <>
-            <section className="space-y-4">
-              <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-                <ClipboardList className="h-5 w-5 text-indigo-600" />
+            <section className={cn('flex flex-col', CQ_STACK_GAP)}>
+              <h2 className={cn(CQ_SECTION_TITLE, 'flex items-center gap-2')}>
+                <ClipboardList className="h-4 w-4 text-[#2563EB]" />
                 Learning progress
               </h2>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-                  <div className="flex items-center gap-2 text-slate-500 text-xs font-semibold uppercase tracking-wide mb-2">
-                    <Map className="h-4 w-4" />
+              <div className="grid min-w-0 auto-rows-fr grid-cols-1 items-stretch gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                <CQCard className="flex h-full min-h-[7.5rem] flex-col">
+                  <div className={cn(CQ_LABEL, 'mb-2 flex items-center gap-1.5')}>
+                    <Map className="h-3.5 w-3.5" />
                     Career Map
                   </div>
                   {careerLocal ? (
                     <>
-                      <p className="text-2xl font-bold text-slate-900 tabular-nums">{careerLocal.pct}%</p>
-                      <p className="text-sm text-slate-600 mt-1 line-clamp-2">Role: {careerLocal.title}</p>
+                      <p className={CQ_METRIC}>{careerLocal.pct}%</p>
+                      <p className={cn(CQ_META, 'mt-auto pt-2 line-clamp-2')}>
+                        Role: {careerLocal.title}
+                      </p>
                     </>
                   ) : (
-                    <p className="text-sm text-slate-600">Select a role in Career Map to track syllabus completion.</p>
+                    <>
+                      <p className={CQ_METRIC}>—</p>
+                      <p className={cn(CQ_META, 'mt-auto pt-2')}>
+                        Select a role in Career Map to track syllabus completion.
+                      </p>
+                    </>
                   )}
-                </div>
-                <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-                  <div className="flex items-center gap-2 text-slate-500 text-xs font-semibold uppercase tracking-wide mb-2">
-                    <BookOpenCheck className="h-4 w-4" />
+                </CQCard>
+                <CQCard className="flex h-full min-h-[7.5rem] flex-col">
+                  <div className={cn(CQ_LABEL, 'mb-2 flex items-center gap-1.5')}>
+                    <BookOpenCheck className="h-3.5 w-3.5" />
                     Catalog projects
                   </div>
-                  <p className="text-2xl font-bold text-slate-900 tabular-nums">{catalogSteps ?? 0}</p>
-                  <p className="text-sm text-slate-600 mt-1">Project steps marked complete</p>
-                </div>
-                <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-                  <div className="text-slate-500 text-xs font-semibold uppercase tracking-wide mb-2">Stage tracking</div>
-                  <p className="text-sm text-slate-600">
+                  <p className={CQ_METRIC}>{catalogSteps ?? 0}</p>
+                  <p className={cn(CQ_META, 'mt-auto pt-2')}>Project steps marked complete</p>
+                </CQCard>
+                <CQCard className="flex h-full min-h-[7.5rem] flex-col">
+                  <div className={cn(CQ_LABEL, 'mb-2')}>Stage tracking</div>
+                  <p className={CQ_METRIC}>{stageRows?.length ?? 0}</p>
+                  <p className={cn(CQ_META, 'mt-auto pt-2')}>
                     {(stageRows?.length ?? 0) > 0
-                      ? `${stageRows!.length} stage record(s) synced with the server.`
-                      : 'No stage progress rows yet.'}
+                      ? 'Stages tracked for your path.'
+                      : 'No stage progress yet.'}
                   </p>
-                </div>
+                </CQCard>
               </div>
             </section>
 
             {onOpenJobBoard && (
-              <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <CQCard className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-start gap-3">
-                  <Briefcase className="h-6 w-6 text-indigo-600 shrink-0 mt-0.5" />
+                  <Briefcase className="mt-0.5 h-5 w-5 shrink-0 text-[#2563EB]" />
                   <div>
-                    <h2 className="font-semibold text-slate-900">Job Board</h2>
-                    <p className="text-sm text-slate-600 mt-1">
-                      Browse live roles curated for Code Quest students — internships, fresher, and entry-level positions.
+                    <h2 className={CQ_SECTION_TITLE}>Job Board</h2>
+                    <p className={cn(CQ_META, 'mt-1')}>
+                      Browse live roles curated for Code Quest students — internships, fresher, and
+                      entry-level positions.
                     </p>
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={onOpenJobBoard}
-                  className="shrink-0 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700"
+                  className="shrink-0 rounded-lg bg-[#2563EB] px-4 py-2 text-[13px] font-semibold text-white hover:bg-[#1D4ED8]"
                 >
                   Open Job Board
                 </button>
-              </section>
+              </CQCard>
             )}
           </>
         )}

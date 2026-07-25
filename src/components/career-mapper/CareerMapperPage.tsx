@@ -12,6 +12,7 @@ import {
 } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { fetchCareerRoles } from '@/lib/api'
+import { careerSeedData } from '@/lib/career-seed-data'
 import { useCareerProgress } from '@/hooks/use-career-progress'
 import { useSkillAssessments } from '@/hooks/use-skill-assessments'
 import { useMLRecommendations } from '@/hooks/use-ml-recommendations'
@@ -23,6 +24,16 @@ import { MLCareerRecommendationCard } from './MLRecommendationCard'
 import { RoleCardSelector } from './RoleCardSelector'
 import { QuizPage } from '@/components/pages/QuizPage'
 import { ProjectLearningPage } from '@/components/pages/ProjectLearningPage'
+import {
+  CQ_BODY,
+  CQ_META,
+  CQ_PAGE_BG,
+  CQ_PAGE_CONTAINER,
+  CQ_PAGE_PAD,
+  CQ_PAGE_TITLE,
+  CQ_STACK_GAP,
+} from '@/components/student-dashboard/cq/cqTheme'
+import { cn } from '@/lib/utils'
 
 const SELECTED_ROLE_KEY = 'career-mapper-selected-role'
 
@@ -88,6 +99,7 @@ export function CareerMapperPage() {
         }
       } catch {
         toast.error('Failed to load career roles. Using local data.')
+        setRoles(careerSeedData.filter((r) => r.isActive).slice(0, 8))
       } finally {
         setIsLoading(false)
       }
@@ -150,36 +162,34 @@ export function CareerMapperPage() {
   // ── Role grid ──────────────────────────────────────────────────────────────
   if (!selectedRole) {
     return (
-      <div className="min-h-screen bg-white">
-        <div className="max-w-6xl mx-auto px-4 md:px-6 py-10 md:py-12">
-          <div className="mb-8 md:mb-10">
-            <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 mb-2">
-              Career Mapper
-            </h1>
-            <p className="text-sm md:text-base text-slate-600 leading-relaxed max-w-2xl">
+      <div className={cn(CQ_PAGE_BG, CQ_PAGE_PAD)}>
+        <div className={cn(CQ_PAGE_CONTAINER, 'flex flex-col', CQ_STACK_GAP)}>
+          <div>
+            <h1 className={CQ_PAGE_TITLE}>Career Map</h1>
+            <p className={cn(CQ_BODY, 'mt-1 max-w-2xl')}>
               Choose a career path, explore your 4-month syllabus, and track your progress with AI insights.
             </p>
-            <p className="text-xs md:text-sm text-slate-500 mt-3 max-w-3xl leading-relaxed">
-              <strong className="text-slate-800">Career Map</strong> (here) is role-centric with syllabus and progress.{' '}
-              <strong className="text-slate-800">Flow Path</strong> in the top nav is topic graphs for browsing skills—use both as needed.
+            <p className={cn(CQ_META, 'mt-2 max-w-3xl')}>
+              <strong className="text-[#111827]">Career Map</strong> (here) is role-centric with syllabus and progress.{' '}
+              <strong className="text-[#111827]">Flow Path</strong> in the top nav is topic graphs for browsing skills—use both as needed.
             </p>
           </div>
 
           {isLoading ? (
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(17rem,1fr))] gap-4">
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(17rem,1fr))] gap-3">
               {[...Array(6)].map((_, i) => (
                 <div
                   key={i}
-                  className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm animate-pulse space-y-3"
+                  className="animate-pulse space-y-3 rounded-lg border border-[#E5E7EB] bg-[#FFFFFF] p-4"
                 >
-                  <div className="h-4 w-3/5 rounded bg-slate-200" />
-                  <div className="h-3 w-2/5 rounded bg-slate-200" />
-                  <div className="h-8 rounded-md bg-slate-200" />
+                  <div className="h-4 w-3/5 rounded bg-[#0A1020]/8" />
+                  <div className="h-3 w-2/5 rounded bg-[#0A1020]/8" />
+                  <div className="h-8 rounded-md bg-[#0A1020]/8" />
                 </div>
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(17rem,1fr))] gap-4">
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(17rem,1fr))] gap-3">
               {roles.map((role) => (
                 <div
                   key={role.id}
@@ -192,8 +202,9 @@ export function CareerMapperPage() {
                       chooseRole(role)
                     }
                   }}
-                  className="group rounded-xl border border-slate-200 bg-white p-5 shadow-sm flex flex-col gap-3 cursor-pointer
-                    transition-all duration-150 hover:border-indigo-300 hover:shadow-md hover:ring-2 hover:ring-indigo-100"
+                  className="group flex h-full cursor-pointer flex-col gap-3 rounded-lg border border-[#E5E7EB] bg-[#FFFFFF] p-4
+                    shadow-[0_8px_22px_-18px_rgba(10,16,32,0.5)] transition-all duration-150
+                    hover:border-[#2563EB]/35 hover:shadow-[0_14px_30px_-18px_rgba(10,16,32,0.55)]"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center gap-2 min-w-0">
@@ -248,8 +259,8 @@ export function CareerMapperPage() {
                       e.stopPropagation()
                       chooseRole(role)
                     }}
-                    className="mt-1 w-full py-2 rounded-lg border-2 border-indigo-400 text-indigo-600 text-xs font-bold tracking-wide
-                      bg-white hover:bg-indigo-50 transition-colors"
+                    className="mt-auto w-full rounded-lg border-2 border-[#2563EB]/50 bg-white py-2 text-xs font-bold tracking-wide text-[#2563EB]
+                      transition-colors hover:bg-[#2563EB]/5"
                   >
                     Explore Path →
                   </button>
@@ -289,8 +300,8 @@ export function CareerMapperPage() {
     : 0
 
   return (
-    <div className="min-h-screen bg-slate-50/80">
-      <div className="max-w-6xl mx-auto px-4 md:px-6 py-6 md:py-8 space-y-6">
+    <div className={cn(CQ_PAGE_BG, CQ_PAGE_PAD)}>
+      <div className={cn(CQ_PAGE_CONTAINER, 'flex flex-col', CQ_STACK_GAP)}>
         <button
           type="button"
           onClick={clearRole}
@@ -423,9 +434,9 @@ export function CareerMapperPage() {
             )}
 
             {topRecos.length === 0 && !currentReport && (
-              <section className="rounded-xl border border-dashed border-slate-200 bg-white p-10 text-center shadow-sm">
-                <Brain size={40} className="text-slate-300 mx-auto mb-3" />
-                <p className="text-sm text-slate-500 max-w-md mx-auto">
+              <section className="rounded-lg border border-dashed border-[#E5E7EB] bg-[#FFFFFF] px-4 py-6 text-center">
+                <Brain size={32} className="mx-auto mb-2 text-[#6B7280]/50" />
+                <p className={cn(CQ_META, 'mx-auto max-w-md')}>
                   Run the skill assessment above to generate personalised career recommendations.
                 </p>
               </section>

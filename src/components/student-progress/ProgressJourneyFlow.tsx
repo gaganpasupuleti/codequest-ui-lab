@@ -31,8 +31,8 @@ import { cn } from '@/lib/utils'
 const NODE_SURFACE: Record<ProgressNodeStatus, string> = {
   done: 'border-[#A8C07A] bg-[#C2CDB0] text-[#1A2E0A]',
   active: 'border-[#7C5CBF] bg-[#DDD0F5] text-[#2E1065]',
-  todo: 'border-[#708090]/25 bg-[#FFFDF6] text-[#111827]',
-  blocked: 'border-[#708090]/20 bg-[#F2EBD6] text-[#708090]',
+  todo: 'border-[#E5E7EB] bg-[#FFFFFF] text-[#111827]',
+  blocked: 'border-[#E5E7EB] bg-[#F4F5F7] text-[#6B7280]',
 }
 
 const ProgressNode = memo(function ProgressNode({ data, selected }: NodeProps) {
@@ -43,16 +43,16 @@ const ProgressNode = memo(function ProgressNode({ data, selected }: NodeProps) {
   return (
     <div
       className={cn(
-        'relative min-w-[148px] max-w-[180px] border shadow-[0_10px_24px_-18px_rgba(10,16,32,0.55)] transition-transform',
-        selected && 'ring-2 ring-[#2563EB]/45 ring-offset-2 ring-offset-[#F2EBD6]',
+        'relative w-[min(100%,11.25rem)] min-w-[8.5rem] max-w-[11.25rem] border shadow-[0_10px_24px_-18px_rgba(10,16,32,0.55)] transition-transform',
+        selected && 'ring-2 ring-[#2563EB]/45 ring-offset-2 ring-offset-[#F4F5F7]',
         isDecision
-          ? 'rotate-0 rounded-2xl px-3 py-3'
+          ? 'rotate-0 rounded-lg px-3 py-3'
           : isEndpoint
             ? 'rounded-full px-4 py-2.5'
-            : 'rounded-2xl px-3.5 py-3',
+            : 'rounded-lg px-3.5 py-3',
         NODE_SURFACE[node.status],
-        node.kind === 'start' && 'bg-[#0A1020] text-[#FAF3E0] border-[#0A1020]',
-        node.kind === 'end' && node.status === 'done' && 'bg-[#0A1020] text-[#FAF3E0] border-[#0A1020]',
+        node.kind === 'start' && 'bg-[#0A1020] text-[#F4F5F7] border-[#0A1020]',
+        node.kind === 'end' && node.status === 'done' && 'bg-[#0A1020] text-[#F4F5F7] border-[#0A1020]',
       )}
     >
       <Handle type="target" position={Position.Left} className="!h-2 !w-2 !border-0 !bg-[#0A1020]/40" />
@@ -154,7 +154,7 @@ function ProgressJourneyFlowInner({
         minZoom={0.4}
         maxZoom={1.4}
         proOptions={{ hideAttribution: true }}
-        className="bg-[#F2EBD6]"
+        className="bg-[#F4F5F7]"
         defaultEdgeOptions={{
           style: { stroke: '#708090', strokeWidth: 1.75 },
         }}
@@ -169,39 +169,39 @@ function ProgressJourneyFlowInner({
         />
         <Controls
           showInteractive={false}
-          className="!overflow-hidden !rounded-xl !border !border-[#708090]/25 !bg-[#FFFDF6] !shadow-sm [&>button]:!border-[#708090]/20 [&>button]:!bg-[#FFFDF6]"
+          className="!overflow-hidden !rounded-xl !border !border-[#E5E7EB] !bg-[#FFFFFF] !shadow-sm [&>button]:!border-[#E5E7EB] [&>button]:!bg-[#FFFFFF]"
         />
         <MiniMap
           pannable
           zoomable
-          className="!overflow-hidden !rounded-xl !border !border-[#708090]/25 !bg-[#FFFDF6]"
+          className="!overflow-hidden !rounded-xl !border !border-[#E5E7EB] !bg-[#FFFFFF]"
           maskColor="rgba(10,16,32,0.08)"
           nodeColor={(n) => {
             const status = (n.data as ProgressNodeData | undefined)?.status
             if (status === 'done') return '#C2CDB0'
             if (status === 'active') return '#DDD0F5'
-            return '#FFFDF6'
+            return '#FFFFFF'
           }}
         />
         <FitViewOnReady nodeCount={nodes.length} />
       </ReactFlow>
 
       {selected && (
-        <aside className="absolute right-3 top-3 z-10 w-[min(100%-1.5rem,300px)] overflow-hidden rounded-2xl border border-[#708090]/20 bg-[#FFFDF6] shadow-[0_18px_40px_-24px_rgba(10,16,32,0.55)]">
+        <aside className="absolute inset-x-2 bottom-2 z-10 max-h-[min(55dvh,28rem)] overflow-y-auto rounded-lg border border-[#E5E7EB] bg-[#FFFFFF] shadow-[0_18px_40px_-24px_rgba(10,16,32,0.55)] sm:inset-x-auto sm:bottom-auto sm:right-3 sm:top-3 sm:w-[min(100%-1.5rem,300px)] sm:max-h-[min(70dvh,32rem)]">
           <div
             className={cn(
               'flex items-start justify-between gap-2 px-3.5 py-3',
               selected.status === 'done' && 'bg-[#C2CDB0]',
               selected.status === 'active' && 'bg-[#DDD0F5]',
               (selected.status === 'todo' || selected.status === 'blocked') && 'bg-[#F3DFA0]',
-              selected.kind === 'start' && 'bg-[#0A1020] text-[#FAF3E0]',
+              selected.kind === 'start' && 'bg-[#0A1020] text-[#F4F5F7]',
             )}
           >
             <div className="min-w-0">
               <p
                 className={cn(
                   CQ_LABEL,
-                  selected.kind === 'start' ? 'text-[#FAF3E0]/70' : 'text-[#0A1020]/60',
+                  selected.kind === 'start' ? 'text-[#F4F5F7]/70' : 'text-[#0A1020]/60',
                 )}
               >
                 {selected.kind === 'decision' ? 'Checkpoint' : selected.kind}
@@ -210,7 +210,7 @@ function ProgressJourneyFlowInner({
                 className={cn(
                   CQ_SECTION_TITLE,
                   'mt-0.5 text-[15px]',
-                  selected.kind === 'start' && 'text-[#FAF3E0]',
+                  selected.kind === 'start' && 'text-[#F4F5F7]',
                 )}
               >
                 {selected.label}
@@ -222,7 +222,7 @@ function ProgressJourneyFlowInner({
               className={cn(
                 'grid h-7 w-7 place-items-center rounded-full transition-colors',
                 selected.kind === 'start'
-                  ? 'text-[#FAF3E0]/80 hover:bg-white/10'
+                  ? 'text-[#F4F5F7]/80 hover:bg-white/10'
                   : 'text-[#374151] hover:bg-[#0A1020]/8',
               )}
               aria-label="Close details"
@@ -251,7 +251,7 @@ function ProgressJourneyFlowInner({
               <button
                 type="button"
                 onClick={() => onNavigate(selected.action!.href)}
-                className="inline-flex w-full items-center justify-center rounded-full bg-[#0A1020] px-4 py-2 text-[13px] font-semibold text-[#FAF3E0] transition-colors hover:bg-[#121A2E]"
+                className="inline-flex w-full items-center justify-center rounded-full bg-[#0A1020] px-4 py-2 text-[13px] font-semibold text-[#F4F5F7] transition-colors hover:bg-[#121A2E]"
               >
                 {selected.action.label}
               </button>

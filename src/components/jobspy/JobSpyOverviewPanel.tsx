@@ -51,7 +51,7 @@ export function JobSpyOverviewPanel({
 }: JobSpyOverviewPanelProps) {
   if (loading && !overview) {
     return (
-      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
         <div className="flex items-center gap-2 text-sm text-slate-500">
           <Loader2 className="h-4 w-4 animate-spin" />
           Loading job board stats…
@@ -67,7 +67,7 @@ export function JobSpyOverviewPanel({
 
   return (
     <div className="space-y-4">
-      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-3">
+      <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-sm font-semibold text-slate-900">Job board overview</h2>
           <span className="text-xs text-slate-500">India · updated daily</span>
@@ -90,7 +90,7 @@ export function JobSpyOverviewPanel({
       </section>
 
       {roleFamilies.length > 0 && (
-        <section className="rounded-2xl border border-violet-200 bg-violet-50/40 p-5 shadow-sm space-y-3">
+        <section className="rounded-lg border border-violet-200 bg-violet-50/40 p-5 shadow-sm space-y-3">
           <div>
             <h3 className="text-sm font-semibold text-violet-950">Role families</h3>
             <p className="text-xs text-violet-800 mt-0.5">Active jobs by enriched role type</p>
@@ -109,7 +109,7 @@ export function JobSpyOverviewPanel({
       )}
 
       {sources.length > 0 && (
-        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-3">
+        <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm space-y-3">
           <div>
             <h3 className="text-sm font-semibold text-slate-900">By source</h3>
             <p className="text-xs text-slate-500 mt-0.5">Tap a source to filter browse results</p>

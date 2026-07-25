@@ -85,6 +85,8 @@ export function buildSkillProgressItems(
         projectTotal > 0
           ? `${approved} of ${projectTotal} approved`
           : 'No project submissions yet',
+      lastPracticeAt: null,
+      hasActivity: projectTotal > 0,
       href: 'projects',
       actionLabel: 'View',
     },
@@ -95,6 +97,8 @@ export function buildSkillProgressItems(
       total: resumeScore.checklist.length,
       pct: resumeScore.overall,
       detail: 'Local draft in this browser',
+      lastPracticeAt: null,
+      hasActivity: resumeScore.overall > 0,
       href: 'resume',
       actionLabel: 'Open',
     },
@@ -105,6 +109,8 @@ export function buildSkillProgressItems(
       total: 100,
       pct: jobReadiness.overall,
       detail: 'Career prep snapshot',
+      lastPracticeAt: null,
+      hasActivity: jobReadiness.overall > 0,
       href: 'roadmapper',
       actionLabel: 'Career map',
     },

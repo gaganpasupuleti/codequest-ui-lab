@@ -19,7 +19,10 @@ import {
   toIsoDate,
   type DeadlineItem,
 } from '@/lib/dashboard-derive'
-import type { PracticeAreaSummary } from '@/lib/practice-progress-summary'
+import {
+  formatLastPracticeLabel,
+  type PracticeAreaSummary,
+} from '@/lib/practice-progress-summary'
 import { cn } from '@/lib/utils'
 
 import { CQActionButton, CQCard, CQInlineLink, CQProgressBar } from './cq/CQKit'
@@ -43,89 +46,11 @@ function CQSkeleton({ className }: { className?: string }) {
   return <div className={cn('animate-pulse rounded-lg bg-[#0A1020]/8', className)} aria-hidden />
 }
 
-/* ------------------------------------------------------------------ Today */
+/* --------------------------------------------------------- Glance strip */
 
-export function TodayPanel({
-  sessions,
-  deadlines,
-  loading,
-  onOpenCalendar,
-}: {
-  sessions: UpcomingSession[]
-  deadlines: UpcomingDeadlines
-  loading: boolean
-  onOpenCalendar: () => void
-}) {
-  const nextSession = sessions[0]
-  const todayLabel = nextSession ? formatSessionDate(nextSession.session_date) : null
-  const isToday = todayLabel === 'Today'
-
-  const nextDeadline = useMemo(
-    () => mergeDeadlines(deadlines).find((d) => !d.done) ?? null,
-    [deadlines],
-  )
-
-  return (
-    <div className={cn('grid md:grid-cols-2', CQ_STACK_GAP)}>
-      <CQCard className="flex flex-col">
-        <div className={CQ_SECTION_HEAD}>
-          <h3 className={cn(CQ_SECTION_TITLE, 'flex items-center gap-2')}>
-            <CalendarClock className="h-4 w-4 shrink-0 text-[#0A1020]/70" strokeWidth={1.75} />
-            {isToday ? "Today's class" : 'Next class'}
-          </h3>
-          <CQInlineLink onClick={onOpenCalendar}>Calendar</CQInlineLink>
-        </div>
-        {loading ? (
-          <CQSkeleton className="h-20 w-full" />
-        ) : nextSession ? (
-          <div className={cn('rounded-xl border border-[#708090]/15 p-3', CQ_TONE_SOFT.yellow)}>
-            <div className="flex items-start justify-between gap-2">
-              <p className={cn('min-w-0', CQ_BODY_STRONG)}>{nextSession.title}</p>
-              <span className={cn(CQ_CHIP, 'shrink-0 bg-[#0A1020]/8 text-[#374151]')}>{todayLabel}</span>
-            </div>
-            {nextSession.topic && <p className={cn('mt-1', CQ_BODY)}>{nextSession.topic}</p>}
-            <p className={cn('mt-2 inline-flex items-center gap-1 font-medium text-[#374151]', CQ_META)}>
-              <Clock3 className="h-3.5 w-3.5" />
-              {formatTime(nextSession.start_time)} – {formatTime(nextSession.end_time)}
-            </p>
-          </div>
-        ) : (
-          <div className="rounded-xl border border-dashed border-[#708090]/30 px-3 py-4 text-center">
-            <p className={cn(CQ_BODY, 'font-medium text-[#374151]')}>No class scheduled today</p>
-            <p className={cn('mt-1', CQ_META)}>Use the calendar to review notes and upcoming sessions.</p>
-          </div>
-        )}
-      </CQCard>
-
-      <CQCard className="flex flex-col">
-        <div className={CQ_SECTION_HEAD}>
-          <h3 className={cn(CQ_SECTION_TITLE, 'flex items-center gap-2')}>
-            <CalendarClock className="h-4 w-4 shrink-0 text-[#0A1020]/70" strokeWidth={1.75} />
-            Next deadline
-          </h3>
-        </div>
-        {loading ? (
-          <CQSkeleton className="h-20 w-full" />
-        ) : nextDeadline ? (
-          <div className="rounded-xl border-l-[3px] border-[#2563EB] bg-[#B8C9E8]/30 p-3">
-            <span className={cn(CQ_CHIP, 'bg-[#0A1020]/8 text-[#374151]')}>
-              {formatSessionDate(nextDeadline.due)}
-            </span>
-            <p className={cn('mt-2', CQ_BODY_STRONG)}>{nextDeadline.title}</p>
-            <p className={cn('mt-1', CQ_META)}>Due {nextDeadline.due}</p>
-          </div>
-        ) : (
-          <div className="rounded-xl border border-dashed border-[#708090]/30 px-3 py-4 text-center">
-            <p className={cn(CQ_BODY, 'font-medium text-[#374151]')}>You&apos;re all caught up</p>
-            <p className={cn('mt-1', CQ_META)}>No upcoming deadlines.</p>
-          </div>
-        )}
-      </CQCard>
-    </div>
-  )
-}
-
-/* --------------------------------------------------------------- Practice */
+/** Fixed rhythm so paired cards stay the same height. */
+const GLANCE_CARD = 'flex h-full min-h-[9.5rem] min-w-0 flex-col'
+const PANEL_CARD = 'flex h-full min-h-[13rem] min-w-0 flex-col'
 
 const PRACTICE_DOT: Record<string, string> = {
   blue: 'bg-[#2563EB]',
@@ -133,7 +58,68 @@ const PRACTICE_DOT: Record<string, string> = {
   teal: 'bg-[#14B8A6]',
 }
 
-function PracticeCard({
+function GlanceCardShell({
+  title,
+  icon,
+  action,
+  metric,
+  metricSub,
+  barValue,
+  detail,
+  interactive = false,
+  onOpen,
+  loading,
+}: {
+  title: string
+  icon: React.ReactNode
+  action: string
+  metric: string
+  metricSub: string
+  barValue?: number | null
+  detail: string
+  interactive?: boolean
+  onOpen?: () => void
+  loading?: boolean
+}) {
+  return (
+    <CQCard interactive={interactive} className={GLANCE_CARD}>
+      <div className="mb-2 flex items-center justify-between gap-2">
+        <h3 className={cn(CQ_SECTION_TITLE, 'flex min-w-0 items-center gap-2')}>
+          <span className="shrink-0 text-[#0A1020]/70">{icon}</span>
+          <span className="truncate">{title}</span>
+        </h3>
+        {onOpen ? (
+          <CQInlineLink onClick={onOpen} className="shrink-0">
+            {action}
+          </CQInlineLink>
+        ) : (
+          <span className="invisible shrink-0 text-[13px] font-semibold" aria-hidden>
+            {action}
+          </span>
+        )}
+      </div>
+
+      {loading ? (
+        <CQSkeleton className="h-16 w-full" />
+      ) : (
+        <div className="flex min-h-0 flex-1 flex-col">
+          <div className="flex min-w-0 items-baseline gap-1.5">
+            <span className={cn(CQ_METRIC, 'truncate')}>{metric}</span>
+            <span className={cn(CQ_META, 'truncate')}>{metricSub}</span>
+          </div>
+          {typeof barValue === 'number' ? (
+            <CQProgressBar value={barValue} showValue={false} className="mt-2" />
+          ) : (
+            <div className="mt-2 h-1.5 w-full rounded-full bg-[#0A1020]/8" aria-hidden />
+          )}
+          <p className={cn('mt-2 line-clamp-2 min-h-[2.4rem]', CQ_META)}>{detail}</p>
+        </div>
+      )}
+    </CQCard>
+  )
+}
+
+function PracticeStatusCard({
   summary,
   dot,
   onOpen,
@@ -143,27 +129,90 @@ function PracticeCard({
   onOpen: () => void
 }) {
   return (
-    <CQCard interactive className="flex h-full flex-col">
-      <div className={CQ_SECTION_HEAD}>
-        <h3 className={cn(CQ_SECTION_TITLE, 'flex items-center gap-2')}>
-          <span className={cn('h-2 w-2 flex-shrink-0 rounded-full', PRACTICE_DOT[dot])} />
-          {summary.label}
+    <button
+      type="button"
+      onClick={onOpen}
+      className={cn(
+        'rounded-lg border border-[#E5E7EB] bg-[#FFFFFF] p-4 text-left shadow-[0_8px_22px_-18px_rgba(10,16,32,0.5)] transition-shadow',
+        'hover:shadow-[0_14px_30px_-18px_rgba(10,16,32,0.55)]',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/45 focus-visible:ring-offset-1 focus-visible:ring-offset-[#FFFFFF]',
+        GLANCE_CARD,
+      )}
+    >
+      <div className="mb-2 flex items-center justify-between gap-2">
+        <h3 className={cn(CQ_SECTION_TITLE, 'flex min-w-0 items-center gap-2')}>
+          <span className={cn('h-2 w-2 shrink-0 rounded-full', PRACTICE_DOT[dot])} />
+          <span className="truncate">{summary.label}</span>
         </h3>
-        <CQInlineLink onClick={onOpen}>Open</CQInlineLink>
+        <span className={cn(CQ_META, 'shrink-0 tabular-nums')}>{summary.pct}%</span>
       </div>
-      <div className="flex items-baseline gap-1.5">
-        <span className={CQ_METRIC}>{summary.pct}%</span>
-        <span className={CQ_META}>
-          {summary.completed}/{summary.total}
+      <div className="flex min-w-0 items-baseline gap-1.5">
+        <span className={CQ_METRIC}>
+          {summary.completed}
+          <span className={cn('ml-1 text-[13px] font-semibold text-[#6B7280]')}>
+            /{summary.total || 0}
+          </span>
         </span>
+        <span className={CQ_META}>done</span>
       </div>
-      <CQProgressBar value={summary.pct} className="mt-2.5" />
-      <p className={cn('mt-2', CQ_META)}>{summary.detail}</p>
+      <CQProgressBar value={summary.pct} showValue={false} className="mt-2" />
+      <p className={cn('mt-2 line-clamp-2 min-h-[2.4rem]', CQ_META)}>
+        {formatLastPracticeLabel(summary.lastPracticeAt)}
+      </p>
+    </button>
+  )
+}
+
+function GettingStartedPracticeCard({
+  onStartSql,
+  onStartCode,
+  onStartTyping,
+}: {
+  onStartSql: () => void
+  onStartCode: () => void
+  onStartTyping: () => void
+}) {
+  const items = [
+    { label: 'SQL module', hint: 'Queries & joins', onClick: onStartSql, dot: 'blue' as const },
+    { label: 'Code challenge', hint: 'Workbench drills', onClick: onStartCode, dot: 'violet' as const },
+    { label: 'Typing drill', hint: 'Speed & accuracy', onClick: onStartTyping, dot: 'teal' as const },
+  ]
+
+  return (
+    <CQCard className="min-w-0 !p-3 sm:!p-4">
+      <div className="mb-2.5 min-w-0">
+        <h3 className={CQ_SECTION_TITLE}>Getting started with practice</h3>
+        <p className={CQ_SECTION_SUB}>Pick an arena — status cards appear after your first session.</p>
+      </div>
+      <div className="grid min-w-0 grid-cols-1 items-stretch gap-2 sm:grid-cols-3">
+        {items.map((item) => (
+          <button
+            key={item.label}
+            type="button"
+            onClick={item.onClick}
+            className={cn(
+              'flex h-[4.5rem] w-full flex-col justify-center rounded-lg border border-[#E5E7EB] bg-zinc-50 px-3 py-2 text-left transition-colors hover:bg-zinc-100',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/45',
+            )}
+          >
+            <span className="inline-flex items-center gap-2 text-[13px] font-semibold text-[#111827]">
+              <span className={cn('h-2 w-2 shrink-0 rounded-full', PRACTICE_DOT[item.dot])} />
+              <span className="truncate">{item.label}</span>
+            </span>
+            <span className={cn('mt-1 truncate', CQ_META)}>{item.hint}</span>
+          </button>
+        ))}
+      </div>
     </CQCard>
   )
 }
 
-export function PracticeProgressGrid({
+/** Schedule pair + practice status (or a single getting-started strip for new users). */
+export function DashboardGlanceRow({
+  sessions,
+  deadlines,
+  loading,
+  onOpenCalendar,
   sql,
   code,
   typing,
@@ -171,6 +220,10 @@ export function PracticeProgressGrid({
   onPracticeCode,
   onPracticeTyping,
 }: {
+  sessions: UpcomingSession[]
+  deadlines: UpcomingDeadlines
+  loading: boolean
+  onOpenCalendar: () => void
   sql: PracticeAreaSummary
   code: PracticeAreaSummary
   typing: PracticeAreaSummary
@@ -178,11 +231,75 @@ export function PracticeProgressGrid({
   onPracticeCode: () => void
   onPracticeTyping: () => void
 }) {
+  const nextSession = sessions[0]
+  const todayLabel = nextSession ? formatSessionDate(nextSession.session_date) : null
+  const isToday = todayLabel === 'Today'
+  const nextDeadline = useMemo(
+    () => mergeDeadlines(deadlines).find((d) => !d.done) ?? null,
+    [deadlines],
+  )
+  const openDeadlineCount = useMemo(
+    () => mergeDeadlines(deadlines).filter((d) => !d.done).length,
+    [deadlines],
+  )
+  const practiceUntouched = !sql.hasActivity && !code.hasActivity && !typing.hasActivity
+
   return (
-    <div className={cn('grid h-full sm:grid-cols-3', CQ_STACK_GAP)}>
-      <PracticeCard summary={sql} dot="blue" onOpen={onPracticeSql} />
-      <PracticeCard summary={code} dot="violet" onOpen={onPracticeCode} />
-      <PracticeCard summary={typing} dot="teal" onOpen={onPracticeTyping} />
+    <div className={cn('flex min-w-0 flex-col', CQ_STACK_GAP)}>
+      <div
+        className={cn(
+          'grid min-w-0 auto-rows-fr grid-cols-1 items-stretch sm:grid-cols-2',
+          CQ_STACK_GAP,
+        )}
+      >
+        <GlanceCardShell
+          title={isToday ? "Today's class" : 'Next class'}
+          icon={<CalendarClock className="h-4 w-4" strokeWidth={1.75} />}
+          action="Calendar"
+          onOpen={onOpenCalendar}
+          loading={loading}
+          metric={nextSession ? formatTime(nextSession.start_time) : '—'}
+          metricSub={nextSession ? (todayLabel ?? 'upcoming') : 'scheduled'}
+          detail={
+            nextSession
+              ? `${nextSession.title}${nextSession.topic ? ` · ${nextSession.topic}` : ''}`
+              : 'Nothing on the calendar yet. Check notes and upcoming sessions.'
+          }
+        />
+        <GlanceCardShell
+          title="Next deadline"
+          icon={<ListChecks className="h-4 w-4" strokeWidth={1.75} />}
+          action="Calendar"
+          onOpen={onOpenCalendar}
+          loading={loading}
+          metric={String(openDeadlineCount)}
+          metricSub="open"
+          detail={
+            nextDeadline
+              ? `${nextDeadline.title} · due ${formatSessionDate(nextDeadline.due)}`
+              : 'Nothing due right now. You are clear on upcoming deadlines.'
+          }
+        />
+      </div>
+
+      {practiceUntouched ? (
+        <GettingStartedPracticeCard
+          onStartSql={onPracticeSql}
+          onStartCode={onPracticeCode}
+          onStartTyping={onPracticeTyping}
+        />
+      ) : (
+        <div
+          className={cn(
+            'grid min-w-0 auto-rows-fr grid-cols-1 items-stretch sm:grid-cols-2 lg:grid-cols-3',
+            CQ_STACK_GAP,
+          )}
+        >
+          <PracticeStatusCard summary={sql} dot="blue" onOpen={onPracticeSql} />
+          <PracticeStatusCard summary={code} dot="violet" onOpen={onPracticeCode} />
+          <PracticeStatusCard summary={typing} dot="teal" onOpen={onPracticeTyping} />
+        </div>
+      )}
     </div>
   )
 }
@@ -209,35 +326,51 @@ export function ProgressPanel({
   const stagesComplete =
     stageRows?.filter((r) => r.total_lessons > 0 && r.lessons_completed >= r.total_lessons).length ??
     0
+  const hasModules = stageCount > 0
+  const hasCatalog = typeof catalogSteps === 'number' && catalogSteps > 0
+  const isFreshStart = !loading && progressPct === 0 && !hasModules && !hasCatalog && !careerJourney
 
   return (
-    <CQCard className="flex flex-col">
-      <div className={cn(CQ_SECTION_HEAD, 'items-start')}>
-        <div>
+    <CQCard className="min-w-0">
+      <div className="mb-2 flex items-start justify-between gap-2">
+        <div className="min-w-0">
           <h3 className={CQ_SECTION_TITLE}>Overall progress</h3>
-          <p className={CQ_SECTION_SUB}>{stageLabel}</p>
+          <p className={CQ_SECTION_SUB}>
+            {isFreshStart ? 'Starts with your first lesson' : stageLabel}
+          </p>
         </div>
-        <CQInlineLink onClick={onViewProgress}>Details</CQInlineLink>
+        <CQInlineLink onClick={onViewProgress} className="shrink-0">
+          Details
+        </CQInlineLink>
       </div>
-      <div className="flex items-end gap-2">
-        <span className={CQ_METRIC_LG}>{loading ? '…' : `${progressPct}%`}</span>
-        <span className={cn('pb-0.5', CQ_META)}>course complete</span>
+      <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] sm:items-end">
+        <div className="min-w-0">
+          <div className="flex items-end gap-2">
+            <span className={CQ_METRIC_LG}>{loading ? '…' : `${progressPct}%`}</span>
+            <span className={cn('pb-0.5', CQ_META)}>
+              {isFreshStart ? 'ready to begin' : 'complete'}
+            </span>
+          </div>
+          <CQProgressBar value={progressPct} showValue={false} className="mt-2" />
+        </div>
+        <dl className="grid grid-cols-2 gap-2">
+          <div className="rounded-lg border border-[#E5E7EB] bg-[#F4F5F7]/60 px-2.5 py-2">
+            <dt className={CQ_META}>Modules</dt>
+            <dd className={cn('mt-0.5 tabular-nums', CQ_BODY_STRONG)}>
+              {loading ? '…' : hasModules ? `${stagesComplete}/${stageCount}` : '0'}
+            </dd>
+          </div>
+          <div className="rounded-lg border border-[#E5E7EB] bg-[#F4F5F7]/60 px-2.5 py-2">
+            <dt className={CQ_META}>Catalog</dt>
+            <dd className={cn('mt-0.5 tabular-nums', CQ_BODY_STRONG)}>
+              {loading ? '…' : hasCatalog ? catalogSteps : '0'}
+            </dd>
+          </div>
+        </dl>
       </div>
-      <CQProgressBar value={progressPct} className="mt-2.5" />
-      <dl className={cn('mt-3 grid grid-cols-2', CQ_STACK_GAP)}>
-        <div className="rounded-lg border border-[#708090]/15 bg-[#FAF3E0]/60 px-3 py-2">
-          <dt className={CQ_META}>Modules</dt>
-          <dd className={cn('mt-0.5 tabular-nums', CQ_BODY_STRONG)}>
-            {loading ? '—' : `${stagesComplete}/${stageCount || '—'}`}
-          </dd>
-        </div>
-        <div className="rounded-lg border border-[#708090]/15 bg-[#FAF3E0]/60 px-3 py-2">
-          <dt className={CQ_META}>Catalog steps</dt>
-          <dd className={cn('mt-0.5 tabular-nums', CQ_BODY_STRONG)}>
-            {loading ? '—' : catalogSteps ?? 0}
-          </dd>
-        </div>
-      </dl>
+      {isFreshStart ? (
+        <p className={cn('mt-2', CQ_META)}>Finish one lesson or practice set to unlock richer stats.</p>
+      ) : null}
     </CQCard>
   )
 }
@@ -267,7 +400,7 @@ function SessionRow({ session, featured }: { session: UpcomingSession; featured?
   }
 
   return (
-    <li className="flex items-center justify-between gap-3 border-b border-[#708090]/15 py-2.5 last:border-0">
+    <li className="flex items-center justify-between gap-3 border-b border-[#E5E7EB] py-2.5 last:border-0">
       <div className="min-w-0">
         <p className={cn('truncate font-medium text-[#111827]', CQ_BODY)}>{session.title}</p>
         {session.topic && <p className={cn('truncate', CQ_META)}>{session.topic}</p>}
@@ -289,29 +422,28 @@ export function UpcomingClassesPanel({
 }) {
   const [next, ...rest] = sessions
   return (
-    <CQCard className="flex h-full flex-col">
+    <CQCard className={PANEL_CARD}>
       <div className={CQ_SECTION_HEAD}>
         <h3 className={cn(CQ_SECTION_TITLE, 'flex items-center gap-2')}>
           <CalendarClock className="h-4 w-4 shrink-0 text-[#0A1020]/70" strokeWidth={1.75} />
           Upcoming classes
         </h3>
-        {sessions.length > 0 && (
-          <span className={cn(CQ_CHIP, 'bg-[#B8C9E8]/40 tabular-nums text-[#1D4ED8]')}>
-            {sessions.length}
-          </span>
-        )}
+        <span className={cn(CQ_CHIP, 'bg-[#B8C9E8]/40 tabular-nums text-[#1D4ED8]')}>
+          {sessions.length}
+        </span>
       </div>
       {loading ? (
-        <div className="space-y-2.5">
-          <CQSkeleton className="h-20 w-full rounded-xl" />
-          <CQSkeleton className="h-9 w-full" />
+        <div className="space-y-2">
+          <CQSkeleton className="h-16 w-full rounded-xl" />
+          <CQSkeleton className="h-8 w-full" />
         </div>
       ) : sessions.length === 0 ? (
-        <p className={cn('flex flex-1 items-center justify-center py-4 text-center', CQ_META)}>
-          No upcoming classes scheduled.
-        </p>
+        <div className="flex flex-1 flex-col justify-center rounded-xl border border-dashed border-[#E5E7EB] px-3 py-3">
+          <p className={cn(CQ_BODY_STRONG)}>No classes on the books</p>
+          <p className={cn('mt-1', CQ_META)}>Live sessions will land here when scheduled.</p>
+        </div>
       ) : (
-        <div className="space-y-2.5">
+        <div className="space-y-2">
           {next && <SessionRow session={next} featured />}
           {rest.length > 0 && (
             <details className="group">
@@ -358,24 +490,24 @@ function DeadlineColumn({
   emptyLabel: string
 }) {
   return (
-    <div className="min-w-0 flex-1">
-      <h4 className={cn('mb-2.5', CQ_LABEL)}>
-        {title}
-        {items.length > 0 && (
-          <span className={cn(CQ_CHIP, 'ml-1.5 bg-[#0A1020]/8 px-1.5 text-[#374151]')}>
+    <div className="flex h-full min-h-[6rem] min-w-0 flex-col rounded-lg border border-[#E5E7EB] bg-zinc-50 px-2.5 py-2">
+      <h4 className={cn('mb-1.5 flex items-center gap-1', CQ_LABEL)}>
+        <span className="truncate">{title}</span>
+        {items.length > 0 ? (
+          <span className={cn(CQ_CHIP, 'bg-[#0A1020]/8 px-1.5 tabular-nums text-[#374151]')}>
             {items.length}
           </span>
-        )}
+        ) : null}
       </h4>
       {items.length === 0 ? (
-        <p className={cn(CQ_META, 'text-[#9CA3AF]')}>{emptyLabel}</p>
+        <p className={cn('mt-auto', CQ_META, 'text-[#9CA3AF]')}>{emptyLabel}</p>
       ) : (
-        <ul className="space-y-2">
-          {items.map((item) => (
+        <ul className="flex flex-1 flex-col gap-1.5">
+          {items.slice(0, 2).map((item) => (
             <li
               key={item.key}
               className={cn(
-                'rounded-lg border-l-[3px] bg-[#FAF3E0]/70 px-3 py-2',
+                'rounded-md border-l-[3px] bg-white px-2 py-1.5',
                 deadlineBorder(item, today),
               )}
             >
@@ -388,9 +520,6 @@ function DeadlineColumn({
               >
                 {item.title}
               </p>
-              {!item.done && (
-                <p className={cn('mt-0.5', CQ_META)}>{formatSessionDate(item.due)}</p>
-              )}
             </li>
           ))}
         </ul>
@@ -412,33 +541,42 @@ export function DeadlinesPanel({
   const hasAny = buckets.today.length + buckets.thisWeek.length + buckets.completed.length > 0
 
   return (
-    <CQCard className="flex h-full flex-col">
+    <CQCard className={PANEL_CARD}>
       <div className={CQ_SECTION_HEAD}>
         <h3 className={cn(CQ_SECTION_TITLE, 'flex items-center gap-2')}>
           <ListChecks className="h-4 w-4 shrink-0 text-[#0A1020]/70" strokeWidth={1.75} />
           All deadlines
         </h3>
-        {openCount > 0 && (
-          <span className={cn(CQ_CHIP, 'bg-[#FBBF24]/25 tabular-nums text-[#92400E]')}>
-            {openCount} open
-          </span>
-        )}
+        <span className={cn(CQ_CHIP, 'bg-[#FBBF24]/25 tabular-nums text-[#92400E]')}>
+          {openCount} open
+        </span>
       </div>
       {loading ? (
-        <div className={cn('flex flex-col md:flex-row', CQ_STACK_GAP)}>
-          <CQSkeleton className="h-28 flex-1" />
-          <CQSkeleton className="h-28 flex-1" />
-          <CQSkeleton className="h-28 flex-1" />
+        <div className="grid grid-cols-3 gap-2">
+          <CQSkeleton className="h-16" />
+          <CQSkeleton className="h-16" />
+          <CQSkeleton className="h-16" />
         </div>
-      ) : !hasAny ? (
-        <p className={cn('flex flex-1 items-center justify-center py-4 text-center', CQ_META)}>
-          No deadlines set yet.
-        </p>
       ) : (
-        <div className={cn('flex flex-1 flex-col md:flex-row', CQ_STACK_GAP)}>
-          <DeadlineColumn title="Due today" items={buckets.today} today={today} emptyLabel="Nothing due today" />
-          <DeadlineColumn title="This week" items={buckets.thisWeek} today={today} emptyLabel="Clear for the week" />
-          <DeadlineColumn title="Completed" items={buckets.completed} today={today} emptyLabel="None completed yet" />
+        <div className="grid flex-1 auto-rows-fr grid-cols-1 items-stretch gap-2 sm:grid-cols-3">
+          <DeadlineColumn
+            title="Due today"
+            items={hasAny ? buckets.today : []}
+            today={today}
+            emptyLabel={hasAny ? 'Nothing due today' : 'Clear'}
+          />
+          <DeadlineColumn
+            title="This week"
+            items={hasAny ? buckets.thisWeek : []}
+            today={today}
+            emptyLabel={hasAny ? 'Clear for the week' : 'Clear'}
+          />
+          <DeadlineColumn
+            title="Completed"
+            items={hasAny ? buckets.completed : []}
+            today={today}
+            emptyLabel={hasAny ? 'None yet' : 'Clear'}
+          />
         </div>
       )}
     </CQCard>
@@ -454,7 +592,7 @@ function TopicChip({ label, tone }: { label: string; tone: CQTone }) {
     <span
       className={cn(
         CQ_CHIP,
-        'max-w-full truncate border border-[#708090]/20 font-medium text-[#374151]',
+        'max-w-full truncate border border-[#E5E7EB] font-medium text-[#374151]',
         CQ_TONE_SOFT[tone],
       )}
     >
@@ -487,9 +625,9 @@ export function SyllabusPanel({
   const empty = completedTopics.length === 0 && remainingTopics.length === 0
 
   return (
-    <CQCard className="h-full">
-      <div className={cn(CQ_SECTION_HEAD, 'items-start')}>
-        <div>
+    <CQCard className={PANEL_CARD}>
+      <div className={CQ_SECTION_HEAD}>
+        <div className="min-w-0">
           <h3 className={cn(CQ_SECTION_TITLE, 'flex items-center gap-2')}>
             <GraduationCap className="h-4 w-4 shrink-0 text-[#0A1020]/70" strokeWidth={1.75} />
             Syllabus overview
@@ -501,7 +639,7 @@ export function SyllabusPanel({
         </span>
       </div>
 
-      <CQProgressBar value={progressPct} className="mb-3" />
+      <CQProgressBar value={progressPct} showValue={false} className="mb-2.5" />
 
       {loading ? (
         <div className="space-y-2">
@@ -509,9 +647,11 @@ export function SyllabusPanel({
           <CQSkeleton className="h-6 w-2/3" />
         </div>
       ) : empty ? (
-        <div>
-          <p className={CQ_META}>Pick a career path in Career Map to track your syllabus progress here.</p>
-          <CQActionButton variant="ghost" className="mt-2.5" onClick={onOpenCareer}>
+        <div className="flex flex-1 flex-col justify-between gap-2 rounded-lg border border-dashed border-[#E5E7EB] px-3 py-3">
+          <p className={CQ_META}>
+            Choose a career path to unlock syllabus milestones here.
+          </p>
+          <CQActionButton variant="primary" className="w-full" onClick={onOpenCareer}>
             Open Career Map
             <ArrowRight className="h-3.5 w-3.5" />
           </CQActionButton>

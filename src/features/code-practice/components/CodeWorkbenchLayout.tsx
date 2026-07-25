@@ -40,48 +40,54 @@ export function CodeWorkbenchLayout({
   const [bottomTab, setBottomTab] = useState<BottomTab>('tests')
 
   return (
-    <div className={cn('flex h-full min-h-0 flex-1 flex-col overflow-hidden', wb.root)}>
-      {toolbar}
-      {questionPicker}
+    <div className={cn('practice-workbench-shell flex min-h-0 flex-1 flex-col overflow-hidden', wb.root)}>
+      <div className="min-w-0 shrink-0 overflow-x-auto">{toolbar}</div>
+      {questionPicker ? <div className="min-w-0 shrink-0 overflow-x-auto">{questionPicker}</div> : null}
 
       <div
         className={cn(
-          'grid min-h-0 flex-1 grid-cols-1',
+          'grid min-h-0 min-w-0 flex-1 grid-cols-1 overflow-y-auto lg:overflow-hidden',
           livePreview
-            ? 'lg:grid-cols-[minmax(220px,280px)_minmax(0,1fr)_minmax(240px,300px)]'
-            : 'lg:grid-cols-[minmax(220px,280px)_minmax(0,1fr)_minmax(220px,280px)]',
+            ? 'lg:grid-cols-[minmax(200px,min(28vw,280px))_minmax(0,1fr)_minmax(200px,min(30vw,300px))]'
+            : 'lg:grid-cols-[minmax(200px,min(28vw,280px))_minmax(0,1fr)_minmax(200px,min(28vw,280px))]',
         )}
       >
-        <div className="min-h-[200px] overflow-hidden border-b lg:min-h-0 lg:border-b-0 lg:border-r lg:border-[#26324A]">
+        <div className="min-h-[min(40dvh,280px)] min-w-0 overflow-hidden border-b lg:min-h-0 lg:border-b-0 lg:border-r lg:border-[#26324A]">
           {problemPanel}
         </div>
 
-        <div className={cn('flex min-h-[300px] flex-col lg:min-h-0', livePreview && 'lg:border-x', wb.border)}>
-          <div className="min-h-0 flex-1 overflow-hidden">{editorPanel}</div>
+        <div
+          className={cn(
+            'flex min-h-[min(50dvh,360px)] min-w-0 flex-col lg:min-h-0',
+            livePreview && 'lg:border-x',
+            wb.border,
+          )}
+        >
+          <div className="min-h-0 min-w-0 flex-1 overflow-hidden">{editorPanel}</div>
           {livePreview && (
             <div className={cn('border-t p-2 lg:hidden', wb.border)}>{livePreview}</div>
           )}
         </div>
 
-        <div className="flex min-h-[180px] flex-col overflow-hidden border-t lg:min-h-0 lg:border-t-0 lg:border-l lg:border-[#26324A]">
+        <div className="flex min-h-[min(35dvh,240px)] min-w-0 flex-col overflow-hidden border-t lg:min-h-0 lg:border-t-0 lg:border-l lg:border-[#26324A]">
           {livePreview && (
             <div className={cn('hidden max-h-[40%] shrink-0 overflow-hidden border-b p-2 lg:block', wb.border)}>
               {livePreview}
             </div>
           )}
-          <div className="min-h-0 flex-1 overflow-hidden">{outputPanel}</div>
+          <div className="min-h-0 min-w-0 flex-1 overflow-hidden">{outputPanel}</div>
         </div>
       </div>
 
       <div className={cn('shrink-0 border-t', wb.panel, wb.border)}>
-        <div className={cn('flex gap-0.5 border-b px-2', wb.border)}>
+        <div className={cn('cq-h-scroll flex gap-0.5 border-b px-2', wb.border)}>
           {BOTTOM_TABS.map((tab) => (
             <button
               key={tab.id}
               type="button"
               onClick={() => setBottomTab(tab.id)}
               className={cn(
-                'px-3 py-2 text-[12px] font-medium transition-colors',
+                'min-h-10 shrink-0 px-3 py-2 text-[12px] font-medium transition-colors',
                 bottomTab === tab.id ? wb.tabActive : wb.tabInactive,
               )}
             >
@@ -89,7 +95,7 @@ export function CodeWorkbenchLayout({
             </button>
           ))}
         </div>
-        <div className="max-h-40 overflow-y-auto">
+        <div className="max-h-[min(40dvh,12rem)] overflow-y-auto">
           {bottomTab === 'tests' && testResults}
           {bottomTab === 'hints' && hints}
           {bottomTab === 'mistakes' && mistakes}

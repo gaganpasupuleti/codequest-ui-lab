@@ -120,14 +120,18 @@ export function PlannerMonthCalendar({
         </button>
       </div>
 
-      <div className={cn('grid grid-cols-7 gap-y-1 text-center', isCq ? CQ_LABEL : undefined)}>
+      <div className="grid grid-cols-7 gap-x-0.5 gap-y-1">
         {WEEKDAYS.map((wd) => (
           <span
             key={wd}
             className={cn(
+              'flex h-6 items-center justify-center text-center',
               isCq
-                ? 'py-0.5'
-                : cn('font-medium uppercase text-slate-400', isPlanner ? 'py-0.5 text-[9px]' : 'py-1 text-[10px]'),
+                ? CQ_LABEL
+                : cn(
+                    'font-medium uppercase text-slate-400',
+                    isPlanner ? 'text-[9px]' : 'text-[10px]',
+                  ),
             )}
           >
             {wd}
@@ -145,48 +149,59 @@ export function PlannerMonthCalendar({
               : []
 
           return (
-            <button
+            <div
               key={`${cell.iso}-${idx}`}
-              type="button"
-              onClick={() => onSelectDate(cell.iso)}
               className={cn(
-                'relative mx-auto flex flex-col items-center justify-center rounded-full tabular-nums transition-colors',
-                isCq
-                  ? 'h-8 w-8 text-[12px]'
-                  : cn(
-                      isPlanner ? 'min-h-[1.5rem] py-0.5 text-[11px]' : 'aspect-square max-w-[2rem] py-1 text-xs',
-                      'rounded',
-                    ),
-                !cell.inMonth && (isCq ? 'text-[#C4C0B4]' : 'text-slate-300'),
-                cell.inMonth &&
-                  !isSelected &&
-                  (isCq
-                    ? 'font-medium text-[#374151] hover:bg-[#0A1020]/6'
-                    : 'text-slate-800 hover:bg-slate-50'),
-                isSelected &&
-                  (isCq
-                    ? 'bg-[#0A1020] font-semibold text-[#FAF3E0]'
-                    : 'bg-blue-600 font-semibold text-white'),
-                isToday &&
-                  !isSelected &&
-                  (isCq ? 'font-semibold text-[#1D4ED8] ring-1 ring-[#2563EB]/50' : 'ring-1 ring-blue-400 ring-offset-1'),
+                'flex items-center justify-center',
+                isCq || isPlanner ? 'h-8' : 'h-9',
               )}
             >
-              <span>{cell.day}</span>
-              {dots.length > 0 && (
-                <span className="absolute bottom-0.5 flex h-1 gap-px" aria-hidden>
-                  {dots.map((kind) => (
-                    <span
-                      key={kind}
-                      className={cn(
-                        'h-1 w-1 rounded-full',
-                        isSelected ? (isCq ? 'bg-[#F5C518]' : 'bg-white/90') : EVENT_DOT[kind],
-                      )}
-                    />
-                  ))}
-                </span>
-              )}
-            </button>
+              <button
+                type="button"
+                onClick={() => onSelectDate(cell.iso)}
+                className={cn(
+                  'relative flex items-center justify-center rounded-full tabular-nums transition-colors',
+                  isCq
+                    ? 'h-7 w-7 text-[12px]'
+                    : cn(
+                        isPlanner ? 'h-7 w-7 text-[11px]' : 'h-8 w-8 text-xs',
+                      ),
+                  !cell.inMonth && (isCq ? 'text-zinc-300' : 'text-slate-300'),
+                  cell.inMonth &&
+                    !isSelected &&
+                    (isCq
+                      ? 'font-medium text-[#374151] hover:bg-zinc-100'
+                      : 'text-slate-800 hover:bg-slate-50'),
+                  isSelected &&
+                    (isCq
+                      ? 'bg-[#0A1020] font-semibold text-white'
+                      : 'bg-blue-600 font-semibold text-white'),
+                  isToday &&
+                    !isSelected &&
+                    (isCq
+                      ? 'font-semibold text-[#1D4ED8] ring-1 ring-[#2563EB]/45'
+                      : 'ring-1 ring-blue-400'),
+                )}
+              >
+                <span>{cell.day}</span>
+                {dots.length > 0 && (
+                  <span
+                    className="absolute bottom-0.5 left-1/2 flex h-1 -translate-x-1/2 gap-px"
+                    aria-hidden
+                  >
+                    {dots.map((kind) => (
+                      <span
+                        key={kind}
+                        className={cn(
+                          'h-1 w-1 rounded-full',
+                          isSelected ? (isCq ? 'bg-amber-300' : 'bg-white/90') : EVENT_DOT[kind],
+                        )}
+                      />
+                    ))}
+                  </span>
+                )}
+              </button>
+            </div>
           )
         })}
       </div>

@@ -57,7 +57,7 @@ export function NodeDetailDrawer({
 
       {/* Drawer */}
       <div
-        className="fixed right-0 top-0 bottom-0 w-[400px] max-w-full bg-[#111118] border-l border-white/10 z-[40] flex flex-col shadow-2xl animate-in slide-in-from-right duration-300"
+        className="fixed right-0 top-0 bottom-0 z-[40] flex w-full max-w-full flex-col border-l border-white/10 bg-[#111118] shadow-2xl animate-in slide-in-from-right duration-300 sm:w-[min(100%,400px)]"
       >
         {/* Header */}
         <div className="p-5 border-b border-white/10 flex items-start justify-between gap-3">

@@ -167,7 +167,7 @@ export function CinematicHero({ onStartQuest }: CinematicHeroProps) {
     <section
       ref={rootRef}
       id="hero"
-      className="landing-section-dark relative flex min-h-screen items-center overflow-hidden pb-24 pt-16 sm:pb-20"
+      className="landing-section-dark relative flex min-h-dvh items-center overflow-hidden pb-24 pt-16 sm:pb-20"
       aria-labelledby="hero-heading"
     >
       <div ref={gridRef} className="landing-coding-grid absolute inset-0 opacity-50" aria-hidden />

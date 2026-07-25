@@ -30,7 +30,7 @@ export function CalendarResources({ selectedDate }: CalendarResourcesProps) {
   const resources = getDemoResourcesForDate(selectedDate)
 
   return (
-    <CQCard className="flex h-full flex-col sm:col-span-2 xl:col-span-1">
+    <CQCard className="flex h-full flex-col">
       <div className={CQ_SECTION_HEAD}>
         <h3 className={cn(CQ_SECTION_TITLE, 'flex items-center gap-2')}>
           <FileText className="h-4 w-4 shrink-0 text-[#0A1020]/70" aria-hidden />
@@ -51,7 +51,7 @@ export function CalendarResources({ selectedDate }: CalendarResourcesProps) {
             const meta = KIND_META[resource.kind]
             return (
               <li key={resource.label}>
-                <div className="flex items-center gap-2.5 rounded-lg border border-[#708090]/15 bg-[#FAF3E0]/60 px-2.5 py-2">
+                <div className="flex items-center gap-2.5 rounded-lg border border-[#E5E7EB] bg-[#F4F5F7]/60 px-2.5 py-2">
                   <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-[#0A1020]/8 text-[#374151]">
                     {meta.icon}
                   </span>
