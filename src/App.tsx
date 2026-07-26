@@ -11,7 +11,6 @@ import { LoginPage } from '@/components/pages/LoginPage'
 import { StudentShell } from '@/components/shells/StudentShell'
 import { AssessmentGuard } from '@/components/assessment/AssessmentGuard'
 import { FlowRoadmapPage } from '@/components/pages/FlowRoadmapPage'
-import { LearningPlannerPage } from '@/components/pages/LearningPlannerPage'
 import { StudentDashboardPage } from '@/components/pages/StudentDashboardPage'
 import { StudentCalendarPage } from '@/components/pages/StudentCalendarPage'
 import { StudentProgressPage } from '@/components/pages/StudentProgressPage'
@@ -81,7 +80,6 @@ export type StudentPage =
   | 'practice-studio'
   | 'study-materials'
   | 'assignments'
-  | 'learning-planner'
   | 'calendar'
   | 'progress'
   | 'resume'
@@ -199,13 +197,21 @@ function App() {
       setStudentPage('dashboard')
       return
     }
+    if (rawPage === 'course-player') {
+      setStudentPage('study-materials')
+      return
+    }
+    if (rawPage === 'learning-planner') {
+      setStudentPage('calendar')
+      return
+    }
     const pageParam = rawPage as StudentPage | null
-  const DEEP_LINK_PAGES: StudentPage[] = [
-    'dashboard', 'calendar', 'progress', 'learning-planner', 'projects', 'hub',
-    'quiz', 'flow-roadmap', 'jobspy', 'live-classes', 'practice-studio', 'study-materials',
-    'assignments', 'roadmapper', 'resume', 'settings', 'practice-code',
-    'practice-sql', 'practice-typing', 'practice-powerbi',
-  ]
+    const DEEP_LINK_PAGES: StudentPage[] = [
+      'dashboard', 'calendar', 'progress', 'projects', 'hub',
+      'quiz', 'flow-roadmap', 'jobspy', 'live-classes', 'practice-studio', 'study-materials',
+      'assignments', 'roadmapper', 'resume', 'settings', 'practice-code',
+      'practice-sql', 'practice-typing', 'practice-powerbi',
+    ]
     if (pageParam && DEEP_LINK_PAGES.includes(pageParam)) {
       setStudentPage(pageParam)
       return
@@ -361,7 +367,9 @@ function App() {
           <StudentDashboardPage user={user} onNavigate={handleStudentNavigate} />
         )}
 
-        {studentPage === 'calendar' && <StudentCalendarPage user={user} />}
+        {studentPage === 'calendar' && (
+          <StudentCalendarPage user={user} onNavigate={handleStudentNavigate} />
+        )}
 
         {studentPage === 'progress' && (
           <StudentProgressPage user={user} onNavigate={handleStudentNavigate} />
@@ -391,10 +399,6 @@ function App() {
         {studentPage === 'settings' && <SettingsPage user={user} />}
 
         {studentPage === 'study-materials' && <StudyMaterialsPage />}
-
-        {studentPage === 'learning-planner' && (
-          <LearningPlannerPage user={user} onNavigate={handleStudentNavigate} />
-        )}
 
         {studentPage === 'projects' && (
           <ProjectsPage onSelectProject={handleSelectProject} />

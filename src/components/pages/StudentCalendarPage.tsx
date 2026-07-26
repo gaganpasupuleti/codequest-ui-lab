@@ -1,92 +1,230 @@
-import { CalendarDays } from 'lucide-react'
+import { useMemo, useState } from 'react'
 
 import type { AuthUser } from '@/lib/auth'
-import { AssignmentList } from '@/components/student-calendar/AssignmentList'
-import { CalendarResources } from '@/components/student-calendar/CalendarResources'
+import { toIsoDate } from '@/lib/calendar-events'
 import { ClassCalendar } from '@/components/student-calendar/ClassCalendar'
-import { DayClassNotes } from '@/components/student-calendar/DayClassNotes'
-import { SelectedDaySummary } from '@/components/student-calendar/SelectedDaySummary'
 import { useLearningPlanner } from '@/components/learning-planner/useLearningPlanner'
-import { useStudentDashboardSnapshot } from '@/components/student-dashboard/useStudentDashboardSnapshot'
 import {
+  CQ_CARD,
   CQ_META,
   CQ_PAGE_BG,
   CQ_PAGE_CONTAINER,
   CQ_PAGE_PAD,
-  CQ_PAGE_TITLE,
   CQ_STACK_GAP,
 } from '@/components/student-dashboard/cq/cqTheme'
 import { cn } from '@/lib/utils'
 
+import { DayScheduleGrid } from '@/components/student-calendar/schedule/DayScheduleGrid'
+import { EventDetailPopover } from '@/components/student-calendar/schedule/EventDetailPopover'
+import { ScheduleSidebar } from '@/components/student-calendar/schedule/ScheduleSidebar'
+import { ScheduleToolbar } from '@/components/student-calendar/schedule/ScheduleToolbar'
+import { WeekScheduleGrid } from '@/components/student-calendar/schedule/WeekScheduleGrid'
+import { buildScheduleDemoEvents } from '@/components/student-calendar/schedule/schedule-demo'
+import {
+  DEFAULT_FILTERS,
+  type ScheduleEvent,
+  type ScheduleFilters,
+  type ScheduleView,
+} from '@/components/student-calendar/schedule/schedule-types'
+import {
+  addDays,
+  eventsForDate,
+  eventsForWeek,
+  filterEvents,
+  getMondayOfWeek,
+  parseIsoDate,
+} from '@/components/student-calendar/schedule/schedule-utils'
+
+type CalendarNavPage =
+  | 'calendar'
+  | 'practice-studio'
+  | 'practice-code'
+  | 'practice-sql'
+  | 'practice-typing'
+  | 'live-classes'
+  | 'assignments'
+  | 'study-materials'
+  | 'settings'
+  | 'progress'
+  | 'dashboard'
+  | 'roadmapper'
+
 interface StudentCalendarPageProps {
   user: AuthUser
+  onNavigate: (page: CalendarNavPage) => void
 }
 
 export function StudentCalendarPage({ user }: StudentCalendarPageProps) {
   const planner = useLearningPlanner(user)
-  const snapshot = useStudentDashboardSnapshot(user)
+
+  const [view, setView] = useState<ScheduleView>('week')
+  const [selectedDate, setSelectedDate] = useState(() => planner.selectedDate)
+  const [viewMonth, setViewMonth] = useState(() => planner.viewMonth)
+  const [filters, setFilters] = useState<ScheduleFilters>(DEFAULT_FILTERS)
+  const [search, setSearch] = useState('')
+  const [activeEvent, setActiveEvent] = useState<ScheduleEvent | null>(null)
+  const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null)
+
+  const allEvents = useMemo(() => buildScheduleDemoEvents(), [])
+  const selected = parseIsoDate(selectedDate)
+  const weekStart = useMemo(() => getMondayOfWeek(selected), [selectedDate])
+
+  const visibleEvents = useMemo(() => {
+    const filtered = filterEvents(allEvents, filters)
+    const q = search.trim().toLowerCase()
+    if (!q) return filtered
+    return filtered.filter(
+      (event) =>
+        event.title.toLowerCase().includes(q) ||
+        event.subtitle?.toLowerCase().includes(q) ||
+        event.category.toLowerCase().includes(q),
+    )
+  }, [allEvents, filters, search])
+
+  const weekEvents = useMemo(
+    () => eventsForWeek(visibleEvents, weekStart),
+    [visibleEvents, weekStart],
+  )
+  const dayEvents = useMemo(
+    () => eventsForDate(visibleEvents, selectedDate),
+    [visibleEvents, selectedDate],
+  )
+
+  const handleSelectDate = (iso: string) => {
+    setSelectedDate(iso)
+    setViewMonth(parseIsoDate(iso))
+    planner.setSelectedDate(iso)
+  }
+
+  const handleToday = () => {
+    handleSelectDate(toIsoDate(new Date()))
+  }
+
+  const handlePrev = () => {
+    if (view === 'day') {
+      handleSelectDate(toIsoDate(addDays(selected, -1)))
+      return
+    }
+    if (view === 'week') {
+      handleSelectDate(toIsoDate(addDays(weekStart, -7)))
+      return
+    }
+    const next = new Date(viewMonth.getFullYear(), viewMonth.getMonth() - 1, 1)
+    setViewMonth(next)
+    handleSelectDate(toIsoDate(next))
+  }
+
+  const handleNext = () => {
+    if (view === 'day') {
+      handleSelectDate(toIsoDate(addDays(selected, 1)))
+      return
+    }
+    if (view === 'week') {
+      handleSelectDate(toIsoDate(addDays(weekStart, 7)))
+      return
+    }
+    const next = new Date(viewMonth.getFullYear(), viewMonth.getMonth() + 1, 1)
+    setViewMonth(next)
+    handleSelectDate(toIsoDate(next))
+  }
+
+  const handleEventClick = (event: ScheduleEvent, rect: DOMRect) => {
+    setActiveEvent(event)
+    setAnchorRect(rect)
+  }
+
+  const toolbarAnchor = view === 'week' ? weekStart : selected
 
   return (
     <div className={cn(CQ_PAGE_BG, CQ_PAGE_PAD)}>
-      <div className={CQ_PAGE_CONTAINER}>
-        <header className="mb-3 flex flex-wrap items-end justify-between gap-2">
-          <div className="min-w-0">
-            <h1 className={cn(CQ_PAGE_TITLE, 'flex items-center gap-2')}>
-              <CalendarDays className="h-5 w-5 shrink-0 text-[#0A1020]/70" aria-hidden />
-              Calendar
-            </h1>
-            <p className={cn(CQ_META, 'mt-0.5')}>
-              Select a day for schedule, notes, assignments, and materials.
-            </p>
-          </div>
-        </header>
+      <div
+        className={cn(
+          CQ_PAGE_CONTAINER,
+          'grid min-h-[calc(100vh-5rem)] grid-cols-1 lg:grid-cols-[220px_minmax(0,1fr)]',
+          CQ_STACK_GAP,
+        )}
+      >
+        <div className="min-h-0 lg:sticky lg:top-3 lg:self-start">
+          <ScheduleSidebar
+            viewMonth={viewMonth}
+            selectedDate={selectedDate}
+            filters={filters}
+            onViewMonthChange={setViewMonth}
+            onSelectDate={handleSelectDate}
+            onFiltersChange={setFilters}
+          />
+        </div>
 
-        <div
-          className={cn(
-            'grid min-w-0 grid-cols-1 lg:grid-cols-[minmax(260px,min(100%,340px))_minmax(0,1fr)] lg:items-start',
-            CQ_STACK_GAP,
-          )}
-        >
-          <div className="min-w-0 lg:sticky lg:top-4">
-            <ClassCalendar
-              viewMonth={planner.viewMonth}
-              onViewMonthChange={planner.setViewMonth}
-              selectedDate={planner.selectedDate}
-              onSelectDate={planner.setSelectedDate}
-              markedDates={planner.markedDates}
-              markedDatesByType={planner.markedDatesByType}
-            />
-          </div>
+        <div className={cn('flex min-h-0 min-w-0 flex-col', CQ_STACK_GAP)}>
+          <ScheduleToolbar
+            view={view}
+            anchorDate={toolbarAnchor}
+            search={search}
+            onViewChange={setView}
+            onSearchChange={setSearch}
+            onToday={handleToday}
+            onPrev={handlePrev}
+            onNext={handleNext}
+            onJoin={() => {
+              const nextLive = weekEvents.find((event) => event.category === 'class')
+              if (nextLive) handleEventClick(nextLive, new DOMRect(120, 120, 0, 0))
+            }}
+          />
 
-          <div className={cn('flex min-w-0 flex-col', CQ_STACK_GAP)}>
-            <SelectedDaySummary
-              selectedDate={planner.selectedDate}
-              sessions={snapshot.upcomingSessions}
-              dayPlan={planner.dayPlan}
-              loading={planner.loading || snapshot.loading}
-            />
-
-            <div
-              className={cn(
-                'grid min-w-0 auto-rows-fr grid-cols-1 items-stretch sm:grid-cols-2 lg:grid-cols-3',
-                CQ_STACK_GAP,
-              )}
-            >
-              <DayClassNotes
-                selectedDate={planner.selectedDate}
-                dayPlan={planner.dayPlan}
-                loading={planner.loading}
+          <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+            {view === 'week' ? (
+              <WeekScheduleGrid
+                weekStart={weekStart}
+                selectedDate={selectedDate}
+                events={weekEvents}
+                onSelectDate={handleSelectDate}
+                onEventClick={handleEventClick}
               />
-              <AssignmentList
-                selectedDate={planner.selectedDate}
-                deadlines={snapshot.deadlines}
-                loading={snapshot.loading}
+            ) : null}
+
+            {view === 'day' ? (
+              <DayScheduleGrid
+                date={selected}
+                events={dayEvents}
+                onEventClick={handleEventClick}
               />
-              <CalendarResources selectedDate={planner.selectedDate} />
-            </div>
+            ) : null}
+
+            {view === 'month' ? (
+              <div className={cn(CQ_CARD, 'min-h-0 flex-1 overflow-auto p-3.5 sm:p-4')}>
+                <ClassCalendar
+                  viewMonth={viewMonth}
+                  onViewMonthChange={setViewMonth}
+                  selectedDate={selectedDate}
+                  onSelectDate={handleSelectDate}
+                  markedDates={planner.markedDates}
+                  markedDatesByType={planner.markedDatesByType}
+                />
+                <p className={cn(CQ_META, 'mt-3')}>
+                  {dayEvents.length} class{dayEvents.length === 1 ? '' : 'es'} on{' '}
+                  {selected.toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                  . Use Week or Day for the timetable.
+                </p>
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
+
+      {activeEvent ? (
+        <EventDetailPopover
+          event={activeEvent}
+          anchorRect={anchorRect}
+          onClose={() => {
+            setActiveEvent(null)
+            setAnchorRect(null)
+          }}
+        />
+      ) : null}
     </div>
   )
 }

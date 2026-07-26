@@ -12,8 +12,8 @@ import {
   UpcomingClassesPanel,
 } from '@/components/student-dashboard/DashboardContentSections'
 import {
+  CQ_DASHBOARD_CONTAINER,
   CQ_PAGE_BG,
-  CQ_PAGE_CONTAINER,
   CQ_PAGE_PAD,
   CQ_STACK_GAP,
 } from '@/components/student-dashboard/cq/cqTheme'
@@ -34,7 +34,6 @@ import { storeSelectedDateForPlanner } from '@/lib/learning-planner-derive'
 type DashboardNavTarget =
   | 'roadmapper'
   | 'jobspy'
-  | 'learning-planner'
   | 'calendar'
   | 'progress'
   | 'resume'
@@ -110,7 +109,7 @@ export function StudentDashboardPage({ user, onNavigate }: StudentDashboardPageP
 
   return (
     <div className={cn(CQ_PAGE_BG, CQ_PAGE_PAD)}>
-      <div className={CQ_PAGE_CONTAINER}>
+      <div className={CQ_DASHBOARD_CONTAINER}>
         <DashboardTopHeader
           firstName={firstName}
           pathTitle={pathTitle}
@@ -142,9 +141,14 @@ export function StudentDashboardPage({ user, onNavigate }: StudentDashboardPageP
             onPracticeTyping={() => onNavigate('practice-typing')}
           />
 
+          {/*
+            Container queries (not viewport): sidebar width no longer delays the
+            two-column layout, and the planner track scales with available space.
+          */}
           <div
             className={cn(
-              'grid min-w-0 grid-cols-1 xl:grid-cols-[minmax(0,1fr)_minmax(280px,300px)] xl:items-start',
+              'grid min-w-0 grid-cols-1 items-start',
+              '@min-[860px]/dash:grid-cols-[minmax(0,1fr)_minmax(18rem,22rem)]',
               CQ_STACK_GAP,
             )}
           >
@@ -158,7 +162,8 @@ export function StudentDashboardPage({ user, onNavigate }: StudentDashboardPageP
               />
               <div
                 className={cn(
-                  'grid min-w-0 auto-rows-fr grid-cols-1 items-stretch md:grid-cols-2',
+                  'grid min-w-0 auto-rows-fr grid-cols-1 items-stretch',
+                  '@min-[560px]/dash:grid-cols-2',
                   CQ_STACK_GAP,
                 )}
               >
@@ -204,7 +209,7 @@ export function StudentDashboardPage({ user, onNavigate }: StudentDashboardPageP
                 onNavigate('calendar')
               }}
               emptyDaySuggestion={plannerSuggestion}
-              className="xl:sticky xl:top-3"
+              className="@min-[860px]/dash:sticky @min-[860px]/dash:top-3"
             />
           </div>
         </div>

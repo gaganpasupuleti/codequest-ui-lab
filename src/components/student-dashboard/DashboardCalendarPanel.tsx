@@ -71,7 +71,7 @@ export function PlannerCard({
       : null
 
   return (
-    <CQCard className={cn('flex flex-col', className)}>
+    <CQCard className={cn('flex h-full min-w-0 w-full flex-col', className)}>
       <div className={cn(CQ_SECTION_HEAD, 'items-center')}>
         <h3 className={CQ_SECTION_TITLE}>Planner</h3>
         <div className="flex shrink-0 items-center gap-0.5">
@@ -97,7 +97,7 @@ export function PlannerCard({
         </div>
       </div>
 
-      <div className="grid grid-cols-7 gap-x-0.5 gap-y-1">
+      <div className="grid w-full grid-cols-7 gap-x-0.5 gap-y-1">
         {WEEKDAYS.map((d, i) => (
           <span
             key={`${d}-${i}`}
@@ -108,14 +108,14 @@ export function PlannerCard({
         ))}
         {cells.map((iso, i) =>
           iso === null ? (
-            <span key={`empty-${i}`} className="flex h-8 items-center justify-center" />
+            <span key={`empty-${i}`} className="flex aspect-square items-center justify-center" />
           ) : (
-            <div key={iso} className="flex h-8 items-center justify-center">
+            <div key={iso} className="flex aspect-square items-center justify-center">
               <button
                 type="button"
                 onClick={() => onSelectDate(iso)}
                 className={cn(
-                  'relative grid h-7 w-7 place-items-center rounded-full text-[12px] tabular-nums transition-colors',
+                  'relative grid h-[1.85rem] w-[1.85rem] max-h-full max-w-full place-items-center rounded-full text-[12px] tabular-nums transition-colors',
                   CQ_FOCUS,
                   iso === selectedDate
                     ? 'bg-[#0A1020] font-semibold text-white'

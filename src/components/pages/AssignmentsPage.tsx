@@ -172,11 +172,11 @@ export function AssignmentsPage({ onNavigate, onBeforeSelectQuiz }: AssignmentsP
               </button>
               <button
                 type="button"
-                onClick={() => onNavigate('learning-planner')}
+                onClick={() => onNavigate('calendar')}
                 className="inline-flex items-center gap-1 rounded-lg border border-[#E5E7EB] bg-white px-2.5 py-1.5 text-[12px] font-semibold text-[#4B5563] hover:bg-zinc-50"
               >
                 <ListChecks className="h-3.5 w-3.5" aria-hidden />
-                Planner
+                Calendar
               </button>
               <button
                 type="button"

@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import {
   CalendarDays,
-  CalendarRange,
   LayoutDashboard,
   Briefcase,
   Map,
@@ -59,7 +58,6 @@ type StudentPage =
   | 'quiz'
   | 'roadmapper'
   | 'flow-roadmap'
-  | 'learning-planner'
   | 'calendar'
   | 'progress'
   | 'resume'
@@ -87,7 +85,6 @@ const NAV_GROUPS: SidebarGroup[] = [
       { page: 'calendar', label: 'Calendar', icon: <CalendarDays size={ICON} aria-hidden /> },
       { page: 'live-classes', label: 'Live Classes', icon: <GraduationCap size={ICON} aria-hidden /> },
       { page: 'assignments', label: 'Assignments', icon: <ClipboardList size={ICON} aria-hidden /> },
-      { page: 'learning-planner', label: 'Learning Planner', icon: <CalendarRange size={ICON} aria-hidden /> },
       { page: 'study-materials', label: 'Study Materials', icon: <BookOpen size={ICON} aria-hidden /> },
     ],
   },

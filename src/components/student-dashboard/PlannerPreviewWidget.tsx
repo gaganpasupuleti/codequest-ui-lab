@@ -1,13 +1,14 @@
 import { ArrowRight, CalendarDays } from 'lucide-react'
 
 import { PlannerMonthCalendar } from '@/components/learning-planner/PlannerMonthCalendar'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Skeleton } from '@/components/ui/skeleton'
+import { CQCard } from '@/components/student-dashboard/cq/CQKit'
+import {
+  CQ_LABEL,
+  CQ_META,
+  CQ_SECTION_TITLE,
+} from '@/components/student-dashboard/cq/cqTheme'
 import type { DayLearningPlan } from '@/lib/learning-planner-derive'
 import { cn } from '@/lib/utils'
-
-import { PLANNER_BODY, PLANNER_CARD } from '@/components/learning-planner/planner-styles'
 
 interface PlannerPreviewWidgetProps {
   dayPlan: DayLearningPlan | null
@@ -31,47 +32,44 @@ export function PlannerPreviewWidget({
   onSelectDate,
 }: PlannerPreviewWidgetProps) {
   return (
-    <Card className={cn(PLANNER_CARD)}>
-      <div className={PLANNER_BODY}>
-        <div className="mb-3 flex items-center gap-2">
-          <CalendarDays className="h-4 w-4 text-blue-600" />
-          <h2 className="text-sm font-semibold text-slate-800">Learning Planner</h2>
-        </div>
-
-        <PlannerMonthCalendar
-          density="dashboard"
-          viewMonth={viewMonth}
-          onViewMonthChange={onViewMonthChange}
-          selectedDate={selectedDate}
-          onSelectDate={onSelectDate}
-          markedDates={markedDates}
-        />
-
-        <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-3">
-          <p className="text-xs font-semibold uppercase text-slate-500">Selected day focus</p>
-          {loading ? (
-            <Skeleton className="mt-2 h-5 w-3/4" />
-          ) : (
-            <p className="mt-1 text-sm font-medium text-slate-900">
-              {dayPlan?.topic ?? 'Select a date to preview'}
-            </p>
-          )}
-          {dayPlan && !loading && (
-            <p className="mt-1 text-xs text-slate-500">{dayPlan.estimatedMinutes} min estimated</p>
-          )}
-        </div>
-
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          className="mt-4 w-full border-slate-200 text-slate-700 hover:bg-slate-50"
-          onClick={onOpenPlanner}
-        >
-          Open full planner
-          <ArrowRight className="ml-2 h-3.5 w-3.5" />
-        </Button>
+    <CQCard className="p-3.5 sm:p-4">
+      <div className="mb-3 flex items-center gap-2">
+        <CalendarDays className="h-4 w-4 text-[#2563EB]" aria-hidden />
+        <h2 className={CQ_SECTION_TITLE}>Calendar</h2>
       </div>
-    </Card>
+
+      <PlannerMonthCalendar
+        density="dashboard"
+        theme="cq"
+        viewMonth={viewMonth}
+        onViewMonthChange={onViewMonthChange}
+        selectedDate={selectedDate}
+        onSelectDate={onSelectDate}
+        markedDates={markedDates}
+      />
+
+      <div className="mt-3 rounded-lg border border-[#E5E7EB] bg-[#F9FAFB] p-3">
+        <p className={CQ_LABEL}>Selected day focus</p>
+        {loading ? (
+          <div className="mt-2 h-4 w-3/4 animate-pulse rounded bg-[#E5E7EB]" aria-hidden />
+        ) : (
+          <p className="mt-1 text-[13px] font-semibold text-[#111827]">
+            {dayPlan?.topic ?? 'Select a date to preview'}
+          </p>
+        )}
+        {dayPlan && !loading ? (
+          <p className={cn(CQ_META, 'mt-1')}>{dayPlan.estimatedMinutes} min estimated</p>
+        ) : null}
+      </div>
+
+      <button
+        type="button"
+        onClick={onOpenPlanner}
+        className="mt-3 inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-md border border-[#E5E7EB] bg-white text-[13px] font-semibold text-[#374151] transition hover:bg-[#F9FAFB]"
+      >
+        Open calendar
+        <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+      </button>
+    </CQCard>
   )
 }

@@ -177,10 +177,10 @@ export function StudyMaterialsPage() {
   }
 
   const stats = [
-    { label: 'Reports', value: allReports.length, tone: 'bg-[#B8C9E8]' },
-    { label: 'Chapters', value: totalChapterCount(), tone: 'bg-[#C2CDB0]' },
-    { label: 'Families', value: BOOK_REPORTS_CATALOG.families.length, tone: 'bg-[#F3DFA0]' },
-    { label: 'Roles', value: JOB_ROLE_CATALOG.length, tone: 'bg-[#DDD0F5]' },
+    { label: 'Reports', value: allReports.length },
+    { label: 'Chapters', value: totalChapterCount() },
+    { label: 'Families', value: BOOK_REPORTS_CATALOG.families.length },
+    { label: 'Roles', value: JOB_ROLE_CATALOG.length },
   ] as const
 
   return (
@@ -189,7 +189,7 @@ export function StudyMaterialsPage() {
       <header className="mb-3 flex flex-wrap items-end justify-between gap-3">
         <div className="min-w-0">
           <h1 className={cn(CQ_PAGE_TITLE, 'flex items-center gap-2')}>
-            <BookOpen className="h-5 w-5 shrink-0 text-[#0A1020]/70" aria-hidden />
+            <BookOpen className="h-5 w-5 shrink-0 text-[#6B7280]" aria-hidden />
             Study Materials
           </h1>
           <p className={cn(CQ_META, 'mt-0.5')}>
@@ -211,18 +211,15 @@ export function StudyMaterialsPage() {
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className={cn(
-              'flex items-center justify-between rounded-xl border border-[#E5E7EB] px-3.5 py-2.5',
-              stat.tone,
-            )}
+            className="flex items-center justify-between rounded-lg border border-[#E5E7EB] bg-white px-3.5 py-2.5 shadow-sm"
           >
             <span className={CQ_LABEL}>{stat.label}</span>
-            <span className={cn(CQ_METRIC, 'text-[22px]')}>{stat.value}</span>
+            <span className={cn(CQ_METRIC, 'text-[20px]')}>{stat.value}</span>
           </div>
         ))}
       </div>
 
-      <CQCard tone="cream" className="mb-3 !p-3">
+      <CQCard className="mb-3 !p-3">
         <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-6">
           <label className="block space-y-1 sm:col-span-2 lg:col-span-2">
             <span className={CQ_LABEL}>Search</span>
@@ -230,8 +227,8 @@ export function StudyMaterialsPage() {
               type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Title, family, level, or role�"
-              className="w-full rounded-lg border border-[#0A1020]/15 bg-white px-3 py-2 text-[13px] text-[#111827] placeholder:text-[#6B7280] focus:border-[#2563EB] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
+              placeholder="Title, family, level, or role…"
+              className="w-full rounded-md border border-[#E5E7EB] bg-white px-3 py-2 text-[13px] text-[#111827] placeholder:text-[#9CA3AF] focus:border-[#93C5FD] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
             />
           </label>
           <FilterSelect
@@ -283,7 +280,7 @@ export function StudyMaterialsPage() {
       </CQCard>
 
       {filtered.length === 0 ? (
-        <CQCard tone="cream" className="flex min-h-[40vh] flex-col items-center justify-center py-10 text-center">
+        <CQCard className="flex min-h-[40vh] flex-col items-center justify-center py-10 text-center">
           <p className="font-semibold text-[#111827]">No reports match</p>
           <p className={cn('mt-1', CQ_META)}>Try clearing a filter or changing your search.</p>
         </CQCard>
@@ -321,7 +318,7 @@ function FilterSelect({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full truncate rounded-lg border border-[#0A1020]/15 bg-white px-2.5 py-2 text-[13px] text-[#111827] focus:border-[#2563EB] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
+        className="w-full truncate rounded-md border border-[#E5E7EB] bg-white px-2.5 py-2 text-[13px] text-[#111827] focus:border-[#93C5FD] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
       >
         {options.map((opt) => (
           <option key={opt.value || '__all'} value={opt.value}>
@@ -348,17 +345,17 @@ function ReportCard({
 
   return (
     <li className="min-w-0">
-      <CQCard interactive tone="cream" className="h-full overflow-hidden !p-0">
+      <CQCard interactive className="h-full overflow-hidden !p-0">
         <button
           type="button"
           onClick={onOpen}
-          className="flex h-full w-full gap-3 p-3 text-left transition-colors hover:bg-[#F4F5F7]/50"
+          className="flex h-full w-full gap-3 p-3 text-left transition-colors hover:bg-[#F9FAFB]"
         >
-          <div className="relative h-[7.5rem] w-[5.25rem] shrink-0 overflow-hidden rounded-lg bg-[#0A1020]">
+          <div className="relative h-[7.5rem] w-[5.25rem] shrink-0 overflow-hidden rounded-md bg-[#111827]">
             {coverUrl ? (
               <img src={coverUrl} alt="" className="h-full w-full object-cover" loading="lazy" />
             ) : (
-              <div className="flex h-full items-center justify-center text-[#F4F5F7]/40">
+              <div className="flex h-full items-center justify-center text-white/40">
                 <BookOpen className="h-7 w-7" aria-hidden />
               </div>
             )}
@@ -369,17 +366,17 @@ function ReportCard({
               {report.report_type ? (
                 <Badge type={report.report_type}>{REPORT_TYPE_LABELS[report.report_type]}</Badge>
               ) : null}
-              <span className={cn(CQ_CHIP, 'bg-[#0A1020]/6 text-[#4B5563]')}>{report.level}</span>
+              <span className={cn(CQ_CHIP, 'bg-[#F3F4F6] text-[#4B5563]')}>{report.level}</span>
             </div>
-            <h2 className="text-[14px] font-semibold leading-snug tracking-tight text-[#0A1020] line-clamp-2">
+            <h2 className="line-clamp-2 text-[14px] font-semibold leading-snug tracking-tight text-[#111827]">
               {displayTitle(report.title)}
             </h2>
             <p className={cn(CQ_META, 'truncate')}>
               {primaryRole}
-              {roleIds.length > 1 ? ` +${roleIds.length - 1}` : ''} � {report.chapter_count} ch
+              {roleIds.length > 1 ? ` +${roleIds.length - 1}` : ''} · {report.chapter_count} ch
             </p>
             {progressPercent > 0 ? <CQProgressBar value={progressPercent} className="mt-auto" /> : null}
-            <span className="mt-auto pt-1 text-[13px] font-semibold text-[#2563EB]">Read ?</span>
+            <span className="mt-auto pt-1 text-[13px] font-semibold text-[#2563EB]">Read →</span>
           </div>
         </button>
       </CQCard>
@@ -400,12 +397,12 @@ function Badge({
         CQ_CHIP,
         'px-2 py-0.5 text-[10px] uppercase tracking-wide',
         type === 'role_career_path'
-          ? 'bg-[#0A1020] text-[#F4F5F7]'
+          ? 'bg-[#111827] text-white'
           : type === 'role_book_study'
-            ? 'bg-[#2563EB]/12 text-[#1D4ED8]'
+            ? 'bg-[#EFF6FF] text-[#1D4ED8]'
             : type === 'role_project'
-              ? 'bg-[#0D9488]/12 text-[#0F766E]'
-              : 'bg-[#0A1020] text-[#F4F5F7]',
+              ? 'bg-[#ECFDF5] text-[#065F46]'
+              : 'bg-[#111827] text-white',
       )}
     >
       {children}
@@ -524,7 +521,7 @@ function StudyReportReader({
           <div className="min-w-0 flex-1 text-center">
             <p className="truncate text-sm font-semibold text-[#0A1020]">{title}</p>
             <p className="text-[11px] text-[#6B7280]">
-              Ch. {chapterNumber}/{total} � Page {pageIndex + 1}/{totalPages || 1}
+              Ch. {chapterNumber}/{total} · Page {pageIndex + 1}/{totalPages || 1}
             </p>
           </div>
 
@@ -642,7 +639,7 @@ function StudyReportReader({
               <span className="font-semibold text-[#0A1020]">
                 Page {pageIndex + 1}/{totalPages || 1}
               </span>
-              <span className="mx-1.5">�</span>
+              <span className="mx-1.5">·</span>
               <span>Ch. {chapterNumber}/{total}</span>
             </p>
 
@@ -681,7 +678,7 @@ function ChapterPage({
       <div>
         <header className="mb-4 border-b border-[#0A1020]/10 pb-4 text-center">
           <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6B7280]">
-            Chapter {chapter.number} � Summary
+            Chapter {chapter.number} · Summary
           </p>
           <h1 className="mt-1 text-2xl font-bold text-[#0A1020]">Before you move on</h1>
         </header>
@@ -705,7 +702,7 @@ function ChapterPage({
         <header className="mb-5 border-b border-[#0A1020]/10 pb-4 text-center">
           <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6B7280]">
             Chapter {chapter.number}
-            {chapter.level ? ` � ${chapter.level}` : ''}
+            {chapter.level ? ` · ${chapter.level}` : ''}
           </p>
           <h1 className="mt-2 text-2xl font-bold leading-tight tracking-tight text-[#0A1020] md:text-3xl">
             {chapter.title}
@@ -713,7 +710,7 @@ function ChapterPage({
         </header>
       ) : (
         <p className="mb-4 text-center text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
-          {chapter.title} � page {pageIndex + 1}/{totalPages}
+          {chapter.title} · page {pageIndex + 1}/{totalPages}
         </p>
       )}
 
