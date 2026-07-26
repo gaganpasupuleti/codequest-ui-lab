@@ -115,8 +115,8 @@ export function DashboardTopHeader({
         className="pointer-events-none absolute -bottom-28 left-10 h-56 w-56 rounded-full bg-[#14B8A6]/15 blur-3xl"
       />
 
-      <div className="relative grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,18rem)] lg:items-start lg:gap-5">
-        <div className="min-w-0 space-y-2">
+      <div className="relative grid min-w-0 grid-cols-1 gap-4 @min-[720px]/dash:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] @min-[720px]/dash:items-end @min-[720px]/dash:gap-6">
+        <div className="min-w-0 space-y-2.5">
           <div className="flex items-center gap-2.5">
             <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#F4F5F7]/12 text-[11px] font-semibold text-[#F4F5F7] ring-1 ring-[#F4F5F7]/20">
               {initials}
@@ -127,7 +127,7 @@ export function DashboardTopHeader({
           </div>
 
           <div className="min-w-0">
-            <h1 className="text-[clamp(1.2rem,3vw,1.6rem)] font-semibold leading-tight tracking-tight text-[#F4F5F7]">
+            <h1 className="text-[clamp(1.2rem,2.4vw,1.55rem)] font-semibold leading-tight tracking-tight text-[#F4F5F7]">
               Your learning command center
             </h1>
             <p className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[13px] text-[#F4F5F7]/70">
@@ -171,7 +171,7 @@ export function DashboardTopHeader({
           ) : null}
         </div>
 
-        <div className="flex w-full min-w-0 flex-col gap-2 lg:pt-0.5">
+        <div className="flex w-full min-w-0 flex-col gap-2">
           <CQActionButton
             variant="ghost"
             onClick={onContinuePractice}

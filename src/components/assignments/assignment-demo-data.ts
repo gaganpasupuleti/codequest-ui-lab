@@ -7,7 +7,7 @@ export type AssignmentNavTarget =
   | 'practice-studio'
   | 'projects'
   | 'roadmapper'
-  | 'learning-planner'
+  | 'calendar'
   | 'quiz'
 
 export interface PathAssignment {

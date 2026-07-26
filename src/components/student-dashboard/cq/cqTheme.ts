@@ -43,6 +43,13 @@ export const CQ_PAGE_PAD = 'w-full min-w-0 px-3 py-3 sm:px-4 sm:py-4 md:px-5'
 export const CQ_PAGE_CONTAINER =
   'mx-auto w-full min-w-0 max-w-[1440px] box-border'
 
+/**
+ * Dashboard fills the shell main column (no centered max-rail).
+ * Pair with `@container/dash` for width-based grids that ignore sidebar chrome.
+ */
+export const CQ_DASHBOARD_CONTAINER =
+  '@container/dash w-full min-w-0 max-w-none box-border'
+
 /** Consistent gap between panels / rows. */
 export const CQ_STACK_GAP = 'gap-3'
 

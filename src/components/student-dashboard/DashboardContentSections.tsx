@@ -48,9 +48,9 @@ function CQSkeleton({ className }: { className?: string }) {
 
 /* --------------------------------------------------------- Glance strip */
 
-/** Fixed rhythm so paired cards stay the same height. */
-const GLANCE_CARD = 'flex h-full min-h-[9.5rem] min-w-0 flex-col'
-const PANEL_CARD = 'flex h-full min-h-[13rem] min-w-0 flex-col'
+/** Compact rhythm — paired cards match height without tall empty voids. */
+const GLANCE_CARD = 'flex h-full min-h-0 min-w-0 flex-col'
+const PANEL_CARD = 'flex h-full min-h-[11rem] min-w-0 flex-col'
 
 const PRACTICE_DOT: Record<string, string> = {
   blue: 'bg-[#2563EB]',
@@ -100,9 +100,13 @@ function GlanceCardShell({
       </div>
 
       {loading ? (
-        <CQSkeleton className="h-16 w-full" />
+        <div className="space-y-2">
+          <CQSkeleton className="h-7 w-24" />
+          <CQSkeleton className="h-1.5 w-full" />
+          <CQSkeleton className="h-4 w-4/5" />
+        </div>
       ) : (
-        <div className="flex min-h-0 flex-1 flex-col">
+        <div className="flex min-h-0 flex-col">
           <div className="flex min-w-0 items-baseline gap-1.5">
             <span className={cn(CQ_METRIC, 'truncate')}>{metric}</span>
             <span className={cn(CQ_META, 'truncate')}>{metricSub}</span>
@@ -112,7 +116,7 @@ function GlanceCardShell({
           ) : (
             <div className="mt-2 h-1.5 w-full rounded-full bg-[#0A1020]/8" aria-hidden />
           )}
-          <p className={cn('mt-2 line-clamp-2 min-h-[2.4rem]', CQ_META)}>{detail}</p>
+          <p className={cn('mt-2 line-clamp-2', CQ_META)}>{detail}</p>
         </div>
       )}
     </CQCard>
@@ -184,14 +188,14 @@ function GettingStartedPracticeCard({
         <h3 className={CQ_SECTION_TITLE}>Getting started with practice</h3>
         <p className={CQ_SECTION_SUB}>Pick an arena — status cards appear after your first session.</p>
       </div>
-      <div className="grid min-w-0 grid-cols-1 items-stretch gap-2 sm:grid-cols-3">
+      <div className="grid min-w-0 w-full grid-cols-1 items-stretch gap-2 @min-[520px]/dash:grid-cols-3">
         {items.map((item) => (
           <button
             key={item.label}
             type="button"
             onClick={item.onClick}
             className={cn(
-              'flex h-[4.5rem] w-full flex-col justify-center rounded-lg border border-[#E5E7EB] bg-zinc-50 px-3 py-2 text-left transition-colors hover:bg-zinc-100',
+              'flex min-h-[4.25rem] w-full flex-col justify-center rounded-lg border border-[#E5E7EB] bg-zinc-50 px-3 py-2 text-left transition-colors hover:bg-zinc-100',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/45',
             )}
           >
@@ -248,7 +252,8 @@ export function DashboardGlanceRow({
     <div className={cn('flex min-w-0 flex-col', CQ_STACK_GAP)}>
       <div
         className={cn(
-          'grid min-w-0 auto-rows-fr grid-cols-1 items-stretch sm:grid-cols-2',
+          'grid min-w-0 w-full auto-rows-fr grid-cols-1 items-stretch',
+          '@min-[520px]/dash:grid-cols-2',
           CQ_STACK_GAP,
         )}
       >
@@ -291,7 +296,8 @@ export function DashboardGlanceRow({
       ) : (
         <div
           className={cn(
-            'grid min-w-0 auto-rows-fr grid-cols-1 items-stretch sm:grid-cols-2 lg:grid-cols-3',
+            'grid min-w-0 w-full auto-rows-fr grid-cols-1 items-stretch',
+            '@min-[520px]/dash:grid-cols-2 @min-[860px]/dash:grid-cols-3',
             CQ_STACK_GAP,
           )}
         >
