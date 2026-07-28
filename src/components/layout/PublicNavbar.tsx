@@ -1,15 +1,14 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Menu, X } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 
 import { LandingCtaButton } from '@/components/landing/LandingCtaButton'
+import { handleSectionAnchorClick } from '@/components/landing/landingSectionNav'
+import { CQLogo } from '@/components/landing/shared/CQLogo'
+import { LANDING_NAV_LINKS } from '@/data/landingContent'
+import { prefersReducedMotion } from '@/lib/motionPreference'
 
-const navLinks = [
-  { label: 'How It Works', href: '#how-it-works' },
-  { label: 'Arenas', href: '#quest-arenas' },
-  { label: 'Career Map', href: '#career-map' },
-  { label: 'Features', href: '#features' },
-]
+const MOBILE_MENU_ID = 'landing-mobile-menu'
 
 type PublicNavbarProps = {
   onStartQuest: () => void
@@ -18,75 +17,122 @@ type PublicNavbarProps = {
 
 export function PublicNavbar({ onStartQuest, onHome }: PublicNavbarProps) {
   const [open, setOpen] = useState(false)
+  const toggleRef = useRef<HTMLButtonElement>(null)
+
+  const closeMenu = useCallback((returnFocus = true) => {
+    setOpen(false)
+    if (returnFocus) toggleRef.current?.focus()
+  }, [])
+
+  useEffect(() => {
+    if (!open) return
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') closeMenu()
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [open, closeMenu])
 
   return (
-    <header className="landing-nav fixed top-0 left-0 right-0 z-50">
+    <header className="landing-nav fixed left-0 right-0 top-0 z-50">
       <nav
-        className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
+        className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8"
         aria-label="Main navigation"
       >
-        <button
-          type="button"
-          onClick={onHome}
-          className="flex items-center gap-2 text-lg font-bold tracking-tight"
-        >
-          <span className="landing-nav-brand">CodeQuest</span>
+        <button type="button" onClick={onHome} className="landing-nav-brand shrink-0">
+          <CQLogo size="xs" />
+          <span>CodeQuest</span>
         </button>
 
-        <div className="hidden items-center gap-8 md:flex">
-          {navLinks.map((link) => (
-            <a key={link.label} href={link.href} className="landing-nav-link text-sm transition-colors">
+        <div className="hidden items-center gap-5 lg:flex xl:gap-7">
+          {LANDING_NAV_LINKS.map((link) => (
+            <a
+              key={link.label}
+              href={`#${link.target}`}
+              onClick={handleSectionAnchorClick}
+              className="landing-nav-link"
+            >
               {link.label}
             </a>
           ))}
         </div>
 
-        <div className="hidden md:block">
-          <LandingCtaButton size="sm" className="landing-btn-primary" onClick={onStartQuest}>
+        <div className="hidden items-center gap-3 lg:flex xl:gap-4">
+          <button type="button" onClick={onStartQuest} className="landing-nav-link">
+            Log In
+          </button>
+          <LandingCtaButton tone="primary" onClick={onStartQuest}>
             Start Your Quest
           </LandingCtaButton>
         </div>
 
         <button
+          ref={toggleRef}
           type="button"
-          className="landing-nav-toggle p-2 md:hidden"
-          onClick={() => setOpen(!open)}
-          aria-label={open ? 'Close menu' : 'Open menu'}
+          className="landing-nav-toggle inline-flex items-center justify-center lg:hidden"
+          onClick={() => (open ? closeMenu(false) : setOpen(true))}
+          aria-label={open ? 'Close navigation menu' : 'Open navigation menu'}
           aria-expanded={open}
+          aria-controls={MOBILE_MENU_ID}
         >
-          {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          {open ? (
+            <X className="h-5 w-5" aria-hidden="true" />
+          ) : (
+            <Menu className="h-5 w-5" aria-hidden="true" />
+          )}
         </button>
       </nav>
 
-      <AnimatePresence>
+      <AnimatePresence initial={false}>
         {open && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="landing-nav-mobile md:hidden"
+            id={MOBILE_MENU_ID}
+            key="mobile-menu"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: prefersReducedMotion() ? 0 : 0.22, ease: 'easeOut' }}
+            className="landing-nav-mobile lg:hidden"
           >
-            <div className="flex flex-col gap-3 px-4 py-4">
-              {navLinks.map((link) => (
+            <div className="mx-auto w-full max-w-7xl px-4 pb-5 pt-1 sm:px-6">
+              {LANDING_NAV_LINKS.map((link) => (
                 <a
                   key={link.label}
-                  href={link.href}
-                  className="landing-nav-link py-2 text-sm"
-                  onClick={() => setOpen(false)}
+                  href={`#${link.target}`}
+                  className="landing-nav-link"
+                  onClick={(event) => {
+                    handleSectionAnchorClick(event)
+                    closeMenu()
+                  }}
                 >
                   {link.label}
                 </a>
               ))}
-              <LandingCtaButton
-                size="sm"
-                className="landing-btn-primary mt-2 w-full"
-                onClick={() => {
-                  setOpen(false)
-                  onStartQuest()
-                }}
-              >
-                Start Your Quest
-              </LandingCtaButton>
+
+              <div className="mt-4 flex flex-col gap-2.5">
+                <LandingCtaButton
+                  tone="ghost"
+                  className="w-full"
+                  onClick={() => {
+                    closeMenu(false)
+                    onStartQuest()
+                  }}
+                >
+                  Log In
+                </LandingCtaButton>
+                <LandingCtaButton
+                  tone="primary"
+                  className="w-full"
+                  onClick={() => {
+                    closeMenu(false)
+                    onStartQuest()
+                  }}
+                >
+                  Start Your Quest
+                </LandingCtaButton>
+              </div>
             </div>
           </motion.div>
         )}

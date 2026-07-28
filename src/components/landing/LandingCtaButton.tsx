@@ -1,40 +1,65 @@
-import type { ButtonHTMLAttributes, ReactNode } from 'react'
+import type { MouseEvent, ReactNode } from 'react'
 
-import { Button } from '@/components/ui/button'
+import { handleSectionAnchorClick } from '@/components/landing/landingSectionNav'
 import { cn } from '@/lib/utils'
 
-type LandingCtaButtonProps = {
+type CtaTone = 'primary' | 'ghost' | 'flare'
+type CtaSize = 'md' | 'lg'
+
+type SharedCtaProps = {
   children: ReactNode
-  onClick?: () => void
+  tone?: CtaTone
+  size?: CtaSize
   className?: string
-  size?: 'sm' | 'md' | 'lg'
-  variant?: 'primary' | 'outline'
-  type?: ButtonHTMLAttributes<HTMLButtonElement>['type']
 }
 
-/** Thin CTA wrapper so landing can reuse CQ Button without UI Lab's motion Button. */
+function ctaClass(tone: CtaTone, size: CtaSize, className?: string): string {
+  return cn('landing-btn', `landing-btn--${tone}`, size === 'lg' && 'landing-btn--lg', className)
+}
+
+type LandingCtaButtonProps = SharedCtaProps & {
+  onClick: () => void
+  ariaLabel?: string
+}
+
+/** Editorial CTA for actions (opens the login view, switches previews, etc). */
 export function LandingCtaButton({
   children,
   onClick,
-  className,
+  tone = 'primary',
   size = 'md',
-  variant = 'primary',
-  type = 'button',
+  className,
+  ariaLabel,
 }: LandingCtaButtonProps) {
   return (
-    <Button
-      type={type}
+    <button
+      type="button"
       onClick={onClick}
-      size={size === 'md' ? 'default' : size}
-      variant={variant === 'outline' ? 'outline' : 'default'}
-      className={cn(
-        'rounded-full font-semibold shadow-none',
-        size === 'lg' && 'h-11 px-7 text-base',
-        size === 'sm' && 'h-8 px-3 text-sm',
-        className,
-      )}
+      aria-label={ariaLabel}
+      className={ctaClass(tone, size, className)}
     >
       {children}
-    </Button>
+    </button>
+  )
+}
+
+type LandingCtaLinkProps = SharedCtaProps & {
+  href: string
+  onClick?: (event: MouseEvent<HTMLAnchorElement>) => void
+}
+
+/** Editorial CTA for in-page navigation — stays an anchor so it works without JS. */
+export function LandingCtaLink({
+  children,
+  href,
+  tone = 'ghost',
+  size = 'md',
+  className,
+  onClick = handleSectionAnchorClick,
+}: LandingCtaLinkProps) {
+  return (
+    <a href={href} onClick={onClick} className={ctaClass(tone, size, className)}>
+      {children}
+    </a>
   )
 }
