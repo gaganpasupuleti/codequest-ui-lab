@@ -1,24 +1,8 @@
-import { LandingCtaButton } from '@/components/landing/LandingCtaButton'
+import { ArrowUp } from 'lucide-react'
 
-const footerColumns = [
-  {
-    title: 'Explore',
-    links: [
-      { label: 'How It Works', href: '#how-it-works' },
-      { label: 'Arenas', href: '#quest-arenas' },
-      { label: 'Career Map', href: '#career-map' },
-      { label: 'Features', href: '#features' },
-    ],
-  },
-  {
-    title: 'Account',
-    links: [
-      { label: 'Home', href: '#hero', action: 'home' as const },
-      { label: 'Login', href: '#', action: 'login' as const },
-      { label: 'Start Your Quest', href: '#', action: 'login' as const },
-    ],
-  },
-]
+import { handleSectionAnchorClick } from '@/components/landing/landingSectionNav'
+import { CQLogo } from '@/components/landing/shared/CQLogo'
+import { LANDING_FOOTER_LINKS } from '@/data/landingContent'
 
 type LandingFooterProps = {
   onStartQuest: () => void
@@ -27,70 +11,60 @@ type LandingFooterProps = {
 
 export function LandingFooter({ onStartQuest, onHome }: LandingFooterProps) {
   return (
-    <footer className="landing-section-footer landing-footer">
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mb-12 text-center">
-          <h2 className="landing-footer-heading mb-4 text-2xl font-bold sm:text-3xl">
-            Start your coding quest today.
-          </h2>
-          <LandingCtaButton size="lg" className="landing-btn-primary" onClick={onStartQuest}>
-            Start Your Quest
-          </LandingCtaButton>
-        </div>
+    <footer className="landing-footer" aria-labelledby="footer-heading">
+      <h2 id="footer-heading" className="sr-only">
+        CodeQuest site footer
+      </h2>
 
-        <div className="mx-auto mb-12 grid max-w-xl grid-cols-2 gap-8">
-          {footerColumns.map((col) => (
-            <div key={col.title}>
-              <h3 className="landing-footer-col-title mb-4 text-xs font-semibold uppercase tracking-widest">
-                {col.title}
-              </h3>
-              <ul className="space-y-2">
-                {col.links.map((link) => {
-                  const action = 'action' in link ? link.action : undefined
-                  if (action === 'login') {
-                    return (
-                      <li key={link.label}>
-                        <button
-                          type="button"
-                          onClick={onStartQuest}
-                          className="landing-footer-link text-sm transition-colors"
-                        >
-                          {link.label}
-                        </button>
-                      </li>
-                    )
-                  }
-                  if (action === 'home') {
-                    return (
-                      <li key={link.label}>
-                        <button
-                          type="button"
-                          onClick={onHome}
-                          className="landing-footer-link text-sm transition-colors"
-                        >
-                          {link.label}
-                        </button>
-                      </li>
-                    )
-                  }
-                  return (
-                    <li key={link.label}>
-                      <a href={link.href} className="landing-footer-link text-sm transition-colors">
-                        {link.label}
-                      </a>
-                    </li>
-                  )
-                })}
-              </ul>
+      <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+        <div className="grid gap-8 sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-12">
+          <div className="max-w-[52ch]">
+            <div className="mb-4 flex items-center gap-3">
+              <CQLogo size="sm" />
+              <span className="landing-h3">CodeQuest</span>
             </div>
-          ))}
+            <p className="landing-copy">
+              CodeQuest helps students learn, practise, build and prepare for real
+              opportunities—without losing the path between them.
+            </p>
+          </div>
+
+          <nav aria-label="Footer">
+            <ul className="flex flex-wrap gap-x-6 gap-y-3 sm:flex-col sm:gap-y-2.5">
+              {LANDING_FOOTER_LINKS.map((link) => (
+                <li key={link.label}>
+                  <a
+                    href={`#${link.target}`}
+                    onClick={handleSectionAnchorClick}
+                    className="landing-footer-link inline-flex min-h-[2.25rem] items-center"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+              <li>
+                <button
+                  type="button"
+                  onClick={onStartQuest}
+                  className="landing-footer-link inline-flex min-h-[2.25rem] items-center"
+                >
+                  Login
+                </button>
+              </li>
+            </ul>
+          </nav>
         </div>
 
-        <div className="landing-footer-divider flex flex-col items-center justify-between gap-4 border-t pt-8 sm:flex-row">
-          <span className="landing-footer-brand font-bold">CodeQuest</span>
-          <p className="landing-footer-fine-print text-xs">
-            Learn, practice, and get job-ready — guided student journey.
-          </p>
+        <div className="landing-rule mt-10 flex flex-col gap-3 pt-6 sm:flex-row sm:items-center sm:justify-between">
+          <p className="landing-footer-note text-sm">© 2026 CodeQuest. All rights reserved.</p>
+          <button
+            type="button"
+            onClick={onHome}
+            className="landing-footer-link inline-flex min-h-[2.25rem] items-center gap-2 self-start sm:self-auto"
+          >
+            Back to top
+            <ArrowUp className="h-4 w-4" aria-hidden="true" />
+          </button>
         </div>
       </div>
     </footer>
